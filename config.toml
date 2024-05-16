@@ -1,4 +1,4 @@
-baseURL = 'https://capstone-pr.netlify.app/'
+baseURL = 'xai-blog.netlify.app'
 languageCode = 'en-us'
 title = 'XAI'
 
