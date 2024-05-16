@@ -1,4 +1,4 @@
-# Capstone project at Innopolis University
+# XAI repo
 
 This is a repo of the XAI blog
 
@@ -30,7 +30,7 @@ If you **do not have** the repo on your machine:
 
 Now you can start contributing:
 
-- To start the website localy, run
+- To start the website locally, run
 
   ```
   hugo server --minify --theme=hugo-book
