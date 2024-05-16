@@ -1,4 +1,4 @@
-baseURL = 'xai-blog.netlify.app'
+baseURL = 'https://xai-blog.netlify.app/'
 languageCode = 'en-us'
 title = 'XAI'
 
