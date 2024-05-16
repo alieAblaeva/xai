@@ -1,6 +1,6 @@
 baseURL = 'https://capstone-pr.netlify.app/'
 languageCode = 'en-us'
-title = 'CAPSTONE'
+title = 'XAI'
 
 
 # Needed for mermaid/katex shortcodes

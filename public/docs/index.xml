@@ -1,10 +1,1 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Docs on CAPSTONE</title>
-    <link>https://capstone-pr.netlify.app/docs/</link>
-    <description>Recent content in Docs on CAPSTONE</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="https://capstone-pr.netlify.app/docs/index.xml" rel="self" type="application/rss+xml" />
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docs on XAI</title><link>http://localhost:1313/docs/</link><description>Recent content in Docs on XAI</description><generator>Hugo</generator><language>en-us</language><atom:link href="http://localhost:1313/docs/index.xml" rel="self" type="application/rss+xml"/><item><title>Example</title><link>http://localhost:1313/docs/groups/example/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>http://localhost:1313/docs/groups/example/</guid><description>Presentation#About us#Examplary post here</description></item></channel></rss>
