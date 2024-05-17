@@ -69,11 +69,13 @@ Imagine a RandomForest model predicting whether a person is infected with a dise
     shap_interaction = explainer.shap_interaction_values(X) # compute interaction values and visualize
     shap.dependence_plot(("age", "preanti"), new_shap_interaction, X, feature_names=X.columns, show=False)
     plt.show()
+    
    ```
 
 This graph shows that those who use drugs and are over 40 have a higher risk of contracting an illness.
 
-![image](https://github.com/IU-PR/xai/assets/88908152/118a53b7-33f7-4650-8fa9-de890c4b4b17)
+![image](https://github.com/IU-PR/xai/assets/88908152/f835a7f9-902d-437f-a83f-683711f8ab1b)
+
 
 
 ## Conclusion
