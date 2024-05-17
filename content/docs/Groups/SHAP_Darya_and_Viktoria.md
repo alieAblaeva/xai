@@ -28,7 +28,8 @@ Imagine a RandomForest model predicting whether a person is infected with a dise
 - Fairness Analysis: By showing how each feature contributes to the prediction, SHAP helps identify potential biases in the model, aiding in fairness assessments.
 - Model Debugging: It highlights areas where the model might be performing poorly or where additional data could improve predictions.
 
-[][!pip install shap # install
+```python
+!pip install shap # install
 df = pd.read_csv('/content/AIDS_Classification.csv') # read data
 model = RandomForestClassifier(n_estimators=200, random_state=121) # initialize tree model
 model.fit(X_train, y_train) # fit the model
@@ -42,6 +43,5 @@ plt.show()
 shap_interaction = explainer.shap_interaction_values(X) # compute interaction values and visualize
 shap.dependence_plot(("age", "preanti"), new_shap_interaction, X, feature_names=X.columns, show=False)
 plt.show()
-]
-  
+```
 
