@@ -31,17 +31,17 @@ Imagine a RandomForest model predicting whether a person is infected with a dise
 ## How to use TreeExplainer?
 
 1. Install the shap library
-```python
-!pip install shap # install
-```
+   ```python
+   !pip install shap # install
+   ```
 2.  Read the data
-```python
-df = pd.read_csv('/content/AIDS_Classification.csv') 
-```
+   ```python
+   df = pd.read_csv('/content/AIDS_Classification.csv') 
+   ```
 3. Initialize tree model
-```python
-model = RandomForestClassifier(n_estimators=200, random_state=121)
-```
+   ```python
+   model = RandomForestClassifier(n_estimators=200, random_state=121)
+   ```
 4. Fit the model
    ```python
    model.fit(X_train, y_train)
@@ -65,11 +65,32 @@ model = RandomForestClassifier(n_estimators=200, random_state=121)
 
 
 8.The second shown the SHAP interaction values between two features ("age" and "preanti") are computed, and the features' dependence on the model's predictions are displayed. This aids in comprehending the interplay between these two characteristics while forecasting.
-
     ```python
     shap_interaction = explainer.shap_interaction_values(X) # compute interaction values and visualize
     shap.dependence_plot(("age", "preanti"), new_shap_interaction, X, feature_names=X.columns, show=False)
     plt.show()
    ```
+
+This graph shows that those who use drugs and are over 40 have a higher risk of contracting an illness.
+
 ![image](https://github.com/IU-PR/xai/assets/88908152/118a53b7-33f7-4650-8fa9-de890c4b4b17)
+
+
+## Conclusion
+
+Our understanding of and confidence in predictive health analytics models is greatly improved by integrating SHAP with RandomForest models. An essential tool for healthcare decision-making, **SHAP's Tree Explainer provides comprehensive insights into how specific attributes affect forecasts**. In addition to its interpretability, SHAP facilitates fairness analysis and debugging of models, which improves the model development process. The essay showcases SHAP's transformative potential in turning raw data into actionable knowledge through its practical application, which primarily focuses on forecasting disease infection status. In order to achieve transparency and reliability in predictive models going forward, the field will need to adopt SHAP, which will be crucial.
+
+
+Link to our colab:
+[Code example](https://colab.research.google.com/drive/1hfdtyhN8ENk49Y-zTB2IH06VQmbeBenl?usp=sharing)
+
+Link to the dataset:
+[AIDS_classification](https://www.kaggle.com/datasets/aadarshvelu/aids-virus-infection-prediction?resource=download)
+
+Links:
+[Documentation of SHAP](https://shap-lrjball.readthedocs.io/en/latest/generated/shap.TreeExplainer.html#)
+[Paper (Explainable AI for Trees: From Local Explanations to Global Understanding, Scott M. Lundberg et al.)](https://paperswithcode.com/paper/explainable-ai-for-trees-from-local)
+[Official exaple of usage](https://github.com/suinleelab/treeexplainer-study/blob/master/README.md)
+[SHAP on github](https://github.com/shap/shap)
+
 
