@@ -1,3 +1,9 @@
+---
+weight: 1
+bookFlatSection: true
+title: "CAM and SeCAM"
+---
+
 # CAM and SeCAM: Explainable AI for Understanding Image Classification Models
 
 **Tutorial by Yaroslav Sokolov and Iskander Ishkineev**
@@ -388,7 +394,7 @@ SLIC is a superpixel segmentation algorithm that clusters pixels in an image int
 The distance {{<katex>}}D{{</katex>}} between a pixel {{<katex>}}i{{</katex>}} and a cluster center {{<katex>}}k{{</katex>}} is defined as:
 
 {{<katex display>}}
-D = \sqrt{d*{lab}^2 + \left(\frac{m}{S}\right)^2 d*{xy}^2}
+D = \sqrt{d_{lab}^2 + \left(\frac{m}{S}\right)^2 d*{xy}^2}
 {{</katex>}}
 
 where:
@@ -469,14 +475,14 @@ After applying SLIC, we get the segmented image with superpixels. The output mat
 
     - The CAM for class {{<katex>}}c{{</katex>}} is computed as:
       {{<katex display>}}
-      M*c(x, y) = \sum*{k} w_{k}^{c} f_k(x, y)
+      M_c(x, y) = \sum_{k} w_{k}^{c} f_k(x, y)
       {{</katex>}}
       This gives the importance of each spatial element {{<katex>}}(x, y){{</katex>}} in the feature maps for class {{<katex>}}c{{</katex>}}.
 
 3. **SeCAM**:
     - For each superpixel, the SeCAM value is computed by averaging the CAM values within the superpixel:
       {{<katex display>}}
-      S*c(s) = \frac{1}{|s|} \sum*{(x, y) \in s} M_c(x, y)
+      S_c(s) = \frac{1}{|s|} \sum_{(x, y) \in s} M_c(x, y)
       {{</katex>}}
       where {{<katex>}}|s|{{</katex>}} is the number of pixels in superpixel {{<katex>}}s{{</katex>}}.
 
