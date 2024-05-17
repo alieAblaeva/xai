@@ -84,15 +84,21 @@ Our understanding of and confidence in predictive health analytics models is gre
 
 
 Link to our colab:
+
 [Code example](https://colab.research.google.com/drive/1hfdtyhN8ENk49Y-zTB2IH06VQmbeBenl?usp=sharing)
 
 Link to the dataset:
+
 [AIDS_classification](https://www.kaggle.com/datasets/aadarshvelu/aids-virus-infection-prediction?resource=download)
 
 Links:
+
 [Documentation of SHAP](https://shap-lrjball.readthedocs.io/en/latest/generated/shap.TreeExplainer.html#)
+
 [Paper (Explainable AI for Trees: From Local Explanations to Global Understanding, Scott M. Lundberg et al.)](https://paperswithcode.com/paper/explainable-ai-for-trees-from-local)
+
 [Official exaple of usage](https://github.com/suinleelab/treeexplainer-study/blob/master/README.md)
+
 [SHAP on github](https://github.com/shap/shap)
 
 
