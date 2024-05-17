@@ -58,17 +58,17 @@ Class Activation Mapping (CAM) is a technique used to identify the discriminativ
 2. **Global Average Pooling**:
 
     - The GAP for feature map {{<katex>}}k{{</katex>}} is computed as:
-      {{<katex>}}F_k = \frac{1}{Z} \sum_{x} \sum_{y} f_k(x, y){{</katex>}}
+      {{<katex display>}}F_k = \frac{1}{Z} \sum_{x} \sum_{y} f_k(x, y){{</katex>}}
       where {{<katex>}}Z{{</katex>}} is the number of pixels in the feature map.
 
 3. **Class Score**:
 
     - The class score {{<katex>}}S_c{{</katex>}} for class {{<katex>}}c{{</katex>}} is computed as:
-      {{<katex>}}S_c = \sum_{k} w_{k}^{c} F_k {{</katex>}}
+      {{<katex display>}}S_c = \sum_{k} w_{k}^{c} F_k {{</katex>}}
       where {{<katex>}}w_{k}^{c}{{</katex>}} is the weight corresponding to class {{<katex>}}c{{</katex>}} for feature map {{<katex>}}k{{</katex>}}.
 
 4. **Class Activation Map**:
-    - The CAM for class {{<katex>}}c{{</katex>}} is computed as: {{<katex>}}M_c(x, y) = \sum_{k} w_{k}^{c} f_k(x, y){{</katex>}}
+    - The CAM for class {{<katex>}}c{{</katex>}} is computed as: {{<katex display>}}M_c(x, y) = \sum_{k} w_{k}^{c} f_k(x, y){{</katex>}}
       This gives the importance of each spatial element {{<katex>}}(x, y){{</katex>}} in the feature maps for class {{<katex>}}c{{</katex>}}.
 
 ### c) Implementation with Code
@@ -363,7 +363,8 @@ SLIC is a superpixel segmentation algorithm that clusters pixels in an image int
 
 1.  **Initialization**:
 
-    -   **Grid Sampling**: The image is divided into a grid of {{<katex>}} N/K {{</katex>}} equally spaced initial cluster centers, where {{<katex>}}N{{</katex>}} is the number of pixels, and {{<katex>}}K{{</katex>}} is the desired number of superpixels. - **Perturbation**: Each cluster center is moved to the lowest gradient position within a 3x3 neighborhood to avoid placing centers at edges.
+    -   **Grid Sampling**: The image is divided into a grid of {{<katex>}} N/K {{</katex>}} equally spaced initial cluster centers, where {{<katex>}}N{{</katex>}} is the number of pixels, and {{<katex>}}K{{</katex>}} is the desired number of superpixels.
+    -   **Perturbation**: Each cluster center is moved to the lowest gradient position within a 3x3 neighborhood to avoid placing centers at edges.
 
 2.  **Assignment**:
 
@@ -468,7 +469,7 @@ After applying SLIC, we get the segmented image with superpixels. The output mat
 
     - The CAM for class {{<katex>}}c{{</katex>}} is computed as:
       {{<katex display>}}
-      M*c(x, y) = \sum*{k} w\_{k}^{c} f_k(x, y)
+      M*c(x, y) = \sum*{k} w_{k}^{c} f_k(x, y)
       {{</katex>}}
       This gives the importance of each spatial element {{<katex>}}(x, y){{</katex>}} in the feature maps for class {{<katex>}}c{{</katex>}}.
 
