@@ -55,7 +55,7 @@ Imagine a RandomForest model predicting whether a person is infected with a dise
    explainer = shap.TreeExplainer(model)
    ```
 
-7. Now, we are ready for construct graph. The first is visualise the shap values
+7. Now, we are ready for construct graph. The first is visualise the shap values.
    ```python
    shap_values = explainer.shap_values(X) # compute common shap values and visualize
    shap.summary_plot(shap_values, X, feature_names=X.columns, plot_type="dot", auto_size_plot=False, show=False)
@@ -65,11 +65,11 @@ Imagine a RandomForest model predicting whether a person is infected with a dise
 
 
 8.The second shown the SHAP interaction values between two features ("age" and "preanti") are computed, and the features' dependence on the model's predictions are displayed. This aids in comprehending the interplay between these two characteristics while forecasting.
-    ```python
-    shap_interaction = explainer.shap_interaction_values(X) # compute interaction values and visualize
-    shap.dependence_plot(("age", "preanti"), new_shap_interaction, X, feature_names=X.columns, show=False)
-    plt.show()
-    
+
+   ```python
+   shap_interaction = explainer.shap_interaction_values(X) # compute interaction values and visualize
+   shap.dependence_plot(("age", "preanti"), new_shap_interaction, X, feature_names=X.columns, show=False)
+   plt.show()
    ```
 
 This graph shows that those who use drugs and are over 40 have a higher risk of contracting an illness.
