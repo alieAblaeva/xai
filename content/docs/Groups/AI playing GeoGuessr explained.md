@@ -49,7 +49,6 @@ However, it's worth noting a difference between how RAINBOLT (the player from th
 Because RAINBOLT proved that you do not need to look around in the game to achieve great results, we will simplify the game to just one picture upon which we are supposed to guess a country. This way it will be much easier to use a neural network.
 
 ![High level view on structure of a neural network for pictures](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%204.png)
-
 High level view on structure of a neural network for pictures
 
 NN might have the following inner dialogue when playing and learning the simplified game:
