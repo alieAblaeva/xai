@@ -50,7 +50,7 @@ Because RAINBOLT proved that you do not need to look around in the game to achie
 
 ![High level view on structure of a neural network for pictures](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%204.png)
 
-<figcaption style="font-size: 0.8em; color: grey; font-weight: normal;">High level view on structure of a neural network for pictures</figcaption>
+<figcaption style="font-size: 0.8em; color: grey; font-weight: normal;">High level view on structure of a neural network for pictures</figcaption><br><br>
 
 NN might have the following inner dialogue when playing and learning the simplified game:
 
@@ -72,11 +72,11 @@ Correct answer: Japan.
 
 ![China](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%205.png)
 
-China
+<figcaption style="font-size: 0.8em; color: grey; font-weight: normal;">China</figcaption><br><br>
 
 ![Japan](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%206.png)
 
-Japan
+<figcaption style="font-size: 0.8em; color: grey; font-weight: normal;">Japan</figcaption><br><br>
 
 Now, how is human learning different? Humans have more sources of information available. RAINBOLT could asked his friend who also plays GeoGuessr for some insights (for example, what to play attention to when seeing hieroglyphics). That way, he would already know some facts without needing to play many games to figure them out through trial and error.
 
@@ -94,7 +94,7 @@ We'll train and use the model on Kaggle because it provides 29 GB of RAM, wherea
 
 ![Training the model on Google Colab with batch size = 2 (amount of images the model trains on simultaneously)](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%207.png)
 
-Training the model on Google Colab with batch size = 2 (amount of images the model trains on simultaneously)
+<figcaption style="font-size: 0.8em; color: grey; font-weight: normal;">Training the model on Google Colab with batch size = 2 (amount of images the model trains on simultaneously)</figcaption><br><br>
 
 Additionally, Google Colab offers only one GPU, while Kaggle provides two GPUs, which boosts training performance by 1.5x.
 
