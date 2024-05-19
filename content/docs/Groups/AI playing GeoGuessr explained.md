@@ -10,7 +10,7 @@ None
 
 Everyone has played [GeoGuessr](https://www.geoguessr.com/) at least once in their life. This is how the game looks like:
 
-![Untitled](https://exfai.xyz/docs/groups/https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled.png)
+![Untitled](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled.png)
 
 If you do not remember this game, I will briefly explain the rules of the game. 
 
