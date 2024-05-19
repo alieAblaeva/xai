@@ -10,7 +10,7 @@ None
 
 Everyone has played [GeoGuessr](https://www.geoguessr.com/) at least once in their life. This is how the game looks like:
 
-![Untitled](AI%20playing%20GeoGuessr%20explained/Untitled.png)
+![Untitled](https://exfai.xyz/docs/groups/https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled.png)
 
 If you do not remember this game, I will briefly explain the rules of the game. 
 
@@ -20,13 +20,13 @@ This game can be played alone or with other players. You can limit the game area
 
 At the end of the game, GeoGuessr shows your score, your guesses, and how far they are from the actual locations. The game is actually quite challenging. My results usually look like this:
 
-![Untitled](AI%20playing%20GeoGuessr%20explained/Untitled%201.png)
+![Untitled](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%201.png)
 
 Not even once I guessed a right country, let alone being close to the real location. 
 
 But there are players whose result looks like this:
 
-![Untitled](AI%20playing%20GeoGuessr%20explained/Untitled%202.png)
+![Untitled](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%202.png)
 
 You know what is much more interesting than the score? This is a screenshot from the YouTube video: **[geoguessr pro guesses in 0.1 seconds](https://www.youtube.com/watch?v=ff6E4mrUkBY)** …
 
@@ -38,7 +38,7 @@ Clearly, he doesn't have time to look into details and think. This means his bra
 
 This is very similar to how Neural Networks (NN) work. NNs are actually inspired by the structure and function of biological neural networks. Essentially, it is a network of neurons that are connected and send information to each another.
 
-![Untitled](AI%20playing%20GeoGuessr%20explained/Untitled%203.png)
+![Untitled](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%203.png)
 
 Neural networks also learn from experience, just like the human brain. Due to this, neural network is a very powerful and widely used model in Machine Learning.
 
@@ -48,7 +48,7 @@ However, it's worth noting a difference between how RAINBOLT (the player from th
 
 Because RAINBOLT proved that you do not need to look around in the game to achieve great results, we will simplify the game to just one picture upon which we are supposed to guess a country. This way it will be much easier to use a neural network.
 
-![High level view on structure of a neural network for pictures](AI%20playing%20GeoGuessr%20explained/Untitled%204.png)
+![High level view on structure of a neural network for pictures](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%204.png)
 
 High level view on structure of a neural network for pictures
 
@@ -70,11 +70,11 @@ Correct answer: Japan.
 
 “How? There must be something else that distinguishes China and Japan… How about the streets? Last time they were wide, and this time they are very narrow… Okay, next time if I see hieroglyphics I’ll look at the streets. If they are wide, I'll guess China; if narrow, then Japan.”
 
-![China](AI%20playing%20GeoGuessr%20explained/Untitled%205.png)
+![China](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%205.png)
 
 China
 
-![Japan](AI%20playing%20GeoGuessr%20explained/Untitled%206.png)
+![Japan](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%206.png)
 
 Japan
 
@@ -92,7 +92,7 @@ We will use DenseNet121, a Dense Convolutional Neural Network (Dense CNN), for t
 
 We'll train and use the model on Kaggle because it provides 29 GB of RAM, whereas Google Colab offers only 13 GB, which is insufficient for efficient model training.
 
-![Training the model on Google Colab with batch size = 2 (amount of images the model trains on simultaneously)](AI%20playing%20GeoGuessr%20explained/Untitled%207.png)
+![Training the model on Google Colab with batch size = 2 (amount of images the model trains on simultaneously)](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%207.png)
 
 Training the model on Google Colab with batch size = 2 (amount of images the model trains on simultaneously)
 
@@ -102,15 +102,15 @@ Additionally, Google Colab offers only one GPU, while Kaggle provides two GPUs, 
 
 Utilizations of resources and training performance for **one** GPU on Kaggle (batch size = 32):
 
-![Untitled](AI%20playing%20GeoGuessr%20explained/Untitled%208.png)
+![Untitled](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%208.png)
 
-![Untitled](AI%20playing%20GeoGuessr%20explained/Untitled%209.png)
+![Untitled](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%209.png)
 
 Utilizations of resources and training performance for **two** GPUs on Kaggle (batch size = 32):
 
-![Untitled](AI%20playing%20GeoGuessr%20explained/Untitled%2010.png)
+![Untitled](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%2010.png)
 
-![Untitled](AI%20playing%20GeoGuessr%20explained/Untitled%2011.png)
+![Untitled](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%2011.png)
 
 The code used for training was originally written by [ANIMESH SINGH BASNET](https://www.kaggle.com/code/crypticsy/geo-guesser/notebook).
 
@@ -124,7 +124,7 @@ We are going to use LIME method for explanations. LIME method provides insights 
 
 Here is an example of how the explanations look:
 
-![Untitled](AI%20playing%20GeoGuessr%20explained/Untitled%2012.png)
+![Untitled](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%2012.png)
 
 Our model works on images with a resolution of 224x224. This resolution is convenient for the model because it contains enough information for pattern recognition while greatly reducing computation times.
 
@@ -134,17 +134,17 @@ As you can see, the grass made the model think that the country is Argentina. Yo
 
 Let's look at another explanation:
 
-![Untitled](AI%20playing%20GeoGuessr%20explained/Untitled%2013.png)
+![Untitled](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%2013.png)
 
 This time, the model focused on the pavement. Yet this was sufficient for the model to guess correctly.
 
 Let's look at a couple more explanations:
 
-![Untitled](AI%20playing%20GeoGuessr%20explained/Untitled%2014.png)
+![Untitled](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%2014.png)
 
-![Untitled](AI%20playing%20GeoGuessr%20explained/Untitled%2015.png)
+![Untitled](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%2015.png)
 
-![Untitled](AI%20playing%20GeoGuessr%20explained/Untitled%2016.png)
+![Untitled](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%2016.png)
 
 However, the model is not perfect and sometimes makes incorrect guesses. This might be due to cases like the one in image 5 above. In this case, the model took into consideration the map, which never changes in any of the pictures and doesn’t give any useful information. This suggests the model needs more training to recognize that focusing on the map is not helpful.
 
