@@ -114,7 +114,7 @@ Utilizations of resources and training performance for **two** GPUs on Kaggle (b
 
 The code used for training was originally written by [ANIMESH SINGH BASNET](https://www.kaggle.com/code/crypticsy/geo-guesser/notebook).
 
-I have made [adjustments](https://www.kaggle.com/code/pavelroganin/geo-guesser?scriptVersionId=177970716) to the model architecture and achieved 54% accuracy, compared to the original 43%.
+I have made [adjustments](https://www.kaggle.com/code/pavelroganin/geo-guesser?scriptVersionId=177970716) to the model architecture and achieved 52% accuracy, compared to the original 43%.
 
 The model was successfully trained for 30 epochs over 3 hours using two GPUs on Kaggle.
 
