@@ -50,7 +50,7 @@ Because RAINBOLT proved that you do not need to look around in the game to achie
 
 ![High level view on structure of a neural network for pictures](https://exfai.xyz/docs/groups/AI%20playing%20GeoGuessr%20explained/Untitled%204.png)
 
-<figcaption>High level view on structure of a neural network for pictures</figcaption>
+<figcaption style="font-size: 0.8em; color: grey; font-weight: normal;">High level view on structure of a neural network for pictures</figcaption>
 
 NN might have the following inner dialogue when playing and learning the simplified game:
 
