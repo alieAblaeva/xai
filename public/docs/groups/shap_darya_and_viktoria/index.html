@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="SHAP. Tree Explanations # Exploring SHAP Tree Explainer for Predictive Health Analytics: A Deep Dive into RandomForest Models # Predictive models are essential for managing healthcare resources, predicting disease outbreaks, and guiding public health policy in the quickly changing field of health analytics. RandomForest is a standout model among these due to its solid performance, interpretability, and simplicity. But it can be difficult to comprehend how these models&rsquo; complex internal workings operate.">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/docs/groups/shap_darya_and_viktoria/">
+  <meta property="og:site_name" content="XAI">
+  <meta property="og:title" content="XAI">
+  <meta property="og:description" content="SHAP. Tree Explanations # Exploring SHAP Tree Explainer for Predictive Health Analytics: A Deep Dive into RandomForest Models # Predictive models are essential for managing healthcare resources, predicting disease outbreaks, and guiding public health policy in the quickly changing field of health analytics. RandomForest is a standout model among these due to its solid performance, interpretability, and simplicity. But it can be difficult to comprehend how these models’ complex internal workings operate.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="docs">
+<title>Shap Darya and Viktoria | XAI</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/book.min.e832d4e94212199857473bcf13a450d089c3fcd54ccadedcfac84ed0feff83fb.css" integrity="sha256-6DLU6UISGZhXRzvPE6RQ0InD/NVMyt7c&#43;shO0P7/g/s=" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/mathtex-script-type.min.js" integrity="sha384-jiBVvJ8NGGj5n7kJaiWwWp9AjC+Yh8rhZY3GtAX8yU28azcLgoRo4oukO87g7zDT" crossorigin="anonymous"></script>
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.04645ac90ec6daecb480e91bfde340b509aeb87f347e01e30a007f76313869df.js" integrity="sha256-BGRayQ7G2uy0gOkb/eNAtQmuuH80fgHjCgB/djE4ad8=" crossorigin="anonymous"></script>
+
+  <script defer src="/sw.min.6f6f90fcb8eb1c49ec389838e6b801d0de19430b8e516902f8d75c3c8bd98739.js" integrity="sha256-b2&#43;Q/LjrHEnsOJg45rgB0N4ZQwuOUWkC&#43;NdcPIvZhzk=" crossorigin="anonymous"></script>
+
+  
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><img src="/YELLOW_BAR.png" alt="Logo" /><span><b>XAI</b></span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/groups/cam_and_secam/" class="">CAM and SeCAM</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/groups/diffusion-lens-interpreting-text-encoders-in-text-to-image-pipelines-tuned-using-dreambooth/" class="">Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/groups/dimensionality-reduction-in-nlp-visualizing-sentence-embeddings-with-umap-and-t-sne/" class="">Dimensionality Reduction in NLP: Visualizing Sentence Embeddings with UMAP and t-SNE</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/groups/example/" class="">Example</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/groups/ai-playing-geoguessr-explained/" class="">Ai Playing Geo Guessr Explained</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/groups/contrastive-grad-cam-consistency/" class="">Contrastive Grad Cam Consistency</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/groups/dndfs_shap/" class="">Dndfs Shap</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/groups/gradcam/" class="">Grad Cam</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/groups/integrated-gradients/" class="">Integrated Gradients</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/groups/kernel-shap/" class="">Kernel Shap</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/groups/rag/" class="">Rag</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/groups/shap_darya_and_viktoria/" class="active">Shap Darya and Viktoria</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/groups/sverl_tac_toe/" class="">Sverl Tac Toe</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/groups/torchprism/" class="">Torch Prism</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/groups/xai_for_transformers/" class="">Xai for Transformers</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Shap Darya and Viktoria</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#shap-tree-explanations">SHAP. Tree Explanations</a>
+      <ul>
+        <li><a href="#exploring-shap-tree-explainer-for-predictive-health-analytics-a-deep-dive-into-randomforest-models">Exploring SHAP Tree Explainer for Predictive Health Analytics: A Deep Dive into RandomForest Models</a></li>
+        <li><a href="#what-is-shap">What is SHAP?</a></li>
+        <li><a href="#shap-tree-explainer-for-randomforest">SHAP Tree Explainer for RandomForest</a></li>
+        <li><a href="#how-does-it-work">How Does It Work?</a></li>
+        <li><a href="#benefits-of-using-shap-with-randomforest">Benefits of Using SHAP with RandomForest</a></li>
+        <li><a href="#how-to-use-treeexplainer">How to use TreeExplainer?</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="shap-tree-explanations">
+  SHAP. Tree Explanations
+  <a class="anchor" href="#shap-tree-explanations">#</a>
+</h1>
+<h2 id="exploring-shap-tree-explainer-for-predictive-health-analytics-a-deep-dive-into-randomforest-models">
+  Exploring SHAP Tree Explainer for Predictive Health Analytics: A Deep Dive into RandomForest Models
+  <a class="anchor" href="#exploring-shap-tree-explainer-for-predictive-health-analytics-a-deep-dive-into-randomforest-models">#</a>
+</h2>
+<p>Predictive models are essential for managing healthcare resources, predicting disease outbreaks, and guiding public health policy in the quickly changing field of health analytics.
+RandomForest is a standout model among these due to its solid performance, interpretability, and simplicity. But it can be difficult to comprehend how these models&rsquo; complex internal workings operate.
+Presenting SHAP (SHapley Additive exPlanations), a revolutionary tool that clarifies how machine learning models—like RandomForest—make decisions.
+In-depth discussion of the SHAP Tree Explainer, its use in RandomForest models, and its importance in predictive health analytics are provided in this article.</p>
+<h2 id="what-is-shap">
+  What is SHAP?
+  <a class="anchor" href="#what-is-shap">#</a>
+</h2>
+<p>The unified measure of feature importance known as SHAP, or SHapley Additive exPlanations, gives each feature a value based on how important it is for a certain prediction. Basing itself on the idea of Shapley values from cooperative game theory, it provides an explanation for any machine learning model&rsquo;s output. After taking into consideration feature interactions, SHAP values indicate the relative contribution of each feature to the prediction for a particular instance.</p>
+<h2 id="shap-tree-explainer-for-randomforest">
+  SHAP Tree Explainer for RandomForest
+  <a class="anchor" href="#shap-tree-explainer-for-randomforest">#</a>
+</h2>
+<p>A customized version of the SHAP library called the SHAP Tree Explainer is intended to be used with tree-based models, such as RandomForest. Trees are more difficult to interpret since they are by nature complicated and nonlinear, in contrast to linear models. To tackle this difficulty, the SHAP Tree Explainer dissects a tree&rsquo;s prediction into contributions from every leaf node and attributes the prediction to the qualities that gave rise to those nodes.</p>
+<h2 id="how-does-it-work">
+  How Does It Work?
+  <a class="anchor" href="#how-does-it-work">#</a>
+</h2>
+<p>Imagine a RandomForest model predicting whether a person is infected with a disease based on various factors like age, symptoms, and medical history. The SHAP Tree Explainer starts by assigning a base value to the prediction, which is the average outcome of the model across all instances. Then, it iterates through the tree, adding the contribution of each feature along the path to the final prediction. Each feature&rsquo;s contribution is calculated based on its impact on the prediction, taking into account the interactions with other features.</p>
+<p>
+  <img src="https://github.com/IU-PR/xai/assets/88908152/f30498ec-8ac4-4f66-8bec-a99a5d6ffe41" alt="image" /></p>
+<h2 id="benefits-of-using-shap-with-randomforest">
+  Benefits of Using SHAP with RandomForest
+  <a class="anchor" href="#benefits-of-using-shap-with-randomforest">#</a>
+</h2>
+<ul>
+<li>Interpretability: SHAP provides clear, actionable insights into how each feature influences the prediction, making it easier to understand the model&rsquo;s decisions.</li>
+<li>Fairness Analysis: By showing how each feature contributes to the prediction, SHAP helps identify potential biases in the model, aiding in fairness assessments.</li>
+<li>Model Debugging: It highlights areas where the model might be performing poorly or where additional data could improve predictions.</li>
+<li></li>
+</ul>
+<h2 id="how-to-use-treeexplainer">
+  How to use TreeExplainer?
+  <a class="anchor" href="#how-to-use-treeexplainer">#</a>
+</h2>
+<ol>
+<li>Install the shap library
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">!</span>pip install shap <span style="color:#75715e"># install</span>
+</span></span></code></pre></div></li>
+<li>Read the data</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_csv(<span style="color:#e6db74">&#39;/content/AIDS_Classification.csv&#39;</span>) 
+</span></span></code></pre></div><ol start="3">
+<li>
+<p>Initialize tree model</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>model <span style="color:#f92672">=</span> RandomForestClassifier(n_estimators<span style="color:#f92672">=</span><span style="color:#ae81ff">200</span>, random_state<span style="color:#f92672">=</span><span style="color:#ae81ff">121</span>)
+</span></span></code></pre></div></li>
+<li>
+<p>Fit the model</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>model<span style="color:#f92672">.</span>fit(X_train, y_train)
+</span></span></code></pre></div></li>
+<li>
+<p>Make a prediction</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>predictions <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>predict(X_test) 
+</span></span></code></pre></div></li>
+<li>
+<p>Initialize TreeExplainer</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>explainer <span style="color:#f92672">=</span> shap<span style="color:#f92672">.</span>TreeExplainer(model)
+</span></span></code></pre></div></li>
+<li>
+<p>Now, we are ready for construct graph. The first is visualise the shap values.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>shap_values <span style="color:#f92672">=</span> explainer<span style="color:#f92672">.</span>shap_values(X) <span style="color:#75715e"># compute common shap values and visualize</span>
+</span></span><span style="display:flex;"><span>shap<span style="color:#f92672">.</span>summary_plot(shap_values, X, feature_names<span style="color:#f92672">=</span>X<span style="color:#f92672">.</span>columns, plot_type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;dot&#34;</span>, auto_size_plot<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>, show<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>show()
+</span></span></code></pre></div></li>
+</ol>
+<p>
+  <img src="https://github.com/IU-PR/xai/assets/88908152/6a14d69f-c442-41eb-b24a-2dc9f8b58546" alt="image" /></p>
+<p>8.The second shown the SHAP interaction values between two features (&ldquo;age&rdquo; and &ldquo;preanti&rdquo;) are computed, and the features&rsquo; dependence on the model&rsquo;s predictions are displayed. This aids in comprehending the interplay between these two characteristics while forecasting.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>shap_interaction <span style="color:#f92672">=</span> explainer<span style="color:#f92672">.</span>shap_interaction_values(X) <span style="color:#75715e"># compute interaction values and visualize</span>
+</span></span><span style="display:flex;"><span>shap<span style="color:#f92672">.</span>dependence_plot((<span style="color:#e6db74">&#34;age&#34;</span>, <span style="color:#e6db74">&#34;preanti&#34;</span>), new_shap_interaction, X, feature_names<span style="color:#f92672">=</span>X<span style="color:#f92672">.</span>columns, show<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>show()
+</span></span></code></pre></div><p>This graph shows that those who use drugs and are over 40 have a higher risk of contracting an illness.</p>
+<p>
+  <img src="https://github.com/IU-PR/xai/assets/88908152/f835a7f9-902d-437f-a83f-683711f8ab1b" alt="image" /></p>
+<h2 id="conclusion">
+  Conclusion
+  <a class="anchor" href="#conclusion">#</a>
+</h2>
+<p>Our understanding of and confidence in predictive health analytics models is greatly improved by integrating SHAP with RandomForest models. An essential tool for healthcare decision-making, <strong>SHAP&rsquo;s Tree Explainer provides comprehensive insights into how specific attributes affect forecasts</strong>. In addition to its interpretability, SHAP facilitates fairness analysis and debugging of models, which improves the model development process. The essay showcases SHAP&rsquo;s transformative potential in turning raw data into actionable knowledge through its practical application, which primarily focuses on forecasting disease infection status. In order to achieve transparency and reliability in predictive models going forward, the field will need to adopt SHAP, which will be crucial.</p>
+<p>Link to our colab:</p>
+<p>
+  <a href="https://colab.research.google.com/drive/1hfdtyhN8ENk49Y-zTB2IH06VQmbeBenl?usp=sharing">Code example</a></p>
+<p>Link to the dataset:</p>
+<p>
+  <a href="https://www.kaggle.com/datasets/aadarshvelu/aids-virus-infection-prediction?resource=download">AIDS_classification</a></p>
+<p>Links:</p>
+<p>
+  <a href="https://shap-lrjball.readthedocs.io/en/latest/generated/shap.TreeExplainer.html#">Documentation of SHAP</a></p>
+<p>
+  <a href="https://paperswithcode.com/paper/explainable-ai-for-trees-from-local">Paper (Explainable AI for Trees: From Local Explanations to Global Understanding, Scott M. Lundberg et al.)</a></p>
+<p>
+  <a href="https://github.com/suinleelab/treeexplainer-study/blob/master/README.md">Official exaple of usage</a></p>
+<p>
+  <a href="https://github.com/shap/shap">SHAP on github</a></p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/IU-PR/Capstone_project/tree/master//content/docs/Groups/SHAP_Darya_and_Viktoria.md" target="_blank" rel="noopener">
+      <img src="/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#shap-tree-explanations">SHAP. Tree Explanations</a>
+      <ul>
+        <li><a href="#exploring-shap-tree-explainer-for-predictive-health-analytics-a-deep-dive-into-randomforest-models">Exploring SHAP Tree Explainer for Predictive Health Analytics: A Deep Dive into RandomForest Models</a></li>
+        <li><a href="#what-is-shap">What is SHAP?</a></li>
+        <li><a href="#shap-tree-explainer-for-randomforest">SHAP Tree Explainer for RandomForest</a></li>
+        <li><a href="#how-does-it-work">How Does It Work?</a></li>
+        <li><a href="#benefits-of-using-shap-with-randomforest">Benefits of Using SHAP with RandomForest</a></li>
+        <li><a href="#how-to-use-treeexplainer">How to use TreeExplainer?</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
