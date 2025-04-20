@@ -1,127 +1,153 @@
-# XAI repo
+# XAI Repo Guide
 
-This is a repo of the XAI blog
+This is the repository for the XAI blog.
 
-Table of contents
+## Table of Contents
 
-- [How to contribute](#how-to-contribute)
-  - [Pull requests](#pull-requests)
-  - [Shortcodes](#shortcodes)
-    - [LaTeX](#latex)
-    - [Mermaid (graphs)](#mermaid-graphs)
-    - [Other shortcodes](#other-shortcodes)
+- [How to Contribute](#how-to-contribute)  
+  - [Forking the Repository](#forking-the-repository)  
+  - [Running the Project Locally](#running-the-project-locally)  
+  - [Making Changes](#making-changes)  
+- [Pull Requests](#pull-requests)  
+- [Uploading Images](#uploading-images)  
+- [Shortcodes](#shortcodes)  
+  - [LaTeX](#latex)  
+  - [Mermaid (Graphs)](#mermaid-graphs)  
+  - [Other Shortcodes](#other-shortcodes)  
 
-## How to contribute
+---
+
+## How to Contribute
+
+### Forking the Repository
 
 If you **do not have** the repo on your machine:
 
-- Make sure you have [git](https://git-scm.com/downloads), [hugo](https://gohugo.io/installation/), and any code editor installed ([VSCode](https://code.visualstudio.com/) is recommended, but you may use the one you prefer)
-- Clone the repository **with submodules**:
+1. Make sure you have [Git](https://git-scm.com/downloads), [Hugo](https://gohugo.io/installation/), and a code editor installed. We recommend [VSCode](https://code.visualstudio.com/), but feel free to use your favorite.
 
-  ```
-  git clone --recursive https://github.com/IU-PR/Capstone_project.git
-  ```
+2. **Fork the repository**:  
+   Go to the original repo: [https://github.com/IU-PR/xai.git](https://github.com/IU-PR/xai.git)  
+   Click "Fork" in the top-right corner.
 
-  (Note) If you have already clone this repo without submodules, run this from the source directory
+3. **Clone your forked repository (with submodules)**:
+   ```bash
+   git clone --recursive https://github.com/YOUR_USERNAME/xai.git
+   ```
 
-  ```
-  git submodule init && git submodule update
-  ```
+> ⚠️ If you've already cloned the repo without submodules, run:
+```bash
+git submodule init && git submodule update
+```
 
-Now you can start contributing:
+---
 
-- To start the website locally, run
+### Running the Project Locally
 
-  ```
-  hugo server --minify --theme=hugo-book
-  ```
+To preview the site locally:
 
-- The last line in the terminal output should look like
+```bash
+hugo server --minify --theme=hugo-book
+```
 
-  ```
-  Web Server is available at //localhost:some-port-number/ (bind address 127.0.0.1)
-  ```
+You should see a line like:
 
-  Visit `localhost:some-port-number` in your browser to access your local instance of the website. Now all of you changes in the website's source code should be propageted automatically.
+```
+Web Server is available at http://localhost:PORT/ (bind address 127.0.0.1)
+```
 
-- After you feel you have made enough changes, run <br>
-  [`git add .`](https://git-scm.com/docs/git-add),<br>
-   then <br>
-  [`git commit -m "Your very informative progress report that describes the changes you've made"`](https://git-scm.com/docs/git-commit).
+Visit that address in your browser to preview your changes. The site will auto-update as you edit files.
 
-Note that this saves and documents changes on your machine only.
+---
 
-## Pull requests
+### Making Changes
 
-Now that you have made your changes, you will need to properly submit them so that no merge conflicts happen.<br>
- To do so:
+1. Make your changes in the appropriate `.md` or layout files.
+2. Stage and commit your changes:
+   ```bash
+   git add .
+   git commit -m "Descriptive message about what you changed"
+   ```
 
-- Switch to a new branch *(if you haven't done that already)*:
+> 🔒 These steps save and document changes **only on your local machine**. To share them, you’ll need to push and create a pull request.
 
-  ```
-  git checkout -b <branch>
-  ```
+---
 
-  Ex: `git checkout -b My_Cool_Project_Group_Name`
-- If you have any changes left uncommited, commit them as usual
-- Push your new branch to the server
+## Pull Requests
 
-  ```
-  git push origin <branch>
-  ```
+Since you do not have direct push access to the original repository, you’ll need to submit changes via a **pull request from your fork**.
 
-**Instructions to merge your branch with the master branch**
+### Steps:
 
-It should push the branch normally. If not, send the error to the group.
-Make sure to run [`git pull`](https://git-scm.com/docs/git-pull) before you make any new changes after you've pushed, so that you avoid creating merge conflicts.
+1. Make sure you are working on a **new branch** (not `main`):
+   ```bash
+   git checkout -b my-feature-branch
+   ```
 
-- Now go to the [github repo](https://github.com/IU-PR/Capstone_project)
-- Press ["Pull requests"](https://github.com/IU-PR/Capstone_project/pulls)
-- Press ["New pull requests"](https://github.com/IU-PR/Capstone_project/compare)
-- Press "Create pull request"
-- Describe what have you modified, maybe provide some suggestions for future imporvements
-- Once done, press "Create pull request"
-- Done! Admins will review your work and merge your changes into the main repo soon  
+2. After committing your changes, push your branch:
+   ```bash
+   git push origin my-feature-branch
+   ```
 
-## **To upload images into your report .md file**  
+3. Go to your fork on GitHub and you should see a "Compare & pull request" button. Click it.
 
- Please, create a folder with your group name in /static/your_group_folder/your_images.png
+4. Make sure you're comparing against the original repo:  
+   **base repository**: `IU-PR/xai`  
+   **head repository**: `YOUR_USERNAME/xai`
+
+5. Write a clear description of your changes and optionally suggest future improvements.
+
+6. Click **Create pull request**.
+
+The repo maintainers will review and merge your changes.
+
+---
+
+## Uploading Images
+
+To add images to your report:
+
+1. Create a folder with your **group name** inside the `/static/` directory.
+2. Add your images to that folder:  
+   Example: `/static/your_group_folder/your_image.png`
+
+3. Reference the image in your `.md` like this:
+   ```markdown
+   ![alt text](/your_group_folder/your_image.png)
+   ```
+
+---
 
 ## Shortcodes
 
-This blog template uses a handful of shortcodes. Shortcode *(in a nutshell)* is "mark" inside your markdown code that enables certain features within its code block. For example, you can define a codeblock of LaTeX code that renders LaTeX formulas. You can also define a codeblock that describes a structure of a graph. Below are example of these two.
+This blog template supports several shortcodes, which enable advanced formatting in Markdown.
 
 ### LaTeX
 
-How to write in LaTeX:
+To render LaTeX formulas:
 
-```md
+Inline formula:
+```markdown
 {{<katex>}}
-your latex formula
+your_latex_here
 {{</katex>}}
 ```
 
-This produces an inline formula. If you want to center your formula, use `display` property like so:
-
-```md
+Centered formula:
+```markdown
 {{<katex display>}}
-your centered latex formula
+your_centered_latex_here
 {{</katex>}}
 ```
 
-[Latex cheatsheet](https://wch.github.io/latexsheet/latexsheet.pdf)
+📘 [LaTeX Cheatsheet](https://wch.github.io/latexsheet/latexsheet.pdf)
 
-### Mermaid (graphs)
+---
 
-How to create graphs:
+### Mermaid (Graphs)
 
-1. [Take a look at Mermaid syntax](https://mermaid.js.org/intro/)
-2. Pick a graph you want to use
-3. Write neccesary code
+To draw diagrams using [Mermaid](https://mermaid.js.org/):
 
-**Ex:**
-
-```md
+```markdown
 {{<mermaid>}}
 gitGraph
   commit
@@ -136,16 +162,18 @@ gitGraph
 {{</mermaid>}}
 ```
 
-This will produce a git graph. There are 12 other graph types you can use. Refer to [Mermaid documentation](https://mermaid.js.org/intro/) for examples.
+There are many other diagram types—check out the [Mermaid documentation](https://mermaid.js.org/intro/).
 
-### Other shortcodes
+---
 
-This project's shortcodes and their descriptions can be found in `layouts/shortcodes`. They all use the same syntax:
+### Other Shortcodes
 
-```
+All shortcodes use the same syntax:
+
+```markdown
 {{<shortcode>}}
-...stuff/..
+...your content...
 {{</shortcode>}}
 ```
 
-Try them out if you think they are useful in your progress reports.
+Explore the available shortcodes in `/layouts/shortcodes`. Use them in your reports if they improve formatting or readability.
