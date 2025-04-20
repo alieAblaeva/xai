@@ -369,7 +369,7 @@ To investigate how DreamBooth fine-tuning alters the semantic understanding of s
    - Visualize the layer-wise embeddings.
 
 2. **Post-Fine-Tuning Comparison:**
-   - Repeat the same encoding process with the fine-tuned DreamBooth model.
+   - Repeat the same encoding process with the fine-tuned (350 epochs) by DreamBooth approach text encoder model.
    - Visualize the layer-wise embeddings.
 
 #### **Text Encoder Layer Visualizations – Raw vs. Tuned (All Layers):**

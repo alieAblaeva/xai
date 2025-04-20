@@ -1,1394 +1,338 @@
-<!DOCTYPE html>
-<html lang="en-us" dir="ltr">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="CAM and SeCAM: Explainable AI for Understanding Image Classification Models # Tutorial by Yaroslav Sokolov and Iskander Ishkineev
+<!doctype html><html lang=en-us dir=ltr><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="CAM and SeCAM: Explainable AI for Understanding Image Classification Models # Tutorial by Yaroslav Sokolov and Iskander Ishkineev
 To see the implementation, visit our colab project.
-Introduction # Explainable Artificial Intelligence (XAI) has emerged as a crucial aspect of AI research, aiming to enhance the transparency and interpretability of AI models. Understanding the decision-making process of AI systems is essential for ensuring trust, accountability, and safety in their applications. In this tutorial, we focus on Class Activation Mapping (CAM) and Segmentation Class Activation Mapping (SeCAM).">
-<meta name="theme-color" content="#FFFFFF">
-<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/docs/groups/cam_and_secam/">
-  <meta property="og:site_name" content="XAI">
-  <meta property="og:title" content="CAM and SeCAM">
-  <meta property="og:description" content="CAM and SeCAM: Explainable AI for Understanding Image Classification Models # Tutorial by Yaroslav Sokolov and Iskander Ishkineev
+Introduction # Explainable Artificial Intelligence (XAI) has emerged as a crucial aspect of AI research, aiming to enhance the transparency and interpretability of AI models. Understanding the decision-making process of AI systems is essential for ensuring trust, accountability, and safety in their applications. In this tutorial, we focus on Class Activation Mapping (CAM) and Segmentation Class Activation Mapping (SeCAM)."><meta name=theme-color content="#FFFFFF"><meta name=color-scheme content="light dark"><meta property="og:url" content="http://localhost:1313/docs/groups/cam_and_secam/"><meta property="og:site_name" content="XAI"><meta property="og:title" content="CAM and SeCAM"><meta property="og:description" content="CAM and SeCAM: Explainable AI for Understanding Image Classification Models # Tutorial by Yaroslav Sokolov and Iskander Ishkineev
 To see the implementation, visit our colab project.
-Introduction # Explainable Artificial Intelligence (XAI) has emerged as a crucial aspect of AI research, aiming to enhance the transparency and interpretability of AI models. Understanding the decision-making process of AI systems is essential for ensuring trust, accountability, and safety in their applications. In this tutorial, we focus on Class Activation Mapping (CAM) and Segmentation Class Activation Mapping (SeCAM).">
-  <meta property="og:locale" content="en_us">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="docs">
-<title>CAM and SeCAM | XAI</title>
-<link rel="manifest" href="/manifest.json">
-<link rel="icon" href="/favicon.png" type="image/x-icon">
-<link rel="stylesheet" href="/book.min.e832d4e94212199857473bcf13a450d089c3fcd54ccadedcfac84ed0feff83fb.css" integrity="sha256-6DLU6UISGZhXRzvPE6RQ0InD/NVMyt7c&#43;shO0P7/g/s=" crossorigin="anonymous">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/mathtex-script-type.min.js" integrity="sha384-jiBVvJ8NGGj5n7kJaiWwWp9AjC+Yh8rhZY3GtAX8yU28azcLgoRo4oukO87g7zDT" crossorigin="anonymous"></script>
-  <script defer src="/flexsearch.min.js"></script>
-  <script defer src="/en.search.min.690e50761b66b2e4cf12ec5df41f0c40cac7f8b58f42e8845ad4158a9deab588.js" integrity="sha256-aQ5QdhtmsuTPEuxd9B8MQMrH&#43;LWPQuiEWtQVip3qtYg=" crossorigin="anonymous"></script>
-
-  <script defer src="/sw.min.6f6f90fcb8eb1c49ec389838e6b801d0de19430b8e516902f8d75c3c8bd98739.js" integrity="sha256-b2&#43;Q/LjrHEnsOJg45rgB0N4ZQwuOUWkC&#43;NdcPIvZhzk=" crossorigin="anonymous"></script>
-
-  
-
-<!--
-Made with Book Theme
-https://github.com/alex-shpak/hugo-book
--->
-  
-</head>
-<body dir="ltr">
-  <input type="checkbox" class="hidden toggle" id="menu-control" />
-  <input type="checkbox" class="hidden toggle" id="toc-control" />
-  <main class="container flex">
-    <aside class="book-menu">
-      <div class="book-menu-content">
-        
-  <nav>
-<h2 class="book-brand">
-  <a class="flex align-center" href="/"><img src="/YELLOW_BAR.png" alt="Logo" /><span><b>XAI</b></span>
-  </a>
-</h2>
-
-
-<div class="book-search">
-  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
-  <div class="book-search-spinner hidden"></div>
-  <ul id="book-search-results"></ul>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-  
-  <ul>
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/cam_and_secam/" class="active">CAM and SeCAM</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/diffusion-lens-interpreting-text-encoders-in-text-to-image-pipelines-tuned-using-dreambooth/" class="">Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/dimensionality-reduction-in-nlp-visualizing-sentence-embeddings-with-umap-and-t-sne/" class="">Dimensionality Reduction in NLP: Visualizing Sentence Embeddings with UMAP and t-SNE</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/example/" class="">Example</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/ai-playing-geoguessr-explained/" class="">Ai Playing Geo Guessr Explained</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/contrastive-grad-cam-consistency/" class="">Contrastive Grad Cam Consistency</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/dndfs_shap/" class="">Dndfs Shap</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/gradcam/" class="">Grad Cam</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/integrated-gradients/" class="">Integrated Gradients</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/kernel-shap/" class="">Kernel Shap</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/rag/" class="">Rag</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/shap_darya_and_viktoria/" class="">Shap Darya and Viktoria</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/sverl_tac_toe/" class="">Sverl Tac Toe</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/torchprism/" class="">Torch Prism</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/xai_for_transformers/" class="">Xai for Transformers</a>
-  
-
-        </li>
-      
-    
-  </ul>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</nav>
-
-
-
-
-  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
-
-
- 
-      </div>
-    </aside>
-
-    <div class="book-page">
-      <header class="book-header">
-        
-  <div class="flex align-center justify-between">
-  <label for="menu-control">
-    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
-  </label>
-
-  <strong>CAM and SeCAM</strong>
-
-  <label for="toc-control">
-    
-    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
-    
-  </label>
-</div>
-
-
-  
-  <aside class="hidden clearfix">
-    
-  
-<nav id="TableOfContents">
-  <ul>
-    <li><a href="#cam-and-secam-explainable-ai-for-understanding-image-classification-models">CAM and SeCAM: Explainable AI for Understanding Image Classification Models</a>
-      <ul>
-        <li><a href="#introduction">Introduction</a></li>
-        <li><a href="#section-1-overview-of-xai-methods">Section 1: Overview of XAI Methods</a></li>
-        <li><a href="#section-2-resnet50-architecture-and-importance-of-understanding">Section 2: ResNet50 Architecture and Importance of Understanding</a></li>
-        <li><a href="#section-3-class-activation-mapping-cam">Section 3: Class Activation Mapping (CAM)</a>
-          <ul>
-            <li><a href="#general-definition">General Definition</a></li>
-            <li><a href="#how-cam-works">How CAM Works:</a></li>
-            <li><a href="#a-steps-involved-in-cam">a) Steps Involved in CAM:</a></li>
-            <li><a href="#b-equations">b) Equations</a></li>
-            <li><a href="#c-implementation-with-code">c) Implementation with Code</a></li>
-            <li><a href="#step-1-preprocess-the-input-image">Step 1: Preprocess the Input Image</a></li>
-            <li><a href="#step-2-load-model-and-extract-features">Step 2: Load Model and Extract Features</a></li>
-            <li><a href="#step-3-get-top-k-predictions">Step 3: Get Top K Predictions</a></li>
-            <li><a href="#step-4-generate-class-activation-maps-cam">Step 4: Generate Class Activation Maps (CAM)</a></li>
-            <li><a href="#step-5-display-and-save-the-cam">Step 5: Display and Save the CAM</a></li>
-            <li><a href="#step-6-full-pipeline-for-generating-and-saving-cam">Step 6: Full Pipeline for Generating and Saving CAM</a></li>
-            <li><a href="#d-examples-of-work">d) Examples of Work:</a></li>
-          </ul>
-        </li>
-        <li><a href="#section-4-segmentation---class-activation-mapping-cam">Section 4: Segmentation - Class Activation Mapping (CAM)</a>
-          <ul>
-            <li><a href="#general-definition-1">General Definition</a></li>
-            <li><a href="#how-secam-works">How SeCAM Works</a></li>
-            <li><a href="#a-steps-involved-in-secam">a) Steps Involved in SeCAM:</a></li>
-            <li><a href="#b-slic-simple-linear-iterative-clustering-algorithm">b) SLIC (Simple Linear Iterative Clustering) Algorithm</a></li>
-            <li><a href="#steps-of-the-slic-algorithm">Steps of the SLIC Algorithm</a></li>
-            <li><a href="#distance-measure">Distance Measure</a></li>
-            <li><a href="#numerical-example">Numerical Example</a></li>
-            <li><a href="#c-secam-equations">c) SeCAM Equations</a></li>
-            <li><a href="#d-implementation-with-code">d) Implementation with Code</a></li>
-            <li><a href="#step-1-3-same-as-for-cam">Step 1-3: Same as for CAM</a></li>
-            <li><a href="#step-4-generate-secam">Step 4: Generate SeCAM</a></li>
-            <li><a href="#step-5-display-and-save-secam">Step 5: Display and Save SeCAM</a></li>
-            <li><a href="#step-3-full-pipeline-for-generating-and-saving-secam">Step 3: Full Pipeline for Generating and Saving SeCAM</a></li>
-            <li><a href="#e-examples-of-work">e) Examples of Work:</a></li>
-          </ul>
-        </li>
-        <li><a href="#conclusion">Conclusion</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-
-
-
-  </aside>
-  
- 
-      </header>
-
-      
-      
-  <article class="markdown"><h1 id="cam-and-secam-explainable-ai-for-understanding-image-classification-models">
-  CAM and SeCAM: Explainable AI for Understanding Image Classification Models
-  <a class="anchor" href="#cam-and-secam-explainable-ai-for-understanding-image-classification-models">#</a>
-</h1>
-<p><strong>Tutorial by Yaroslav Sokolov and Iskander Ishkineev</strong></p>
-<p><em>To see the implementation, visit our 
-  <a href="https://colab.research.google.com/drive/105adw-UyMxsmWiogAtSXC6xMjfC4423T?usp=sharing">colab project</a>.</em></p>
-<h2 id="introduction">
-  Introduction
-  <a class="anchor" href="#introduction">#</a>
-</h2>
-<p>Explainable Artificial Intelligence (XAI) has emerged as a crucial aspect of AI research, aiming to enhance the transparency and interpretability of AI models. Understanding the decision-making process of AI systems is essential for ensuring trust, accountability, and safety in their applications.
+Introduction # Explainable Artificial Intelligence (XAI) has emerged as a crucial aspect of AI research, aiming to enhance the transparency and interpretability of AI models. Understanding the decision-making process of AI systems is essential for ensuring trust, accountability, and safety in their applications. In this tutorial, we focus on Class Activation Mapping (CAM) and Segmentation Class Activation Mapping (SeCAM)."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="docs"><title>CAM and SeCAM | XAI</title>
+<link rel=manifest href=/manifest.json><link rel=icon href=/favicon.png type=image/x-icon><link rel=stylesheet href=/book.min.e832d4e94212199857473bcf13a450d089c3fcd54ccadedcfac84ed0feff83fb.css integrity="sha256-6DLU6UISGZhXRzvPE6RQ0InD/NVMyt7c+shO0P7/g/s=" crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/mathtex-script-type.min.js integrity=sha384-jiBVvJ8NGGj5n7kJaiWwWp9AjC+Yh8rhZY3GtAX8yU28azcLgoRo4oukO87g7zDT crossorigin=anonymous></script><script defer src=/flexsearch.min.js></script><script defer src=/en.search.min.690e50761b66b2e4cf12ec5df41f0c40cac7f8b58f42e8845ad4158a9deab588.js integrity="sha256-aQ5QdhtmsuTPEuxd9B8MQMrH+LWPQuiEWtQVip3qtYg=" crossorigin=anonymous></script><script defer src=/sw.min.6f6f90fcb8eb1c49ec389838e6b801d0de19430b8e516902f8d75c3c8bd98739.js integrity="sha256-b2+Q/LjrHEnsOJg45rgB0N4ZQwuOUWkC+NdcPIvZhzk=" crossorigin=anonymous></script></head><body dir=ltr><input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><div class=book-menu-content><nav><h2 class=book-brand><a class="flex align-center" href=/><img src=/YELLOW_BAR.png alt=Logo><span><b>XAI</b></span></a></h2><div class=book-search><input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><ul><li><a href=/docs/groups/cam_and_secam/ class=active>CAM and SeCAM</a></li><li><a href=/docs/groups/diffusion-lens-interpreting-text-encoders-in-text-to-image-pipelines-tuned-using-dreambooth/>Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines</a></li><li><a href=/docs/groups/dimensionality-reduction-in-nlp-visualizing-sentence-embeddings-with-umap-and-t-sne/>Dimensionality Reduction in NLP: Visualizing Sentence Embeddings with UMAP and t-SNE</a></li><li><a href=/docs/groups/example/>Example</a></li><li><a href=/docs/groups/ai-playing-geoguessr-explained/>Ai Playing Geo Guessr Explained</a></li><li><a href=/docs/groups/contrastive-grad-cam-consistency/>Contrastive Grad Cam Consistency</a></li><li><a href=/docs/groups/dndfs_shap/>Dndfs Shap</a></li><li><a href=/docs/groups/gradcam/>Grad Cam</a></li><li><a href=/docs/groups/integrated-gradients/>Integrated Gradients</a></li><li><a href=/docs/groups/kernel-shap/>Kernel Shap</a></li><li><a href=/docs/groups/rag/>Rag</a></li><li><a href=/docs/groups/shap_darya_and_viktoria/>Shap Darya and Viktoria</a></li><li><a href=/docs/groups/sverl_tac_toe/>Sverl Tac Toe</a></li><li><a href=/docs/groups/torchprism/>Torch Prism</a></li><li><a href=/docs/groups/xai_for_transformers/>Xai for Transformers</a></li></ul></nav><script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script></div></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/svg/menu.svg class=book-icon alt=Menu>
+</label><strong>CAM and SeCAM</strong>
+<label for=toc-control><img src=/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#cam-and-secam-explainable-ai-for-understanding-image-classification-models>CAM and SeCAM: Explainable AI for Understanding Image Classification Models</a><ul><li><a href=#introduction>Introduction</a></li><li><a href=#section-1-overview-of-xai-methods>Section 1: Overview of XAI Methods</a></li><li><a href=#section-2-resnet50-architecture-and-importance-of-understanding>Section 2: ResNet50 Architecture and Importance of Understanding</a></li><li><a href=#section-3-class-activation-mapping-cam>Section 3: Class Activation Mapping (CAM)</a><ul><li><a href=#general-definition>General Definition</a></li><li><a href=#how-cam-works>How CAM Works:</a></li><li><a href=#a-steps-involved-in-cam>a) Steps Involved in CAM:</a></li><li><a href=#b-equations>b) Equations</a></li><li><a href=#c-implementation-with-code>c) Implementation with Code</a></li><li><a href=#step-1-preprocess-the-input-image>Step 1: Preprocess the Input Image</a></li><li><a href=#step-2-load-model-and-extract-features>Step 2: Load Model and Extract Features</a></li><li><a href=#step-3-get-top-k-predictions>Step 3: Get Top K Predictions</a></li><li><a href=#step-4-generate-class-activation-maps-cam>Step 4: Generate Class Activation Maps (CAM)</a></li><li><a href=#step-5-display-and-save-the-cam>Step 5: Display and Save the CAM</a></li><li><a href=#step-6-full-pipeline-for-generating-and-saving-cam>Step 6: Full Pipeline for Generating and Saving CAM</a></li><li><a href=#d-examples-of-work>d) Examples of Work:</a></li></ul></li><li><a href=#section-4-segmentation---class-activation-mapping-cam>Section 4: Segmentation - Class Activation Mapping (CAM)</a><ul><li><a href=#general-definition-1>General Definition</a></li><li><a href=#how-secam-works>How SeCAM Works</a></li><li><a href=#a-steps-involved-in-secam>a) Steps Involved in SeCAM:</a></li><li><a href=#b-slic-simple-linear-iterative-clustering-algorithm>b) SLIC (Simple Linear Iterative Clustering) Algorithm</a></li><li><a href=#steps-of-the-slic-algorithm>Steps of the SLIC Algorithm</a></li><li><a href=#distance-measure>Distance Measure</a></li><li><a href=#numerical-example>Numerical Example</a></li><li><a href=#c-secam-equations>c) SeCAM Equations</a></li><li><a href=#d-implementation-with-code>d) Implementation with Code</a></li><li><a href=#step-1-3-same-as-for-cam>Step 1-3: Same as for CAM</a></li><li><a href=#step-4-generate-secam>Step 4: Generate SeCAM</a></li><li><a href=#step-5-display-and-save-secam>Step 5: Display and Save SeCAM</a></li><li><a href=#step-3-full-pipeline-for-generating-and-saving-secam>Step 3: Full Pipeline for Generating and Saving SeCAM</a></li><li><a href=#e-examples-of-work>e) Examples of Work:</a></li></ul></li><li><a href=#conclusion>Conclusion</a></li></ul></li></ul></nav></aside></header><article class=markdown><h1 id=cam-and-secam-explainable-ai-for-understanding-image-classification-models>CAM and SeCAM: Explainable AI for Understanding Image Classification Models
+<a class=anchor href=#cam-and-secam-explainable-ai-for-understanding-image-classification-models>#</a></h1><p><strong>Tutorial by Yaroslav Sokolov and Iskander Ishkineev</strong></p><p><em>To see the implementation, visit our
+<a href="https://colab.research.google.com/drive/105adw-UyMxsmWiogAtSXC6xMjfC4423T?usp=sharing">colab project</a>.</em></p><h2 id=introduction>Introduction
+<a class=anchor href=#introduction>#</a></h2><p>Explainable Artificial Intelligence (XAI) has emerged as a crucial aspect of AI research, aiming to enhance the transparency and interpretability of AI models. Understanding the decision-making process of AI systems is essential for ensuring trust, accountability, and safety in their applications.
 In this tutorial, we focus on Class Activation Mapping (CAM) and Segmentation Class Activation Mapping (SeCAM). Specifically, we consider their application in explaining the decisions of the ResNet50 model, a pivotal architecture within the domain of deep CNNs that has significantly impacted image classification tasks.
-CAM and SeCAM in particular aim to provide fast and intuitive explanations by identifying image regions most influential to the model&rsquo;s prediction.</p>
-<h2 id="section-1-overview-of-xai-methods">
-  Section 1: Overview of XAI Methods
-  <a class="anchor" href="#section-1-overview-of-xai-methods">#</a>
-</h2>
-<p>Explainable AI (XAI) refers to methods and techniques in the application of artificial intelligence technology such that the results of the solution can be understood by human experts. It contrasts with the concept of the &ldquo;black box&rdquo; in machine learning where even their designers cannot explain why the AI arrived at a specific decision. XAI is becoming increasingly important as AI systems are used in more critical applications such as diagnostic healthcare, autonomous driving, and more.</p>
-<h2 id="section-2-resnet50-architecture-and-importance-of-understanding">
-  Section 2: ResNet50 Architecture and Importance of Understanding
-  <a class="anchor" href="#section-2-resnet50-architecture-and-importance-of-understanding">#</a>
-</h2>
-<p>The ResNet50 model is a pivotal architecture within the domain of deep convolutional neural networks (CNNs) that has significantly impacted image classification tasks, notably achieving remarkable success in the ImageNet Large Scale Visual Recognition Challenge (ILSVRC). Generally, ResNet50 has the following architecture:</p>
-<p>
-  <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/0*tH9evuOFqk8F41FG.png" alt="ResNet50" /></p>
-<p>The ResNet50 model, while renowned for its high accuracy in image classification tasks, exemplifies the &ldquo;black box&rdquo; nature inherent to many advanced deep learning models. This characteristic poses a significant challenge for AI researchers, practitioners, and end-users who seek to understand the model&rsquo;s predictive behaviour. The intricate architecture of ResNet50, characterised by its deep layers and residual blocks, complicates the interpretation of how input features influence the final classification outcomes</p>
-<h2 id="section-3-class-activation-mapping-cam">
-  Section 3: Class Activation Mapping (CAM)
-  <a class="anchor" href="#section-3-class-activation-mapping-cam">#</a>
-</h2>
-<h3 id="general-definition">
-  General Definition
-  <a class="anchor" href="#general-definition">#</a>
-</h3>
-<p>Class Activation Mapping (CAM) is a technique used to identify the discriminative regions in an image that contribute to the class prediction made by a Convolutional Neural Network (CNN). CAM is particularly useful for understanding and interpreting the decisions of CNN models.</p>
-<p>
-  <img src="/SeCAM/CAM_architecture.png" alt="CAM Example" /></p>
-<h3 id="how-cam-works">
-  How CAM Works:
-  <a class="anchor" href="#how-cam-works">#</a>
-</h3>
-<h3 id="a-steps-involved-in-cam">
-  a) Steps Involved in CAM:
-  <a class="anchor" href="#a-steps-involved-in-cam">#</a>
-</h3>
-<ol>
-<li>
-<p><strong>Feature Extraction</strong>:</p>
-<ul>
-<li>Extract the feature maps from the last convolutional layer of the CNN.</li>
-</ul>
-</li>
-<li>
-<p><strong>Global Average Pooling (GAP)</strong>:</p>
-<ul>
-<li>Apply Global Average Pooling (GAP) to the feature maps to get a vector of size equal to the number of feature maps.</li>
-</ul>
-</li>
-<li>
-<p><strong>Fully Connected Layer</strong>:</p>
-<ul>
-<li>The GAP output is fed into a fully connected layer to get the final class scores.</li>
-</ul>
-</li>
-<li>
-<p><strong>Class Activation Mapping</strong>:</p>
-<ul>
-<li>For a given class, compute the weighted sum of the feature maps using the weights from the fully connected layer.</li>
-</ul>
-</li>
-</ol>
-<h3 id="b-equations">
-  b) Equations
-  <a class="anchor" href="#b-equations">#</a>
-</h3>
-<ol>
-<li>
-<p><strong>Feature Maps</strong>:</p>
-<ul>
-<li>Let 
-<link rel="stylesheet" href="/katex/katex.min.css" />
-<script defer src="/katex/katex.min.js"></script>
-<script defer src="/katex/auto-render.min.js" onload="renderMathInElement(document.body);"></script><span>
-  \(f_k(x, y)\)
-</span>
- represent the activation of unit <span>
-  \(k\)
-</span>
- in the feature map at spatial location <span>
-  \((x, y)\)
-</span>
-.</li>
-</ul>
-</li>
-<li>
-<p><strong>Global Average Pooling</strong>:</p>
-<ul>
-<li>The GAP for feature map <span>
-  \(k\)
-</span>
- is computed as:
-<span>
-  \[F_k = \frac{1}{Z} \sum_{x} \sum_{y} f_k(x, y)\]
-</span>
-
-where <span>
-  \(Z\)
-</span>
- is the number of pixels in the feature map.</li>
-</ul>
-</li>
-<li>
-<p><strong>Class Score</strong>:</p>
-<ul>
-<li>The class score <span>
-  \(S_c\)
-</span>
- for class <span>
-  \(c\)
-</span>
- is computed as:
-<span>
-  \[S_c = \sum_{k} w_{k}^{c} F_k \]
-</span>
-
-where <span>
-  \(w_{k}^{c}\)
-</span>
- is the weight corresponding to class <span>
-  \(c\)
-</span>
- for feature map <span>
-  \(k\)
-</span>
-.</li>
-</ul>
-</li>
-<li>
-<p><strong>Class Activation Map</strong>:</p>
-<ul>
-<li>The CAM for class <span>
-  \(c\)
-</span>
- is computed as: <span>
-  \[M_c(x, y) = \sum_{k} w_{k}^{c} f_k(x, y)\]
-</span>
-
-This gives the importance of each spatial element <span>
-  \((x, y)\)
-</span>
- in the feature maps for class <span>
-  \(c\)
-</span>
-.</li>
-</ul>
-</li>
-</ol>
-<h3 id="c-implementation-with-code">
-  c) Implementation with Code
-  <a class="anchor" href="#c-implementation-with-code">#</a>
-</h3>
-<h3 id="step-1-preprocess-the-input-image">
-  Step 1: Preprocess the Input Image
-  <a class="anchor" href="#step-1-preprocess-the-input-image">#</a>
-</h3>
-<p>Firstly, we need to read and preprocess the input image to make it compatible with the ResNet50 model.
-The preprocessing steps include resizing the image to 224x224 pixels, normalizing it, and converting it to a PyTorch tensor.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">preprocess_image</span>(image_path):
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Preprocess the input image.
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param image_path: Path to the input image
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :return: Preprocessed image tensor, original image, image dimensions
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>    image <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>imread(image_path)
-</span></span><span style="display:flex;"><span>    original_image <span style="color:#f92672">=</span> image<span style="color:#f92672">.</span>copy()
-</span></span><span style="display:flex;"><span>    image <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>cvtColor(image, cv2<span style="color:#f92672">.</span>COLOR_BGR2RGB)
-</span></span><span style="display:flex;"><span>    height, width, _ <span style="color:#f92672">=</span> image<span style="color:#f92672">.</span>shape
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    preprocess <span style="color:#f92672">=</span> transforms<span style="color:#f92672">.</span>Compose([
-</span></span><span style="display:flex;"><span>        transforms<span style="color:#f92672">.</span>ToPILImage(),
-</span></span><span style="display:flex;"><span>        transforms<span style="color:#f92672">.</span>Resize((<span style="color:#ae81ff">224</span>, <span style="color:#ae81ff">224</span>)),
-</span></span><span style="display:flex;"><span>        transforms<span style="color:#f92672">.</span>ToTensor(),
-</span></span><span style="display:flex;"><span>        transforms<span style="color:#f92672">.</span>Normalize(mean<span style="color:#f92672">=</span>[<span style="color:#ae81ff">0.485</span>, <span style="color:#ae81ff">0.456</span>, <span style="color:#ae81ff">0.406</span>], std<span style="color:#f92672">=</span>[<span style="color:#ae81ff">0.229</span>, <span style="color:#ae81ff">0.224</span>, <span style="color:#ae81ff">0.225</span>])
-</span></span><span style="display:flex;"><span>    ])
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    image_tensor <span style="color:#f92672">=</span> preprocess(image)
-</span></span><span style="display:flex;"><span>    image_tensor <span style="color:#f92672">=</span> image_tensor<span style="color:#f92672">.</span>unsqueeze(<span style="color:#ae81ff">0</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> image_tensor, original_image, height, width
-</span></span></code></pre></div><ul>
-<li><code>image = cv2.imread(image_path)</code>: Reads the image from the specified path using OpenCV.</li>
-<li><code>original_image = image.copy()</code>: Creates a copy of the original image to preserve it for later use.</li>
-<li><code>image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)</code>: Converts the image from BGR to RGB format as OpenCV reads images in BGR format by default.</li>
-<li><code>height, width, _ = image.shape</code>: Retrieves the dimensions (height and width) of the image.</li>
-<li><code>preprocess = transforms.Compose([...])</code>: Defines a series of preprocessing steps:
-<ul>
-<li><code>transforms.ToPILImage()</code>: Converts the image to PIL format.</li>
-<li><code>transforms.Resize((224, 224))</code>: Resizes the image to 224x224 pixels.</li>
-<li><code>transforms.ToTensor()</code>: Converts the image to a PyTorch tensor.</li>
-<li><code>transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])</code>: Normalizes the image tensor using the specified mean and standard deviation.</li>
-</ul>
-</li>
-<li><code>image_tensor = preprocess(image)</code>: Applies the preprocessing steps to the image.</li>
-<li><code>image_tensor = image_tensor.unsqueeze(0)</code>: Adds a batch dimension to the image tensor, making it compatible for input to the CNN.</li>
-</ul>
-<h3 id="step-2-load-model-and-extract-features">
-  Step 2: Load Model and Extract Features
-  <a class="anchor" href="#step-2-load-model-and-extract-features">#</a>
-</h3>
-<p>Secondly, we need to load a pre-trained ResNet50 model and extract the feature maps from the last convolutional layer.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">load_model_and_extract_features</span>():
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Load the pretrained ResNet50 model and extract features.
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :return: Model, features blob list, softmax weights
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>    model <span style="color:#f92672">=</span> models<span style="color:#f92672">.</span>resnet50(weights<span style="color:#f92672">=</span>models<span style="color:#f92672">.</span>ResNet50_Weights<span style="color:#f92672">.</span>DEFAULT)<span style="color:#f92672">.</span>eval()
-</span></span><span style="display:flex;"><span>    features_blobs <span style="color:#f92672">=</span> []
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">hook_feature</span>(module, input, output):
-</span></span><span style="display:flex;"><span>        features_blobs<span style="color:#f92672">.</span>append(output<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>cpu()<span style="color:#f92672">.</span>numpy())
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Hook the feature extractor to get the convolutional features from &#39;layer4&#39;</span>
-</span></span><span style="display:flex;"><span>    model<span style="color:#f92672">.</span>_modules<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;layer4&#39;</span>)<span style="color:#f92672">.</span>register_forward_hook(hook_feature)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Get the softmax weights</span>
-</span></span><span style="display:flex;"><span>    params <span style="color:#f92672">=</span> list(model<span style="color:#f92672">.</span>parameters())
-</span></span><span style="display:flex;"><span>    softmax_weights <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>squeeze(params[<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>]<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>numpy())
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> model, features_blobs, softmax_weights
-</span></span></code></pre></div><ul>
-<li><code>model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT).eval()</code>: Loads a pre-trained ResNet50 model and sets it to evaluation mode.</li>
-<li><code>features_blobs = []</code>: Initializes an empty list to store feature maps from the hooked layer.</li>
-<li><code>def hook_feature(module, input, output)</code>: Defines a hook function that captures the output of the specified layer.</li>
-<li><code>features_blobs.append(output.data.cpu().numpy())</code>: Appends the output feature maps to the <code>features_blobs</code> list, converting them to NumPy arrays and moving them to the CPU.</li>
-<li><code>model._modules.get('layer4').register_forward_hook(hook_feature)</code>: Registers the hook on the last convolutional layer (<code>layer4</code>) of the model to capture its output.</li>
-<li><code>params = list(model.parameters())</code>: Retrieves the parameters of the model.</li>
-<li><code>softmax_weights = np.squeeze(params[-2].data.numpy())</code>: Extracts and squeezes the softmax weights from the fully connected layer of the model, converting them to a NumPy array.</li>
-</ul>
-<h3 id="step-3-get-top-k-predictions">
-  Step 3: Get Top K Predictions
-  <a class="anchor" href="#step-3-get-top-k-predictions">#</a>
-</h3>
-<p>Thirdly, we need to perform a forward pass through the model, compute the softmax probabilities,
-and retrieve the top K class indices with the highest probabilities.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_topk_predictions</span>(model, image_tensor, topk_predictions):
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Get the top k predictions for the input image.
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param model: Pretrained model
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param image_tensor: Preprocessed image tensor
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param topk_predictions: Number of top predictions to get
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :return: Top k class indices
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>    outputs <span style="color:#f92672">=</span> model(image_tensor)
-</span></span><span style="display:flex;"><span>    probabilities <span style="color:#f92672">=</span> F<span style="color:#f92672">.</span>softmax(outputs, dim<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>squeeze()
-</span></span><span style="display:flex;"><span>    class_indices <span style="color:#f92672">=</span> topk(probabilities, topk_predictions)[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>int()
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> class_indices
-</span></span></code></pre></div><ul>
-<li><code>outputs = model(image_tensor)</code>: Performs a forward pass through the model using the preprocessed image tensor.</li>
-<li><code>probabilities = F.softmax(outputs, dim=1).data.squeeze()</code>: Computes the softmax probabilities for the outputs, normalizing them across the class dimension, and removes extra dimensions.</li>
-<li><code>class_indices = topk(probabilities, topk_predictions)[1].int()</code>: Retrieves the indices of the top K classes with the highest probabilities using the <code>topk</code> function.</li>
-</ul>
-<h3 id="step-4-generate-class-activation-maps-cam">
-  Step 4: Generate Class Activation Maps (CAM)
-  <a class="anchor" href="#step-4-generate-class-activation-maps-cam">#</a>
-</h3>
-<p>After all the above steps, we can generate the Class Activation Maps (CAM) for the top K predictions.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_CAM</span>(feature_maps, softmax_weights, class_indices):
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Generate Class Activation Maps (CAM).
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param feature_maps: Convolutional feature maps
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param softmax_weights: Weights of the fully connected layer
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param class_indices: Class indices
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :return: List of CAMs for the specified class indices
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>    batch_size, num_channels, height, width <span style="color:#f92672">=</span> feature_maps<span style="color:#f92672">.</span>shape
-</span></span><span style="display:flex;"><span>    output_cams <span style="color:#f92672">=</span> []
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> class_idx <span style="color:#f92672">in</span> class_indices:
-</span></span><span style="display:flex;"><span>        cam <span style="color:#f92672">=</span> softmax_weights[class_idx]<span style="color:#f92672">.</span>dot(feature_maps<span style="color:#f92672">.</span>reshape((num_channels, height <span style="color:#f92672">*</span> width)))
-</span></span><span style="display:flex;"><span>        cam <span style="color:#f92672">=</span> cam<span style="color:#f92672">.</span>reshape(height, width)
-</span></span><span style="display:flex;"><span>        cam <span style="color:#f92672">=</span> cam <span style="color:#f92672">-</span> np<span style="color:#f92672">.</span>min(cam)  <span style="color:#75715e"># Normalize CAM to be non-negative</span>
-</span></span><span style="display:flex;"><span>        cam <span style="color:#f92672">=</span> cam <span style="color:#f92672">/</span> np<span style="color:#f92672">.</span>max(cam)  <span style="color:#75715e"># Scale CAM to be in range [0, 1]</span>
-</span></span><span style="display:flex;"><span>        cam_img <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>uint8(<span style="color:#ae81ff">255</span> <span style="color:#f92672">*</span> cam)  <span style="color:#75715e"># Convert to uint8 format</span>
-</span></span><span style="display:flex;"><span>        output_cams<span style="color:#f92672">.</span>append(cam_img)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> output_cams
-</span></span></code></pre></div><ul>
-<li><code>batch_size, num_channels, height, width = feature_maps.shape</code>: Retrieves the shape of the feature maps.</li>
-<li><code>output_cams = []</code>: Initializes an empty list to store the CAMs.</li>
-<li><code>for class_idx in class_indices</code>: Iterates over each class index.</li>
-<li><code>cam = softmax_weights[class_idx].dot(feature_maps.reshape((num_channels, height * width)))</code>: Computes the CAM by taking the weighted sum of the feature maps.</li>
-<li><code>cam = cam.reshape(height, width)</code>: Reshapes the CAM to the original feature map size.</li>
-<li><code>cam = cam - np.min(cam)</code>: Normalizes the CAM to be non-negative.</li>
-<li><code>cam = cam / np.max(cam)</code>: Scales the CAM to be in the range [0, 1].</li>
-<li><code>cam_img = np.uint8(255 * cam)</code>: Converts the CAM to uint8 format.</li>
-<li><code>output_cams.append(cam_img)</code>: Adds the CAM to the list of output CAMs.</li>
-</ul>
-<p>This function computes the CAM for each class index by taking the weighted sum of the feature maps using the softmax weights.
-It normalizes and converts the CAM to an 8-bit image.</p>
-<h3 id="step-5-display-and-save-the-cam">
-  Step 5: Display and Save the CAM
-  <a class="anchor" href="#step-5-display-and-save-the-cam">#</a>
-</h3>
-<p>After generating the CAMs, we can overlay them on the original image and display the results.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">display_and_save_CAM</span>(CAMs, width, height, original_image, class_indices, class_labels, save_name, plot<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>):
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Display and save the CAM images.
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param CAMs: List of CAMs
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param width: Width of the original image
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param height: Height of the original image
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param original_image: Original input image
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param class_indices: Class indices
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param class_labels: List of all class names
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param save_name: Name to save the output image
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param plot: Whether to display the image
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>    matplotlib<span style="color:#f92672">.</span>rcParams[<span style="color:#e6db74">&#39;figure.figsize&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">15</span>, <span style="color:#ae81ff">12</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i, cam <span style="color:#f92672">in</span> enumerate(CAMs):
-</span></span><span style="display:flex;"><span>        heatmap <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>applyColorMap(cv2<span style="color:#f92672">.</span>resize(cam, (width, height)), cv2<span style="color:#f92672">.</span>COLORMAP_JET)
-</span></span><span style="display:flex;"><span>        result <span style="color:#f92672">=</span> heatmap <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.3</span> <span style="color:#f92672">+</span> original_image <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.5</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Put class label text on the result</span>
-</span></span><span style="display:flex;"><span>        cv2<span style="color:#f92672">.</span>putText(result, class_labels[class_indices[i]], (<span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">40</span>),
-</span></span><span style="display:flex;"><span>                    cv2<span style="color:#f92672">.</span>FONT_HERSHEY_SIMPLEX, <span style="color:#ae81ff">1.5</span>, (<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">255</span>, <span style="color:#ae81ff">0</span>), <span style="color:#ae81ff">2</span>)
-</span></span><span style="display:flex;"><span>        cv2<span style="color:#f92672">.</span>imwrite(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;outputs/CAM_</span><span style="color:#e6db74">{</span>save_name<span style="color:#e6db74">}</span><span style="color:#e6db74">_</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">.jpg&#34;</span>, result)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Display the result</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> plot:
-</span></span><span style="display:flex;"><span>            image <span style="color:#f92672">=</span> plt<span style="color:#f92672">.</span>imread(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;outputs/CAM_</span><span style="color:#e6db74">{</span>save_name<span style="color:#e6db74">}</span><span style="color:#e6db74">_</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">.jpg&#34;</span>)
-</span></span><span style="display:flex;"><span>            plt<span style="color:#f92672">.</span>imshow(image)
-</span></span><span style="display:flex;"><span>            plt<span style="color:#f92672">.</span>axis(<span style="color:#e6db74">&#39;off&#39;</span>)
-</span></span><span style="display:flex;"><span>            plt<span style="color:#f92672">.</span>show()
-</span></span></code></pre></div><ul>
-<li><code>matplotlib.rcParams['figure.figsize'] = 15, 12</code>: Sets the figure size for matplotlib plots.</li>
-<li><code>for i, cam in enumerate(CAMs)</code>: Iterates over each CAM.</li>
-<li><code>heatmap = cv2.applyColorMap(cv2.resize(cam, (width, height)), cv2.COLORMAP_JET)</code>: Creates a heatmap by resizing the CAM and applying a colormap.</li>
-<li><code>result = heatmap * 0.3 + original_image * 0.5</code>: Overlays the heatmap on the original image.</li>
-<li><code>cv2.putText(result, class_labels[class_indices[i]], (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 2)</code>: Adds the class label to the result image.</li>
-<li><code>cv2.imwrite(f&quot;outputs/CAM_{save_name}_{i}.jpg&quot;, result)</code>: Saves the result image.</li>
-<li><code>image = plt.imread(f&quot;outputs/CAM_{save_name}_{i}.jpg&quot;)</code>: Reads the saved image.</li>
-<li><code>plt.imshow(image)</code>: Displays the image.</li>
-<li><code>plt.axis('off')</code>: Hides the axis.</li>
-<li><code>plt.show()</code>: Shows the image.</li>
-</ul>
-<p>This function overlays the CAM on the original image, adds the class label, and saves the result. It also displays the final image.</p>
-<h3 id="step-6-full-pipeline-for-generating-and-saving-cam">
-  Step 6: Full Pipeline for Generating and Saving CAM
-  <a class="anchor" href="#step-6-full-pipeline-for-generating-and-saving-cam">#</a>
-</h3>
-<p>Finally, we can combine all the above steps into a single function to generate and save CAMs for the top K predictions of an input image.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_and_save_CAM</span>(image_path, topk_predictions):
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Generate and save CAM for the specified image and topk predictions.
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param image_path: Path to the input image
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param topk_predictions: Number of top predictions to generate CAM for
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Load the class labels</span>
-</span></span><span style="display:flex;"><span>    class_labels <span style="color:#f92672">=</span> load_class_labels(<span style="color:#e6db74">&#39;LOC_synset_mapping.txt&#39;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Read and preprocess the image</span>
-</span></span><span style="display:flex;"><span>    image_tensor, original_image, height, width <span style="color:#f92672">=</span> preprocess_image(image_path)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Load the model and extract features</span>
-</span></span><span style="display:flex;"><span>    model, features_blobs, softmax_weights <span style="color:#f92672">=</span> load_model_and_extract_features()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Get the top k predictions</span>
-</span></span><span style="display:flex;"><span>    class_indices <span style="color:#f92672">=</span> get_topk_predictions(model, image_tensor, topk_predictions)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Generate CAM for the top predictions</span>
-</span></span><span style="display:flex;"><span>    CAMs <span style="color:#f92672">=</span> generate_CAM(features_blobs[<span style="color:#ae81ff">0</span>], softmax_weights, class_indices)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Display and save the CAM results</span>
-</span></span><span style="display:flex;"><span>    save_name <span style="color:#f92672">=</span> image_path<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;/&#39;</span>)[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;.&#39;</span>)[<span style="color:#ae81ff">0</span>]
-</span></span><span style="display:flex;"><span>    display_and_save_CAM(CAMs, width, height, original_image, class_indices, class_labels, save_name)
-</span></span></code></pre></div><ul>
-<li><code>class_labels = load_class_labels('LOC_synset_mapping.txt')</code>: Loads the class labels from a specified file.</li>
-<li><code>image_tensor, original_image, height, width = preprocess_image(image_path)</code>: Reads and preprocesses the input image, returning the preprocessed image tensor, original image, and image dimensions.</li>
-<li><code>model, features_blobs, softmax_weights = load_model_and_extract_features()</code>: Loads the model and extracts the feature maps and softmax weights.</li>
-<li><code>class_indices, _ = get_topk_predictions(model, image_tensor, topk_predictions)</code>: Gets the top K predictions for the input image.</li>
-<li><code>CAMs = generate_CAM(features_blobs[0], softmax_weights, class_indices)</code>: Generates the CAMs for the top predictions.</li>
-<li><code>save_name = image_path.split('/')[-1].split('.')[0]</code>: Extracts the base name of the image file for saving the results.</li>
-<li><code>display_and_save_CAM(CAMs, width, height, original_image, class_indices, class_labels, save_name)</code>: Displays and saves the CAM results.</li>
-</ul>
-<p>This function combines all the steps to generate and save CAMs for the top K predictions of an input image.</p>
-<h3 id="d-examples-of-work">
-  d) Examples of Work:
-  <a class="anchor" href="#d-examples-of-work">#</a>
-</h3>
-<p>Here you can see the results of applying CAM to an image of a dogs.
-The CAM highlights the regions of the image that are most influential in the model&rsquo;s prediction of the class &ldquo;Yorkshire Terrier&rdquo;:</p>
-<p>
-  <img src="/SeCAM/CAM_dogs.png" alt="CAM Example" /></p>
-<p>There is another example of applying CAM to an image of a bird:</p>
-<p>
-  <img src="/SeCAM/CAM_bird.png" alt="CAM Example" /></p>
-<p>Now let&rsquo;s see the difference of CAMs for different classes of images.</p>
-<p>
-  <img src="/SeCAM/CAM_vs_CAM_dogs.png" alt="CAM Example" /></p>
-<p>
-  <img src="/SeCAM/CAM_vs_CAM_bird.png" alt="CAM Example" /></p>
-<h2 id="section-4-segmentation---class-activation-mapping-cam">
-  Section 4: Segmentation - Class Activation Mapping (CAM)
-  <a class="anchor" href="#section-4-segmentation---class-activation-mapping-cam">#</a>
-</h2>
-<h3 id="general-definition-1">
-  General Definition
-  <a class="anchor" href="#general-definition-1">#</a>
-</h3>
-<p>Segmentation-based Class Activation Mapping (SeCAM) is an advanced technique proposed by Quoc Hung Cao, Truong Thanh Hung Nguyen, Vo Thanh Khang Nguyen, and Xuan Phong Nguyen in their paper 
-  <a href="https://arxiv.org/abs/2307.04137">Segmentation-based Class Activation Mapping</a>.
+CAM and SeCAM in particular aim to provide fast and intuitive explanations by identifying image regions most influential to the model&rsquo;s prediction.</p><h2 id=section-1-overview-of-xai-methods>Section 1: Overview of XAI Methods
+<a class=anchor href=#section-1-overview-of-xai-methods>#</a></h2><p>Explainable AI (XAI) refers to methods and techniques in the application of artificial intelligence technology such that the results of the solution can be understood by human experts. It contrasts with the concept of the &ldquo;black box&rdquo; in machine learning where even their designers cannot explain why the AI arrived at a specific decision. XAI is becoming increasingly important as AI systems are used in more critical applications such as diagnostic healthcare, autonomous driving, and more.</p><h2 id=section-2-resnet50-architecture-and-importance-of-understanding>Section 2: ResNet50 Architecture and Importance of Understanding
+<a class=anchor href=#section-2-resnet50-architecture-and-importance-of-understanding>#</a></h2><p>The ResNet50 model is a pivotal architecture within the domain of deep convolutional neural networks (CNNs) that has significantly impacted image classification tasks, notably achieving remarkable success in the ImageNet Large Scale Visual Recognition Challenge (ILSVRC). Generally, ResNet50 has the following architecture:</p><p><img src=https://miro.medium.com/v2/resize:fit:1400/format:webp/0*tH9evuOFqk8F41FG.png alt=ResNet50></p><p>The ResNet50 model, while renowned for its high accuracy in image classification tasks, exemplifies the &ldquo;black box&rdquo; nature inherent to many advanced deep learning models. This characteristic poses a significant challenge for AI researchers, practitioners, and end-users who seek to understand the model&rsquo;s predictive behaviour. The intricate architecture of ResNet50, characterised by its deep layers and residual blocks, complicates the interpretation of how input features influence the final classification outcomes</p><h2 id=section-3-class-activation-mapping-cam>Section 3: Class Activation Mapping (CAM)
+<a class=anchor href=#section-3-class-activation-mapping-cam>#</a></h2><h3 id=general-definition>General Definition
+<a class=anchor href=#general-definition>#</a></h3><p>Class Activation Mapping (CAM) is a technique used to identify the discriminative regions in an image that contribute to the class prediction made by a Convolutional Neural Network (CNN). CAM is particularly useful for understanding and interpreting the decisions of CNN models.</p><p><img src=/SeCAM/CAM_architecture.png alt="CAM Example"></p><h3 id=how-cam-works>How CAM Works:
+<a class=anchor href=#how-cam-works>#</a></h3><h3 id=a-steps-involved-in-cam>a) Steps Involved in CAM:
+<a class=anchor href=#a-steps-involved-in-cam>#</a></h3><ol><li><p><strong>Feature Extraction</strong>:</p><ul><li>Extract the feature maps from the last convolutional layer of the CNN.</li></ul></li><li><p><strong>Global Average Pooling (GAP)</strong>:</p><ul><li>Apply Global Average Pooling (GAP) to the feature maps to get a vector of size equal to the number of feature maps.</li></ul></li><li><p><strong>Fully Connected Layer</strong>:</p><ul><li>The GAP output is fed into a fully connected layer to get the final class scores.</li></ul></li><li><p><strong>Class Activation Mapping</strong>:</p><ul><li>For a given class, compute the weighted sum of the feature maps using the weights from the fully connected layer.</li></ul></li></ol><h3 id=b-equations>b) Equations
+<a class=anchor href=#b-equations>#</a></h3><ol><li><p><strong>Feature Maps</strong>:</p><ul><li>Let
+<link rel=stylesheet href=/katex/katex.min.css><script defer src=/katex/katex.min.js></script><script defer src=/katex/auto-render.min.js onload=renderMathInElement(document.body)></script><span>\(f_k(x, y)\)
+</span>represent the activation of unit <span>\(k\)
+</span>in the feature map at spatial location <span>\((x, y)\)
+</span>.</li></ul></li><li><p><strong>Global Average Pooling</strong>:</p><ul><li>The GAP for feature map <span>\(k\)
+</span>is computed as:
+<span>\[F_k = \frac{1}{Z} \sum_{x} \sum_{y} f_k(x, y)\]
+</span>where <span>\(Z\)
+</span>is the number of pixels in the feature map.</li></ul></li><li><p><strong>Class Score</strong>:</p><ul><li>The class score <span>\(S_c\)
+</span>for class <span>\(c\)
+</span>is computed as:
+<span>\[S_c = \sum_{k} w_{k}^{c} F_k \]
+</span>where <span>\(w_{k}^{c}\)
+</span>is the weight corresponding to class <span>\(c\)
+</span>for feature map <span>\(k\)
+</span>.</li></ul></li><li><p><strong>Class Activation Map</strong>:</p><ul><li>The CAM for class <span>\(c\)
+</span>is computed as: <span>\[M_c(x, y) = \sum_{k} w_{k}^{c} f_k(x, y)\]
+</span>This gives the importance of each spatial element <span>\((x, y)\)
+</span>in the feature maps for class <span>\(c\)
+</span>.</li></ul></li></ol><h3 id=c-implementation-with-code>c) Implementation with Code
+<a class=anchor href=#c-implementation-with-code>#</a></h3><h3 id=step-1-preprocess-the-input-image>Step 1: Preprocess the Input Image
+<a class=anchor href=#step-1-preprocess-the-input-image>#</a></h3><p>Firstly, we need to read and preprocess the input image to make it compatible with the ResNet50 model.
+The preprocessing steps include resizing the image to 224x224 pixels, normalizing it, and converting it to a PyTorch tensor.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>preprocess_image</span>(image_path):
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    Preprocess the input image.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param image_path: Path to the input image
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :return: Preprocessed image tensor, original image, image dimensions
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    image <span style=color:#f92672>=</span> cv2<span style=color:#f92672>.</span>imread(image_path)
+</span></span><span style=display:flex><span>    original_image <span style=color:#f92672>=</span> image<span style=color:#f92672>.</span>copy()
+</span></span><span style=display:flex><span>    image <span style=color:#f92672>=</span> cv2<span style=color:#f92672>.</span>cvtColor(image, cv2<span style=color:#f92672>.</span>COLOR_BGR2RGB)
+</span></span><span style=display:flex><span>    height, width, _ <span style=color:#f92672>=</span> image<span style=color:#f92672>.</span>shape
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    preprocess <span style=color:#f92672>=</span> transforms<span style=color:#f92672>.</span>Compose([
+</span></span><span style=display:flex><span>        transforms<span style=color:#f92672>.</span>ToPILImage(),
+</span></span><span style=display:flex><span>        transforms<span style=color:#f92672>.</span>Resize((<span style=color:#ae81ff>224</span>, <span style=color:#ae81ff>224</span>)),
+</span></span><span style=display:flex><span>        transforms<span style=color:#f92672>.</span>ToTensor(),
+</span></span><span style=display:flex><span>        transforms<span style=color:#f92672>.</span>Normalize(mean<span style=color:#f92672>=</span>[<span style=color:#ae81ff>0.485</span>, <span style=color:#ae81ff>0.456</span>, <span style=color:#ae81ff>0.406</span>], std<span style=color:#f92672>=</span>[<span style=color:#ae81ff>0.229</span>, <span style=color:#ae81ff>0.224</span>, <span style=color:#ae81ff>0.225</span>])
+</span></span><span style=display:flex><span>    ])
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    image_tensor <span style=color:#f92672>=</span> preprocess(image)
+</span></span><span style=display:flex><span>    image_tensor <span style=color:#f92672>=</span> image_tensor<span style=color:#f92672>.</span>unsqueeze(<span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> image_tensor, original_image, height, width
+</span></span></code></pre></div><ul><li><code>image = cv2.imread(image_path)</code>: Reads the image from the specified path using OpenCV.</li><li><code>original_image = image.copy()</code>: Creates a copy of the original image to preserve it for later use.</li><li><code>image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)</code>: Converts the image from BGR to RGB format as OpenCV reads images in BGR format by default.</li><li><code>height, width, _ = image.shape</code>: Retrieves the dimensions (height and width) of the image.</li><li><code>preprocess = transforms.Compose([...])</code>: Defines a series of preprocessing steps:<ul><li><code>transforms.ToPILImage()</code>: Converts the image to PIL format.</li><li><code>transforms.Resize((224, 224))</code>: Resizes the image to 224x224 pixels.</li><li><code>transforms.ToTensor()</code>: Converts the image to a PyTorch tensor.</li><li><code>transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])</code>: Normalizes the image tensor using the specified mean and standard deviation.</li></ul></li><li><code>image_tensor = preprocess(image)</code>: Applies the preprocessing steps to the image.</li><li><code>image_tensor = image_tensor.unsqueeze(0)</code>: Adds a batch dimension to the image tensor, making it compatible for input to the CNN.</li></ul><h3 id=step-2-load-model-and-extract-features>Step 2: Load Model and Extract Features
+<a class=anchor href=#step-2-load-model-and-extract-features>#</a></h3><p>Secondly, we need to load a pre-trained ResNet50 model and extract the feature maps from the last convolutional layer.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>load_model_and_extract_features</span>():
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    Load the pretrained ResNet50 model and extract features.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :return: Model, features blob list, softmax weights
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    model <span style=color:#f92672>=</span> models<span style=color:#f92672>.</span>resnet50(weights<span style=color:#f92672>=</span>models<span style=color:#f92672>.</span>ResNet50_Weights<span style=color:#f92672>.</span>DEFAULT)<span style=color:#f92672>.</span>eval()
+</span></span><span style=display:flex><span>    features_blobs <span style=color:#f92672>=</span> []
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>hook_feature</span>(module, input, output):
+</span></span><span style=display:flex><span>        features_blobs<span style=color:#f92672>.</span>append(output<span style=color:#f92672>.</span>data<span style=color:#f92672>.</span>cpu()<span style=color:#f92672>.</span>numpy())
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Hook the feature extractor to get the convolutional features from &#39;layer4&#39;</span>
+</span></span><span style=display:flex><span>    model<span style=color:#f92672>.</span>_modules<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#39;layer4&#39;</span>)<span style=color:#f92672>.</span>register_forward_hook(hook_feature)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Get the softmax weights</span>
+</span></span><span style=display:flex><span>    params <span style=color:#f92672>=</span> list(model<span style=color:#f92672>.</span>parameters())
+</span></span><span style=display:flex><span>    softmax_weights <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>squeeze(params[<span style=color:#f92672>-</span><span style=color:#ae81ff>2</span>]<span style=color:#f92672>.</span>data<span style=color:#f92672>.</span>numpy())
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> model, features_blobs, softmax_weights
+</span></span></code></pre></div><ul><li><code>model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT).eval()</code>: Loads a pre-trained ResNet50 model and sets it to evaluation mode.</li><li><code>features_blobs = []</code>: Initializes an empty list to store feature maps from the hooked layer.</li><li><code>def hook_feature(module, input, output)</code>: Defines a hook function that captures the output of the specified layer.</li><li><code>features_blobs.append(output.data.cpu().numpy())</code>: Appends the output feature maps to the <code>features_blobs</code> list, converting them to NumPy arrays and moving them to the CPU.</li><li><code>model._modules.get('layer4').register_forward_hook(hook_feature)</code>: Registers the hook on the last convolutional layer (<code>layer4</code>) of the model to capture its output.</li><li><code>params = list(model.parameters())</code>: Retrieves the parameters of the model.</li><li><code>softmax_weights = np.squeeze(params[-2].data.numpy())</code>: Extracts and squeezes the softmax weights from the fully connected layer of the model, converting them to a NumPy array.</li></ul><h3 id=step-3-get-top-k-predictions>Step 3: Get Top K Predictions
+<a class=anchor href=#step-3-get-top-k-predictions>#</a></h3><p>Thirdly, we need to perform a forward pass through the model, compute the softmax probabilities,
+and retrieve the top K class indices with the highest probabilities.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>get_topk_predictions</span>(model, image_tensor, topk_predictions):
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    Get the top k predictions for the input image.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param model: Pretrained model
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param image_tensor: Preprocessed image tensor
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param topk_predictions: Number of top predictions to get
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :return: Top k class indices
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    outputs <span style=color:#f92672>=</span> model(image_tensor)
+</span></span><span style=display:flex><span>    probabilities <span style=color:#f92672>=</span> F<span style=color:#f92672>.</span>softmax(outputs, dim<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>)<span style=color:#f92672>.</span>data<span style=color:#f92672>.</span>squeeze()
+</span></span><span style=display:flex><span>    class_indices <span style=color:#f92672>=</span> topk(probabilities, topk_predictions)[<span style=color:#ae81ff>1</span>]<span style=color:#f92672>.</span>int()
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> class_indices
+</span></span></code></pre></div><ul><li><code>outputs = model(image_tensor)</code>: Performs a forward pass through the model using the preprocessed image tensor.</li><li><code>probabilities = F.softmax(outputs, dim=1).data.squeeze()</code>: Computes the softmax probabilities for the outputs, normalizing them across the class dimension, and removes extra dimensions.</li><li><code>class_indices = topk(probabilities, topk_predictions)[1].int()</code>: Retrieves the indices of the top K classes with the highest probabilities using the <code>topk</code> function.</li></ul><h3 id=step-4-generate-class-activation-maps-cam>Step 4: Generate Class Activation Maps (CAM)
+<a class=anchor href=#step-4-generate-class-activation-maps-cam>#</a></h3><p>After all the above steps, we can generate the Class Activation Maps (CAM) for the top K predictions.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>generate_CAM</span>(feature_maps, softmax_weights, class_indices):
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    Generate Class Activation Maps (CAM).
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param feature_maps: Convolutional feature maps
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param softmax_weights: Weights of the fully connected layer
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param class_indices: Class indices
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :return: List of CAMs for the specified class indices
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    batch_size, num_channels, height, width <span style=color:#f92672>=</span> feature_maps<span style=color:#f92672>.</span>shape
+</span></span><span style=display:flex><span>    output_cams <span style=color:#f92672>=</span> []
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> class_idx <span style=color:#f92672>in</span> class_indices:
+</span></span><span style=display:flex><span>        cam <span style=color:#f92672>=</span> softmax_weights[class_idx]<span style=color:#f92672>.</span>dot(feature_maps<span style=color:#f92672>.</span>reshape((num_channels, height <span style=color:#f92672>*</span> width)))
+</span></span><span style=display:flex><span>        cam <span style=color:#f92672>=</span> cam<span style=color:#f92672>.</span>reshape(height, width)
+</span></span><span style=display:flex><span>        cam <span style=color:#f92672>=</span> cam <span style=color:#f92672>-</span> np<span style=color:#f92672>.</span>min(cam)  <span style=color:#75715e># Normalize CAM to be non-negative</span>
+</span></span><span style=display:flex><span>        cam <span style=color:#f92672>=</span> cam <span style=color:#f92672>/</span> np<span style=color:#f92672>.</span>max(cam)  <span style=color:#75715e># Scale CAM to be in range [0, 1]</span>
+</span></span><span style=display:flex><span>        cam_img <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>uint8(<span style=color:#ae81ff>255</span> <span style=color:#f92672>*</span> cam)  <span style=color:#75715e># Convert to uint8 format</span>
+</span></span><span style=display:flex><span>        output_cams<span style=color:#f92672>.</span>append(cam_img)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> output_cams
+</span></span></code></pre></div><ul><li><code>batch_size, num_channels, height, width = feature_maps.shape</code>: Retrieves the shape of the feature maps.</li><li><code>output_cams = []</code>: Initializes an empty list to store the CAMs.</li><li><code>for class_idx in class_indices</code>: Iterates over each class index.</li><li><code>cam = softmax_weights[class_idx].dot(feature_maps.reshape((num_channels, height * width)))</code>: Computes the CAM by taking the weighted sum of the feature maps.</li><li><code>cam = cam.reshape(height, width)</code>: Reshapes the CAM to the original feature map size.</li><li><code>cam = cam - np.min(cam)</code>: Normalizes the CAM to be non-negative.</li><li><code>cam = cam / np.max(cam)</code>: Scales the CAM to be in the range [0, 1].</li><li><code>cam_img = np.uint8(255 * cam)</code>: Converts the CAM to uint8 format.</li><li><code>output_cams.append(cam_img)</code>: Adds the CAM to the list of output CAMs.</li></ul><p>This function computes the CAM for each class index by taking the weighted sum of the feature maps using the softmax weights.
+It normalizes and converts the CAM to an 8-bit image.</p><h3 id=step-5-display-and-save-the-cam>Step 5: Display and Save the CAM
+<a class=anchor href=#step-5-display-and-save-the-cam>#</a></h3><p>After generating the CAMs, we can overlay them on the original image and display the results.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>display_and_save_CAM</span>(CAMs, width, height, original_image, class_indices, class_labels, save_name, plot<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>):
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    Display and save the CAM images.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param CAMs: List of CAMs
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param width: Width of the original image
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param height: Height of the original image
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param original_image: Original input image
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param class_indices: Class indices
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param class_labels: List of all class names
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param save_name: Name to save the output image
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param plot: Whether to display the image
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    matplotlib<span style=color:#f92672>.</span>rcParams[<span style=color:#e6db74>&#39;figure.figsize&#39;</span>] <span style=color:#f92672>=</span> <span style=color:#ae81ff>15</span>, <span style=color:#ae81ff>12</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> i, cam <span style=color:#f92672>in</span> enumerate(CAMs):
+</span></span><span style=display:flex><span>        heatmap <span style=color:#f92672>=</span> cv2<span style=color:#f92672>.</span>applyColorMap(cv2<span style=color:#f92672>.</span>resize(cam, (width, height)), cv2<span style=color:#f92672>.</span>COLORMAP_JET)
+</span></span><span style=display:flex><span>        result <span style=color:#f92672>=</span> heatmap <span style=color:#f92672>*</span> <span style=color:#ae81ff>0.3</span> <span style=color:#f92672>+</span> original_image <span style=color:#f92672>*</span> <span style=color:#ae81ff>0.5</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># Put class label text on the result</span>
+</span></span><span style=display:flex><span>        cv2<span style=color:#f92672>.</span>putText(result, class_labels[class_indices[i]], (<span style=color:#ae81ff>20</span>, <span style=color:#ae81ff>40</span>),
+</span></span><span style=display:flex><span>                    cv2<span style=color:#f92672>.</span>FONT_HERSHEY_SIMPLEX, <span style=color:#ae81ff>1.5</span>, (<span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>255</span>, <span style=color:#ae81ff>0</span>), <span style=color:#ae81ff>2</span>)
+</span></span><span style=display:flex><span>        cv2<span style=color:#f92672>.</span>imwrite(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;outputs/CAM_</span><span style=color:#e6db74>{</span>save_name<span style=color:#e6db74>}</span><span style=color:#e6db74>_</span><span style=color:#e6db74>{</span>i<span style=color:#e6db74>}</span><span style=color:#e6db74>.jpg&#34;</span>, result)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># Display the result</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> plot:
+</span></span><span style=display:flex><span>            image <span style=color:#f92672>=</span> plt<span style=color:#f92672>.</span>imread(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;outputs/CAM_</span><span style=color:#e6db74>{</span>save_name<span style=color:#e6db74>}</span><span style=color:#e6db74>_</span><span style=color:#e6db74>{</span>i<span style=color:#e6db74>}</span><span style=color:#e6db74>.jpg&#34;</span>)
+</span></span><span style=display:flex><span>            plt<span style=color:#f92672>.</span>imshow(image)
+</span></span><span style=display:flex><span>            plt<span style=color:#f92672>.</span>axis(<span style=color:#e6db74>&#39;off&#39;</span>)
+</span></span><span style=display:flex><span>            plt<span style=color:#f92672>.</span>show()
+</span></span></code></pre></div><ul><li><code>matplotlib.rcParams['figure.figsize'] = 15, 12</code>: Sets the figure size for matplotlib plots.</li><li><code>for i, cam in enumerate(CAMs)</code>: Iterates over each CAM.</li><li><code>heatmap = cv2.applyColorMap(cv2.resize(cam, (width, height)), cv2.COLORMAP_JET)</code>: Creates a heatmap by resizing the CAM and applying a colormap.</li><li><code>result = heatmap * 0.3 + original_image * 0.5</code>: Overlays the heatmap on the original image.</li><li><code>cv2.putText(result, class_labels[class_indices[i]], (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 2)</code>: Adds the class label to the result image.</li><li><code>cv2.imwrite(f"outputs/CAM_{save_name}_{i}.jpg", result)</code>: Saves the result image.</li><li><code>image = plt.imread(f"outputs/CAM_{save_name}_{i}.jpg")</code>: Reads the saved image.</li><li><code>plt.imshow(image)</code>: Displays the image.</li><li><code>plt.axis('off')</code>: Hides the axis.</li><li><code>plt.show()</code>: Shows the image.</li></ul><p>This function overlays the CAM on the original image, adds the class label, and saves the result. It also displays the final image.</p><h3 id=step-6-full-pipeline-for-generating-and-saving-cam>Step 6: Full Pipeline for Generating and Saving CAM
+<a class=anchor href=#step-6-full-pipeline-for-generating-and-saving-cam>#</a></h3><p>Finally, we can combine all the above steps into a single function to generate and save CAMs for the top K predictions of an input image.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>generate_and_save_CAM</span>(image_path, topk_predictions):
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    Generate and save CAM for the specified image and topk predictions.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param image_path: Path to the input image
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param topk_predictions: Number of top predictions to generate CAM for
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Load the class labels</span>
+</span></span><span style=display:flex><span>    class_labels <span style=color:#f92672>=</span> load_class_labels(<span style=color:#e6db74>&#39;LOC_synset_mapping.txt&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Read and preprocess the image</span>
+</span></span><span style=display:flex><span>    image_tensor, original_image, height, width <span style=color:#f92672>=</span> preprocess_image(image_path)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Load the model and extract features</span>
+</span></span><span style=display:flex><span>    model, features_blobs, softmax_weights <span style=color:#f92672>=</span> load_model_and_extract_features()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Get the top k predictions</span>
+</span></span><span style=display:flex><span>    class_indices <span style=color:#f92672>=</span> get_topk_predictions(model, image_tensor, topk_predictions)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Generate CAM for the top predictions</span>
+</span></span><span style=display:flex><span>    CAMs <span style=color:#f92672>=</span> generate_CAM(features_blobs[<span style=color:#ae81ff>0</span>], softmax_weights, class_indices)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Display and save the CAM results</span>
+</span></span><span style=display:flex><span>    save_name <span style=color:#f92672>=</span> image_path<span style=color:#f92672>.</span>split(<span style=color:#e6db74>&#39;/&#39;</span>)[<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>]<span style=color:#f92672>.</span>split(<span style=color:#e6db74>&#39;.&#39;</span>)[<span style=color:#ae81ff>0</span>]
+</span></span><span style=display:flex><span>    display_and_save_CAM(CAMs, width, height, original_image, class_indices, class_labels, save_name)
+</span></span></code></pre></div><ul><li><code>class_labels = load_class_labels('LOC_synset_mapping.txt')</code>: Loads the class labels from a specified file.</li><li><code>image_tensor, original_image, height, width = preprocess_image(image_path)</code>: Reads and preprocesses the input image, returning the preprocessed image tensor, original image, and image dimensions.</li><li><code>model, features_blobs, softmax_weights = load_model_and_extract_features()</code>: Loads the model and extracts the feature maps and softmax weights.</li><li><code>class_indices, _ = get_topk_predictions(model, image_tensor, topk_predictions)</code>: Gets the top K predictions for the input image.</li><li><code>CAMs = generate_CAM(features_blobs[0], softmax_weights, class_indices)</code>: Generates the CAMs for the top predictions.</li><li><code>save_name = image_path.split('/')[-1].split('.')[0]</code>: Extracts the base name of the image file for saving the results.</li><li><code>display_and_save_CAM(CAMs, width, height, original_image, class_indices, class_labels, save_name)</code>: Displays and saves the CAM results.</li></ul><p>This function combines all the steps to generate and save CAMs for the top K predictions of an input image.</p><h3 id=d-examples-of-work>d) Examples of Work:
+<a class=anchor href=#d-examples-of-work>#</a></h3><p>Here you can see the results of applying CAM to an image of a dogs.
+The CAM highlights the regions of the image that are most influential in the model&rsquo;s prediction of the class &ldquo;Yorkshire Terrier&rdquo;:</p><p><img src=/SeCAM/CAM_dogs.png alt="CAM Example"></p><p>There is another example of applying CAM to an image of a bird:</p><p><img src=/SeCAM/CAM_bird.png alt="CAM Example"></p><p>Now let&rsquo;s see the difference of CAMs for different classes of images.</p><p><img src=/SeCAM/CAM_vs_CAM_dogs.png alt="CAM Example"></p><p><img src=/SeCAM/CAM_vs_CAM_bird.png alt="CAM Example"></p><h2 id=section-4-segmentation---class-activation-mapping-cam>Section 4: Segmentation - Class Activation Mapping (CAM)
+<a class=anchor href=#section-4-segmentation---class-activation-mapping-cam>#</a></h2><h3 id=general-definition-1>General Definition
+<a class=anchor href=#general-definition-1>#</a></h3><p>Segmentation-based Class Activation Mapping (SeCAM) is an advanced technique proposed by Quoc Hung Cao, Truong Thanh Hung Nguyen, Vo Thanh Khang Nguyen, and Xuan Phong Nguyen in their paper
+<a href=https://arxiv.org/abs/2307.04137>Segmentation-based Class Activation Mapping</a>.
 This method combines the principles of Class Activation Mapping (CAM) with image segmentation to provide more interpretable and precise discriminative regions in an image.
-SeCAM helps in understanding and interpreting the decisions of Convolutional Neural Network (CNN) models by highlighting regions of the image that are most influential in the model&rsquo;s prediction, segmented into meaningful parts.</p>
-<p>
-  <img src="/SeCAM/SeCAM_architecture.png" alt="SeCAM Example" /></p>
-<h3 id="how-secam-works">
-  How SeCAM Works
-  <a class="anchor" href="#how-secam-works">#</a>
-</h3>
-<h3 id="a-steps-involved-in-secam">
-  a) Steps Involved in SeCAM:
-  <a class="anchor" href="#a-steps-involved-in-secam">#</a>
-</h3>
-<ol>
-<li>
-<p><strong>Feature Extraction</strong>:</p>
-<ul>
-<li>Extract the feature maps from the last convolutional layer of the CNN.</li>
-</ul>
-</li>
-<li>
-<p><strong>Global Average Pooling (GAP)</strong>:</p>
-<ul>
-<li>Apply Global Average Pooling (GAP) to the feature maps to get a vector of size equal to the number of feature maps.</li>
-</ul>
-</li>
-<li>
-<p><strong>Fully Connected Layer</strong>:</p>
-<ul>
-<li>The GAP output is fed into a fully connected layer to get the final class scores.</li>
-</ul>
-</li>
-<li>
-<p><strong>Class Activation Mapping (CAM)</strong>:</p>
-<ul>
-<li>For a given class, compute the weighted sum of the feature maps using the weights from the fully connected layer.</li>
-</ul>
-</li>
-<li>
-<p><strong>Superpixel Segmentation</strong>:</p>
-<ul>
-<li>Segment the input image into superpixels using the SLIC (Simple Linear Iterative Clustering) algorithm.</li>
-</ul>
-</li>
-<li>
-<p><strong>Segmentation-based CAM (SeCAM)</strong>:</p>
-<ul>
-<li>Combine the CAM values with the segmented superpixels to compute the SeCAM values for each region.</li>
-</ul>
-</li>
-</ol>
-<h3 id="b-slic-simple-linear-iterative-clustering-algorithm">
-  b) SLIC (Simple Linear Iterative Clustering) Algorithm
-  <a class="anchor" href="#b-slic-simple-linear-iterative-clustering-algorithm">#</a>
-</h3>
-<p>SLIC is a superpixel segmentation algorithm that clusters pixels in an image into superpixels. Superpixels are contiguous groups of pixels with similar colors or gray levels. The SLIC algorithm adapts k-means clustering to efficiently generate superpixels with uniform size and compactness.</p>
-<h3 id="steps-of-the-slic-algorithm">
-  Steps of the SLIC Algorithm
-  <a class="anchor" href="#steps-of-the-slic-algorithm">#</a>
-</h3>
-<ol>
-<li>
-<p><strong>Initialization</strong>:</p>
-<ul>
-<li><strong>Grid Sampling</strong>: The image is divided into a grid of <span>
-  \( N/K \)
-</span>
- equally spaced initial cluster centers, where <span>
-  \(N\)
-</span>
- is the number of pixels, and <span>
-  \(K\)
-</span>
- is the desired number of superpixels.</li>
-<li><strong>Perturbation</strong>: Each cluster center is moved to the lowest gradient position within a 3x3 neighborhood to avoid placing centers at edges.</li>
-</ul>
-</li>
-<li>
-<p><strong>Assignment</strong>:</p>
-<ul>
-<li>For each pixel, find the nearest cluster center based on a distance measure that includes color and spatial proximity.</li>
-<li>Distance <span>
-  \(D\)
-</span>
- is computed as a weighted sum of color distance and spatial distance.</li>
-</ul>
-</li>
-<li>
-<p><strong>Update</strong>:</p>
-<ul>
-<li>Update each cluster center to the mean of the pixels assigned to it.</li>
-<li>Recompute the cluster centers.</li>
-</ul>
-</li>
-<li>
-<p><strong>Enforce Connectivity</strong>:</p>
-<ul>
-<li>Ensure that each superpixel is a single connected component.</li>
-</ul>
-</li>
-<li>
-<p><strong>Repeat</strong>:</p>
-<ul>
-<li>Repeat the assignment and update steps until convergence.</li>
-</ul>
-</li>
-</ol>
-<h3 id="distance-measure">
-  Distance Measure
-  <a class="anchor" href="#distance-measure">#</a>
-</h3>
-<p>The distance <span>
-  \(D\)
-</span>
- between a pixel <span>
-  \(i\)
-</span>
- and a cluster center <span>
-  \(k\)
-</span>
- is defined as:</p>
-<span>
-  \[D = \sqrt{d_{lab}^2 &#43; \left(\frac{m}{S}\right)^2 d*{xy}^2}\]
-</span>
-
-<p>where:</p>
-<ul>
-<li><span>
-  \(d_{lab}\)
-</span>
-: Euclidean distance in the CIELAB color space.</li>
-<li><span>
-  \(d_{xy}\)
-</span>
-: Euclidean distance in the pixel coordinate space.</li>
-<li><span>
-  \(S\)
-</span>
-: Grid interval, approximately <span>
-  \(\sqrt{N/K}\)
-</span>
-.</li>
-<li><span>
-  \(m\)
-</span>
-: Compactness parameter, controlling the trade-off between color similarity and spatial proximity.</li>
-</ul>
-<h3 id="numerical-example">
-  Numerical Example
-  <a class="anchor" href="#numerical-example">#</a>
-</h3>
-<p>Assume we have a small 5x5 grayscale image:</p>
-<span>
-  \[\begin{bmatrix}
-10 &amp; 10 &amp; 10 &amp; 20 &amp; 20 \\
-10 &amp; 10 &amp; 10 &amp; 20 &amp; 20 \\
-10 &amp; 10 &amp; 10 &amp; 20 &amp; 20 \\
-30 &amp; 30 &amp; 30 &amp; 40 &amp; 40 \\
-30 &amp; 30 &amp; 30 &amp; 40 &amp; 40 \\
-\end{bmatrix}\]
-</span>
-
-<p>Let&rsquo;s apply SLIC to generate 4 superpixels.</p>
-<ol>
-<li>
-<p><strong>Initialization</strong>:</p>
-<ul>
-<li>Number of pixels <span>
-  \(N = 25\)
-</span>
-</li>
-<li>Desired superpixels <span>
-  \(K = 4\)
-</span>
-</li>
-<li>Grid interval <span>
-  \(S \approx \sqrt{25 / 4} = 2.5\)
-</span>
-</li>
-<li>Place initial cluster centers (perturbed for the lowest gradient):
-<ul>
-<li>Cluster Centers = <span>
-  \(\{ (1, 1), (1, 4), (4, 1), (4, 4) \}\)
-</span>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p><strong>Assignment</strong>:</p>
-<ul>
-<li>For each pixel, compute the distance <span>
-  \(D\)
-</span>
- to each cluster center.</li>
-<li>Example for pixel at (2,2):
-<ul>
-<li>Color distance <span>
-  \(d_{lab} = |10 - 10| = 0\)
-</span>
-</li>
-<li>Spatial distance <span>
-  \(d_{xy} = \sqrt{(2-1)^2 &#43; (2-1)^2} = \sqrt{2}\)
-</span>
-</li>
-<li>Assume <span>
-  \(m = 10\)
-</span>
-, <span>
-  \(S = 2.5\)
-</span>
-:
-<span>
-  \[          D = \sqrt{0^2 &#43; \left(\frac{10}{2.5}\right)^2 \cdot 2} = \sqrt{0 &#43; 16 \cdot 2} = \sqrt{32} = 5.66
-          \]
-</span>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p><strong>Update</strong>:</p>
-<ul>
-<li>Update cluster centers based on the mean of the assigned pixels.</li>
-<li>Recompute centers.</li>
-</ul>
-</li>
-<li>
-<p><strong>Enforce Connectivity</strong>:</p>
-<ul>
-<li>Ensure all superpixels are connected components.</li>
-</ul>
-</li>
-<li>
-<p><strong>Repeat</strong>:</p>
-<ul>
-<li>Iterate until convergence.</li>
-</ul>
-</li>
-</ol>
-<p><strong>Output Matrix with Segments</strong>:</p>
-<p>After applying SLIC, we get the segmented image with superpixels. The output matrix might look like this:</p>
-<span>
-  \[\begin{bmatrix}
-1 &amp; 1 &amp; 1 &amp; 2 &amp; 2 \\
-1 &amp; 1 &amp; 1 &amp; 2 &amp; 2 \\
-1 &amp; 1 &amp; 1 &amp; 2 &amp; 2 \\
-3 &amp; 3 &amp; 3 &amp; 4 &amp; 4 \\
-3 &amp; 3 &amp; 3 &amp; 4 &amp; 4 \\
-\end{bmatrix}\]
-</span>
-
-<h3 id="c-secam-equations">
-  c) SeCAM Equations
-  <a class="anchor" href="#c-secam-equations">#</a>
-</h3>
-<ol>
-<li>
-<p><strong>Feature Maps</strong>:</p>
-<ul>
-<li>Let <span>
-  \(f_k(x, y)\)
-</span>
- represent the activation of unit <span>
-  \(k\)
-</span>
- in the feature map at spatial location <span>
-  \((x, y)\)
-</span>
-.</li>
-</ul>
-</li>
-<li>
-<p><strong>Class Activation Map (CAM)</strong>:</p>
-<ul>
-<li>The CAM for class <span>
-  \(c\)
-</span>
- is computed as:
-<span>
-  \[      M_c(x, y) = \sum_{k} w_{k}^{c} f_k(x, y)
-      \]
-</span>
-
-This gives the importance of each spatial element <span>
-  \((x, y)\)
-</span>
- in the feature maps for class <span>
-  \(c\)
-</span>
-.</li>
-</ul>
-</li>
-<li>
-<p><strong>SeCAM</strong>:</p>
-<ul>
-<li>For each superpixel, the SeCAM value is computed by averaging the CAM values within the superpixel:
-<span>
-  \[      S_c(s) = \frac{1}{|s|} \sum_{(x, y) \in s} M_c(x, y)
-      \]
-</span>
-
-where <span>
-  \(|s|\)
-</span>
- is the number of pixels in superpixel <span>
-  \(s\)
-</span>
-.</li>
-</ul>
-</li>
-</ol>
-<h3 id="d-implementation-with-code">
-  d) Implementation with Code
-  <a class="anchor" href="#d-implementation-with-code">#</a>
-</h3>
-<h3 id="step-1-3-same-as-for-cam">
-  Step 1-3: Same as for CAM
-  <a class="anchor" href="#step-1-3-same-as-for-cam">#</a>
-</h3>
-<h3 id="step-4-generate-secam">
-  Step 4: Generate SeCAM
-  <a class="anchor" href="#step-4-generate-secam">#</a>
-</h3>
-<p>After all preparation steps, we can generate the Segmentation-based Class Activation Maps (SeCAM) for the top K predictions.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_seCAM</span>(feature_maps, softmax_weights, class_indices, segments):
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Generate Segmentation-based Class Activation Maps (SeCAM).
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param feature_maps: Convolutional feature maps
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param softmax_weights: Weights of the fully connected layer
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param class_indices: Class indices
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param segments: Segmented image regions
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :return: List of SeCAMs for the specified class indices
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>    batch_size, num_channels, height, width <span style="color:#f92672">=</span> feature_maps<span style="color:#f92672">.</span>shape
-</span></span><span style="display:flex;"><span>    output_seCAMs <span style="color:#f92672">=</span> []
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> class_idx <span style="color:#f92672">in</span> class_indices:
-</span></span><span style="display:flex;"><span>        cam <span style="color:#f92672">=</span> softmax_weights[class_idx]<span style="color:#f92672">.</span>dot(feature_maps<span style="color:#f92672">.</span>reshape((num_channels, height <span style="color:#f92672">*</span> width)))
-</span></span><span style="display:flex;"><span>        cam <span style="color:#f92672">=</span> cam<span style="color:#f92672">.</span>reshape(height, width)
-</span></span><span style="display:flex;"><span>        cam <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>maximum(cam, <span style="color:#ae81ff">0</span>)
-</span></span><span style="display:flex;"><span>        cam <span style="color:#f92672">=</span> cam <span style="color:#f92672">/</span> np<span style="color:#f92672">.</span>max(cam)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Resize segments to match cam size</span>
-</span></span><span style="display:flex;"><span>        segments_resized <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>resize(segments<span style="color:#f92672">.</span>astype(np<span style="color:#f92672">.</span>float32), (width, height), interpolation<span style="color:#f92672">=</span>cv2<span style="color:#f92672">.</span>INTER_NEAREST)
-</span></span><span style="display:flex;"><span>        segments_resized <span style="color:#f92672">=</span> segments_resized<span style="color:#f92672">.</span>astype(int)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        seCAM <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>zeros_like(cam)
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> seg_val <span style="color:#f92672">in</span> np<span style="color:#f92672">.</span>unique(segments_resized):
-</span></span><span style="display:flex;"><span>            mask <span style="color:#f92672">=</span> (segments_resized <span style="color:#f92672">==</span> seg_val)
-</span></span><span style="display:flex;"><span>            seCAM[mask] <span style="color:#f92672">=</span> cam[mask]<span style="color:#f92672">.</span>mean()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        output_seCAMs<span style="color:#f92672">.</span>append(seCAM)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> output_seCAMs
-</span></span></code></pre></div><ul>
-<li><code>batch_size, num_channels, height, width = feature_maps.shape</code>: Retrieves the shape of the feature maps.</li>
-<li><code>output_seCAMs = []</code>: Initializes an empty list to store the SeCAMs.</li>
-<li><code>for class_idx in class_indices</code>: Iterates over each class index.</li>
-<li><code>cam = softmax_weights[class_idx].dot(feature_maps.reshape((num_channels, height * width)))</code>: Computes the CAM by taking the weighted sum of the feature maps.</li>
-<li><code>cam = cam.reshape(height, width)</code>: Reshapes the CAM to the original feature map size.</li>
-<li><code>cam = np.maximum(cam, 0)</code>: Ensures all CAM values are non-negative.</li>
-<li><code>cam = cam / np.max(cam)</code>: Normalizes the CAM values to be in the range [0, 1].</li>
-<li><code>segments_resized = cv2.resize(segments.astype(np.float32), (width, height), interpolation=cv2.INTER_NEAREST)</code>: Resizes the segments to match the CAM size.</li>
-<li><code>segments_resized = segments_resized.astype(int)</code>: Converts the resized segments to integers.</li>
-<li><code>seCAM = np.zeros_like(cam)</code>: Initializes an array of zeros with the same shape as the CAM.</li>
-<li><code>for seg_val in np.unique(segments_resized)</code>: Iterates over each unique segment value.</li>
-<li><code>mask = (segments_resized == seg_val)</code>: Creates a mask for the current segment.</li>
-<li><code>seCAM[mask] = cam[mask].mean()</code>: Assigns the mean CAM value of the current segment to the SeCAM array.</li>
-<li><code>output_seCAMs.append(seCAM)</code>: Adds the SeCAM to the list of output SeCAMs.</li>
-</ul>
-<p>This function generates Segmentation-based CAMs (SeCAMs) by combining CAM values with superpixel segments, resulting in more interpretable and precise discriminative regions.</p>
-<h3 id="step-5-display-and-save-secam">
-  Step 5: Display and Save SeCAM
-  <a class="anchor" href="#step-5-display-and-save-secam">#</a>
-</h3>
-<p>After generating the SeCAMs, we can overlay them on the original image, mask insignificant regions, and display the results.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">display_and_save_seCAM</span>(SeCAMs, width, height, original_image, save_name, secam_threshold, plot<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>):
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Display and save the SeCAM images.
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param SeCAMs: List of SeCAMs
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param width: Width of the original image
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param height: Height of the original image
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param original_image: Original input image
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param save_name: Name to save the output image
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param secam_threshold: Threshold to mask significant regions
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param plot: Whether to display the image
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>    matplotlib<span style="color:#f92672">.</span>rcParams[<span style="color:#e6db74">&#39;figure.figsize&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">15</span>, <span style="color:#ae81ff">12</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i, seCAM <span style="color:#f92672">in</span> enumerate(SeCAMs):
-</span></span><span style="display:flex;"><span>        seCAM <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>uint8(<span style="color:#ae81ff">255</span> <span style="color:#f92672">*</span> seCAM)
-</span></span><span style="display:flex;"><span>        seCAM_resized <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>resize(seCAM, (width, height))
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Create a mask of the significant regions</span>
-</span></span><span style="display:flex;"><span>        mask <span style="color:#f92672">=</span> seCAM_resized <span style="color:#f92672">&gt;</span> (secam_threshold <span style="color:#f92672">*</span> seCAM_resized<span style="color:#f92672">.</span>max())
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Create a black background image</span>
-</span></span><span style="display:flex;"><span>        black_bg <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>zeros_like(original_image)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Apply the mask to the original image</span>
-</span></span><span style="display:flex;"><span>        result <span style="color:#f92672">=</span> original_image<span style="color:#f92672">.</span>copy()
-</span></span><span style="display:flex;"><span>        result[<span style="color:#f92672">~</span>mask] <span style="color:#f92672">=</span> black_bg[<span style="color:#f92672">~</span>mask]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Save the result</span>
-</span></span><span style="display:flex;"><span>        cv2<span style="color:#f92672">.</span>imwrite(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;outputs/SeCAM_</span><span style="color:#e6db74">{</span>save_name<span style="color:#e6db74">}</span><span style="color:#e6db74">_</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">.jpg&#34;</span>, result)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Display the result</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> plot:
-</span></span><span style="display:flex;"><span>            image <span style="color:#f92672">=</span> plt<span style="color:#f92672">.</span>imread(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;outputs/SeCAM_</span><span style="color:#e6db74">{</span>save_name<span style="color:#e6db74">}</span><span style="color:#e6db74">_</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">.jpg&#34;</span>)
-</span></span><span style="display:flex;"><span>            plt<span style="color:#f92672">.</span>imshow(image)
-</span></span><span style="display:flex;"><span>            plt<span style="color:#f92672">.</span>axis(<span style="color:#e6db74">&#39;off&#39;</span>)
-</span></span><span style="display:flex;"><span>            plt<span style="color:#f92672">.</span>show()
-</span></span></code></pre></div><ul>
-<li><code>matplotlib.rcParams['figure.figsize'] = 15, 12</code>: Sets the figure size for matplotlib plots.</li>
-<li><code>for i, seCAM in enumerate(SeCAMs)</code>: Iterates over each SeCAM.</li>
-<li><code>seCAM = np.uint8(255 * seCAM)</code>: Scales the SeCAM values to the range [0, 255] and converts them to uint8 format.</li>
-<li><code>seCAM_resized = cv2.resize(seCAM, (width, height))</code>: Resizes the SeCAM to match the original image size.</li>
-<li><code>mask = seCAM_resized &gt; (secam_threshold * seCAM_resized.max())</code>: Creates a mask for significant regions in the SeCAM.</li>
-<li><code>black_bg = np.zeros_like(original_image)</code>: Creates a black background image.</li>
-<li><code>result = original_image.copy()</code>: Copies the original image.</li>
-<li><code>result[~mask] = black_bg[~mask]</code>: Applies the mask to the original image, keeping only the significant regions.</li>
-<li><code>cv2.imwrite(f&quot;outputs/SeCAM_{save_name}_{i}.jpg&quot;, result)</code>: Saves the result image.</li>
-<li><code>image = plt.imread(f&quot;outputs/SeCAM_{save_name}_{i}.jpg&quot;)</code>: Reads the saved image.</li>
-<li><code>plt.imshow(image)</code>: Displays the image.</li>
-<li><code>plt.axis('off')</code>: Hides the axis.</li>
-<li><code>plt.show()</code>: Shows the image.</li>
-</ul>
-<p>This function overlays the SeCAM on the original image, masks insignificant regions, adds the class label, and saves the result. It also displays the final image.</p>
-<h3 id="step-3-full-pipeline-for-generating-and-saving-secam">
-  Step 3: Full Pipeline for Generating and Saving SeCAM
-  <a class="anchor" href="#step-3-full-pipeline-for-generating-and-saving-secam">#</a>
-</h3>
-<p>Finally, we can combine all the above steps into a single function to generate and save SeCAMs for the top K predictions of an input image.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_and_save_seCAM</span>(image_path, topk_predictions, num_segments<span style="color:#f92672">=</span><span style="color:#ae81ff">50</span>, compactness<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, secam_threshold<span style="color:#f92672">=</span><span style="color:#ae81ff">0.8</span>):
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Generate and save SeCAM for the specified image and topk predictions.
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param image_path: Path to the input image
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param topk_predictions: Number of top predictions to generate SeCAM for
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param num_segments: Number of segments for SLIC
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param compactness: Compactness parameter for SLIC
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    :param secam_threshold: Threshold to mask significant regions in SeCAM
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Load the class labels</span>
-</span></span><span style="display:flex;"><span>    class_labels <span style="color:#f92672">=</span> load_class_labels(<span style="color:#e6db74">&#39;LOC_synset_mapping.txt&#39;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Read and preprocess the image</span>
-</span></span><span style="display:flex;"><span>    image_tensor, original_image, height, width <span style="color:#f92672">=</span> preprocess_image(image_path)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Load the model and extract features</span>
-</span></span><span style="display:flex;"><span>    model, features_blobs, softmax_weights <span style="color:#f92672">=</span> load_model_and_extract_features()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Get the top k predictions</span>
-</span></span><span style="display:flex;"><span>    class_indices <span style="color:#f92672">=</span> get_topk_predictions(model, image_tensor, topk_predictions)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Generate superpixels using SLIC</span>
-</span></span><span style="display:flex;"><span>    segments <span style="color:#f92672">=</span> slic(original_image, n_segments<span style="color:#f92672">=</span>num_segments, compactness<span style="color:#f92672">=</span>compactness, start_label<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Generate SeCAM for the top predictions</span>
-</span></span><span style="display:flex;"><span>    SeCAMs <span style="color:#f92672">=</span> generate_seCAM(features_blobs[<span style="color:#ae81ff">0</span>], softmax_weights, class_indices, segments)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Display and save the SeCAM results</span>
-</span></span><span style="display:flex;"><span>    save_name <span style="color:#f92672">=</span> image_path<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;/&#39;</span>)[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;.&#39;</span>)[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">+</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;_seg_</span><span style="color:#e6db74">{</span>num_segments<span style="color:#e6db74">}</span><span style="color:#e6db74">_ts_</span><span style="color:#e6db74">{</span>secam_threshold<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>    display_and_save_seCAM(SeCAMs, width, height, original_image, save_name, secam_threshold)
-</span></span></code></pre></div><ul>
-<li><code>class_labels = load_class_labels('LOC_synset_mapping.txt')</code>: Loads the class labels from a specified file.</li>
-<li><code>image_tensor, original_image, height, width = preprocess_image(image_path)</code>: Reads and preprocesses the input image, returning the preprocessed image tensor, original image, and image dimensions.</li>
-<li><code>model, features_blobs, softmax_weights = load_model_and_extract_features()</code>: Loads the model and extracts the feature maps and softmax weights.</li>
-<li><code>class_indices, _ = get_topk_predictions(model, image_tensor, topk_predictions)</code>: Gets the top K predictions for the input image.</li>
-<li><code>segments = slic(original_image, n_segments=num_segments, compactness=compactness, start_label=1)</code>: Segments the input image into superpixels using the SLIC algorithm.</li>
-<li><code>SeCAMs = generate_seCAM(features_blobs[0], softmax_weights, class_indices, segments)</code>: Generates the SeCAMs for the top predictions.</li>
-<li><code>save_name = image_path.split('/')[-1].split('.')[0]</code>: Extracts the base name of the image file for saving the results.</li>
-<li><code>display_and_save_seCAM(SeCAMs, width, height, original_image, class_indices, class_labels, save_name, secam_threshold)</code>: Displays and saves the SeCAM results.</li>
-</ul>
-<h3 id="e-examples-of-work">
-  e) Examples of Work:
-  <a class="anchor" href="#e-examples-of-work">#</a>
-</h3>
-<p>Here you can see the results of applying SeCAM to an image of a dogs using different number of segments and threshold values:</p>
-<p>
-  <img src="/SeCAM/CAM_dogs.png" alt="SeCAM Example" />
-
-  <img src="/SeCAM/SeCAM_dogs.png" alt="SeCAM Example" /></p>
-<p>There is another example of applying SeCAM to an image of a tiger:</p>
-<p>
-  <img src="/SeCAM/SeCAM_tiger.png" alt="SeCAM Example" /></p>
-<h2 id="conclusion">
-  Conclusion
-  <a class="anchor" href="#conclusion">#</a>
-</h2>
-<p>In this tutorial, we have explored the concepts of Class Activation Mapping (CAM) and Segmentation-based Class Activation Mapping (SeCAM) as Explainable AI (XAI) methods for understanding image classification models.
+SeCAM helps in understanding and interpreting the decisions of Convolutional Neural Network (CNN) models by highlighting regions of the image that are most influential in the model&rsquo;s prediction, segmented into meaningful parts.</p><p><img src=/SeCAM/SeCAM_architecture.png alt="SeCAM Example"></p><h3 id=how-secam-works>How SeCAM Works
+<a class=anchor href=#how-secam-works>#</a></h3><h3 id=a-steps-involved-in-secam>a) Steps Involved in SeCAM:
+<a class=anchor href=#a-steps-involved-in-secam>#</a></h3><ol><li><p><strong>Feature Extraction</strong>:</p><ul><li>Extract the feature maps from the last convolutional layer of the CNN.</li></ul></li><li><p><strong>Global Average Pooling (GAP)</strong>:</p><ul><li>Apply Global Average Pooling (GAP) to the feature maps to get a vector of size equal to the number of feature maps.</li></ul></li><li><p><strong>Fully Connected Layer</strong>:</p><ul><li>The GAP output is fed into a fully connected layer to get the final class scores.</li></ul></li><li><p><strong>Class Activation Mapping (CAM)</strong>:</p><ul><li>For a given class, compute the weighted sum of the feature maps using the weights from the fully connected layer.</li></ul></li><li><p><strong>Superpixel Segmentation</strong>:</p><ul><li>Segment the input image into superpixels using the SLIC (Simple Linear Iterative Clustering) algorithm.</li></ul></li><li><p><strong>Segmentation-based CAM (SeCAM)</strong>:</p><ul><li>Combine the CAM values with the segmented superpixels to compute the SeCAM values for each region.</li></ul></li></ol><h3 id=b-slic-simple-linear-iterative-clustering-algorithm>b) SLIC (Simple Linear Iterative Clustering) Algorithm
+<a class=anchor href=#b-slic-simple-linear-iterative-clustering-algorithm>#</a></h3><p>SLIC is a superpixel segmentation algorithm that clusters pixels in an image into superpixels. Superpixels are contiguous groups of pixels with similar colors or gray levels. The SLIC algorithm adapts k-means clustering to efficiently generate superpixels with uniform size and compactness.</p><h3 id=steps-of-the-slic-algorithm>Steps of the SLIC Algorithm
+<a class=anchor href=#steps-of-the-slic-algorithm>#</a></h3><ol><li><p><strong>Initialization</strong>:</p><ul><li><strong>Grid Sampling</strong>: The image is divided into a grid of <span>\( N/K \)
+</span>equally spaced initial cluster centers, where <span>\(N\)
+</span>is the number of pixels, and <span>\(K\)
+</span>is the desired number of superpixels.</li><li><strong>Perturbation</strong>: Each cluster center is moved to the lowest gradient position within a 3x3 neighborhood to avoid placing centers at edges.</li></ul></li><li><p><strong>Assignment</strong>:</p><ul><li>For each pixel, find the nearest cluster center based on a distance measure that includes color and spatial proximity.</li><li>Distance <span>\(D\)
+</span>is computed as a weighted sum of color distance and spatial distance.</li></ul></li><li><p><strong>Update</strong>:</p><ul><li>Update each cluster center to the mean of the pixels assigned to it.</li><li>Recompute the cluster centers.</li></ul></li><li><p><strong>Enforce Connectivity</strong>:</p><ul><li>Ensure that each superpixel is a single connected component.</li></ul></li><li><p><strong>Repeat</strong>:</p><ul><li>Repeat the assignment and update steps until convergence.</li></ul></li></ol><h3 id=distance-measure>Distance Measure
+<a class=anchor href=#distance-measure>#</a></h3><p>The distance <span>\(D\)
+</span>between a pixel <span>\(i\)
+</span>and a cluster center <span>\(k\)
+</span>is defined as:</p><span>\[D = \sqrt{d_{lab}^2 + \left(\frac{m}{S}\right)^2 d*{xy}^2}\]</span><p>where:</p><ul><li><span>\(d_{lab}\)
+</span>: Euclidean distance in the CIELAB color space.</li><li><span>\(d_{xy}\)
+</span>: Euclidean distance in the pixel coordinate space.</li><li><span>\(S\)
+</span>: Grid interval, approximately <span>\(\sqrt{N/K}\)
+</span>.</li><li><span>\(m\)
+</span>: Compactness parameter, controlling the trade-off between color similarity and spatial proximity.</li></ul><h3 id=numerical-example>Numerical Example
+<a class=anchor href=#numerical-example>#</a></h3><p>Assume we have a small 5x5 grayscale image:</p><span>\[\begin{bmatrix}
+10 & 10 & 10 & 20 & 20 \\
+10 & 10 & 10 & 20 & 20 \\
+10 & 10 & 10 & 20 & 20 \\
+30 & 30 & 30 & 40 & 40 \\
+30 & 30 & 30 & 40 & 40 \\
+\end{bmatrix}\]</span><p>Let&rsquo;s apply SLIC to generate 4 superpixels.</p><ol><li><p><strong>Initialization</strong>:</p><ul><li>Number of pixels <span>\(N = 25\)</span></li><li>Desired superpixels <span>\(K = 4\)</span></li><li>Grid interval <span>\(S \approx \sqrt{25 / 4} = 2.5\)</span></li><li>Place initial cluster centers (perturbed for the lowest gradient):<ul><li>Cluster Centers = <span>\(\{ (1, 1), (1, 4), (4, 1), (4, 4) \}\)</span></li></ul></li></ul></li><li><p><strong>Assignment</strong>:</p><ul><li>For each pixel, compute the distance <span>\(D\)
+</span>to each cluster center.</li><li>Example for pixel at (2,2):<ul><li>Color distance <span>\(d_{lab} = |10 - 10| = 0\)</span></li><li>Spatial distance <span>\(d_{xy} = \sqrt{(2-1)^2 + (2-1)^2} = \sqrt{2}\)</span></li><li>Assume <span>\(m = 10\)
+</span>, <span>\(S = 2.5\)
+</span>:
+<span>\[ D = \sqrt{0^2 + \left(\frac{10}{2.5}\right)^2 \cdot 2} = \sqrt{0 + 16 \cdot 2} = \sqrt{32} = 5.66
+\]</span></li></ul></li></ul></li><li><p><strong>Update</strong>:</p><ul><li>Update cluster centers based on the mean of the assigned pixels.</li><li>Recompute centers.</li></ul></li><li><p><strong>Enforce Connectivity</strong>:</p><ul><li>Ensure all superpixels are connected components.</li></ul></li><li><p><strong>Repeat</strong>:</p><ul><li>Iterate until convergence.</li></ul></li></ol><p><strong>Output Matrix with Segments</strong>:</p><p>After applying SLIC, we get the segmented image with superpixels. The output matrix might look like this:</p><span>\[\begin{bmatrix}
+1 & 1 & 1 & 2 & 2 \\
+1 & 1 & 1 & 2 & 2 \\
+1 & 1 & 1 & 2 & 2 \\
+3 & 3 & 3 & 4 & 4 \\
+3 & 3 & 3 & 4 & 4 \\
+\end{bmatrix}\]</span><h3 id=c-secam-equations>c) SeCAM Equations
+<a class=anchor href=#c-secam-equations>#</a></h3><ol><li><p><strong>Feature Maps</strong>:</p><ul><li>Let <span>\(f_k(x, y)\)
+</span>represent the activation of unit <span>\(k\)
+</span>in the feature map at spatial location <span>\((x, y)\)
+</span>.</li></ul></li><li><p><strong>Class Activation Map (CAM)</strong>:</p><ul><li>The CAM for class <span>\(c\)
+</span>is computed as:
+<span>\[ M_c(x, y) = \sum_{k} w_{k}^{c} f_k(x, y)
+\]
+</span>This gives the importance of each spatial element <span>\((x, y)\)
+</span>in the feature maps for class <span>\(c\)
+</span>.</li></ul></li><li><p><strong>SeCAM</strong>:</p><ul><li>For each superpixel, the SeCAM value is computed by averaging the CAM values within the superpixel:
+<span>\[ S_c(s) = \frac{1}{|s|} \sum_{(x, y) \in s} M_c(x, y)
+\]
+</span>where <span>\(|s|\)
+</span>is the number of pixels in superpixel <span>\(s\)
+</span>.</li></ul></li></ol><h3 id=d-implementation-with-code>d) Implementation with Code
+<a class=anchor href=#d-implementation-with-code>#</a></h3><h3 id=step-1-3-same-as-for-cam>Step 1-3: Same as for CAM
+<a class=anchor href=#step-1-3-same-as-for-cam>#</a></h3><h3 id=step-4-generate-secam>Step 4: Generate SeCAM
+<a class=anchor href=#step-4-generate-secam>#</a></h3><p>After all preparation steps, we can generate the Segmentation-based Class Activation Maps (SeCAM) for the top K predictions.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>generate_seCAM</span>(feature_maps, softmax_weights, class_indices, segments):
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    Generate Segmentation-based Class Activation Maps (SeCAM).
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param feature_maps: Convolutional feature maps
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param softmax_weights: Weights of the fully connected layer
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param class_indices: Class indices
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param segments: Segmented image regions
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :return: List of SeCAMs for the specified class indices
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    batch_size, num_channels, height, width <span style=color:#f92672>=</span> feature_maps<span style=color:#f92672>.</span>shape
+</span></span><span style=display:flex><span>    output_seCAMs <span style=color:#f92672>=</span> []
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> class_idx <span style=color:#f92672>in</span> class_indices:
+</span></span><span style=display:flex><span>        cam <span style=color:#f92672>=</span> softmax_weights[class_idx]<span style=color:#f92672>.</span>dot(feature_maps<span style=color:#f92672>.</span>reshape((num_channels, height <span style=color:#f92672>*</span> width)))
+</span></span><span style=display:flex><span>        cam <span style=color:#f92672>=</span> cam<span style=color:#f92672>.</span>reshape(height, width)
+</span></span><span style=display:flex><span>        cam <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>maximum(cam, <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>        cam <span style=color:#f92672>=</span> cam <span style=color:#f92672>/</span> np<span style=color:#f92672>.</span>max(cam)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># Resize segments to match cam size</span>
+</span></span><span style=display:flex><span>        segments_resized <span style=color:#f92672>=</span> cv2<span style=color:#f92672>.</span>resize(segments<span style=color:#f92672>.</span>astype(np<span style=color:#f92672>.</span>float32), (width, height), interpolation<span style=color:#f92672>=</span>cv2<span style=color:#f92672>.</span>INTER_NEAREST)
+</span></span><span style=display:flex><span>        segments_resized <span style=color:#f92672>=</span> segments_resized<span style=color:#f92672>.</span>astype(int)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        seCAM <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>zeros_like(cam)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> seg_val <span style=color:#f92672>in</span> np<span style=color:#f92672>.</span>unique(segments_resized):
+</span></span><span style=display:flex><span>            mask <span style=color:#f92672>=</span> (segments_resized <span style=color:#f92672>==</span> seg_val)
+</span></span><span style=display:flex><span>            seCAM[mask] <span style=color:#f92672>=</span> cam[mask]<span style=color:#f92672>.</span>mean()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        output_seCAMs<span style=color:#f92672>.</span>append(seCAM)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> output_seCAMs
+</span></span></code></pre></div><ul><li><code>batch_size, num_channels, height, width = feature_maps.shape</code>: Retrieves the shape of the feature maps.</li><li><code>output_seCAMs = []</code>: Initializes an empty list to store the SeCAMs.</li><li><code>for class_idx in class_indices</code>: Iterates over each class index.</li><li><code>cam = softmax_weights[class_idx].dot(feature_maps.reshape((num_channels, height * width)))</code>: Computes the CAM by taking the weighted sum of the feature maps.</li><li><code>cam = cam.reshape(height, width)</code>: Reshapes the CAM to the original feature map size.</li><li><code>cam = np.maximum(cam, 0)</code>: Ensures all CAM values are non-negative.</li><li><code>cam = cam / np.max(cam)</code>: Normalizes the CAM values to be in the range [0, 1].</li><li><code>segments_resized = cv2.resize(segments.astype(np.float32), (width, height), interpolation=cv2.INTER_NEAREST)</code>: Resizes the segments to match the CAM size.</li><li><code>segments_resized = segments_resized.astype(int)</code>: Converts the resized segments to integers.</li><li><code>seCAM = np.zeros_like(cam)</code>: Initializes an array of zeros with the same shape as the CAM.</li><li><code>for seg_val in np.unique(segments_resized)</code>: Iterates over each unique segment value.</li><li><code>mask = (segments_resized == seg_val)</code>: Creates a mask for the current segment.</li><li><code>seCAM[mask] = cam[mask].mean()</code>: Assigns the mean CAM value of the current segment to the SeCAM array.</li><li><code>output_seCAMs.append(seCAM)</code>: Adds the SeCAM to the list of output SeCAMs.</li></ul><p>This function generates Segmentation-based CAMs (SeCAMs) by combining CAM values with superpixel segments, resulting in more interpretable and precise discriminative regions.</p><h3 id=step-5-display-and-save-secam>Step 5: Display and Save SeCAM
+<a class=anchor href=#step-5-display-and-save-secam>#</a></h3><p>After generating the SeCAMs, we can overlay them on the original image, mask insignificant regions, and display the results.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>display_and_save_seCAM</span>(SeCAMs, width, height, original_image, save_name, secam_threshold, plot<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>):
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    Display and save the SeCAM images.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param SeCAMs: List of SeCAMs
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param width: Width of the original image
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param height: Height of the original image
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param original_image: Original input image
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param save_name: Name to save the output image
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param secam_threshold: Threshold to mask significant regions
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param plot: Whether to display the image
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    matplotlib<span style=color:#f92672>.</span>rcParams[<span style=color:#e6db74>&#39;figure.figsize&#39;</span>] <span style=color:#f92672>=</span> <span style=color:#ae81ff>15</span>, <span style=color:#ae81ff>12</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> i, seCAM <span style=color:#f92672>in</span> enumerate(SeCAMs):
+</span></span><span style=display:flex><span>        seCAM <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>uint8(<span style=color:#ae81ff>255</span> <span style=color:#f92672>*</span> seCAM)
+</span></span><span style=display:flex><span>        seCAM_resized <span style=color:#f92672>=</span> cv2<span style=color:#f92672>.</span>resize(seCAM, (width, height))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># Create a mask of the significant regions</span>
+</span></span><span style=display:flex><span>        mask <span style=color:#f92672>=</span> seCAM_resized <span style=color:#f92672>&gt;</span> (secam_threshold <span style=color:#f92672>*</span> seCAM_resized<span style=color:#f92672>.</span>max())
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># Create a black background image</span>
+</span></span><span style=display:flex><span>        black_bg <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>zeros_like(original_image)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># Apply the mask to the original image</span>
+</span></span><span style=display:flex><span>        result <span style=color:#f92672>=</span> original_image<span style=color:#f92672>.</span>copy()
+</span></span><span style=display:flex><span>        result[<span style=color:#f92672>~</span>mask] <span style=color:#f92672>=</span> black_bg[<span style=color:#f92672>~</span>mask]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># Save the result</span>
+</span></span><span style=display:flex><span>        cv2<span style=color:#f92672>.</span>imwrite(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;outputs/SeCAM_</span><span style=color:#e6db74>{</span>save_name<span style=color:#e6db74>}</span><span style=color:#e6db74>_</span><span style=color:#e6db74>{</span>i<span style=color:#e6db74>}</span><span style=color:#e6db74>.jpg&#34;</span>, result)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># Display the result</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> plot:
+</span></span><span style=display:flex><span>            image <span style=color:#f92672>=</span> plt<span style=color:#f92672>.</span>imread(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;outputs/SeCAM_</span><span style=color:#e6db74>{</span>save_name<span style=color:#e6db74>}</span><span style=color:#e6db74>_</span><span style=color:#e6db74>{</span>i<span style=color:#e6db74>}</span><span style=color:#e6db74>.jpg&#34;</span>)
+</span></span><span style=display:flex><span>            plt<span style=color:#f92672>.</span>imshow(image)
+</span></span><span style=display:flex><span>            plt<span style=color:#f92672>.</span>axis(<span style=color:#e6db74>&#39;off&#39;</span>)
+</span></span><span style=display:flex><span>            plt<span style=color:#f92672>.</span>show()
+</span></span></code></pre></div><ul><li><code>matplotlib.rcParams['figure.figsize'] = 15, 12</code>: Sets the figure size for matplotlib plots.</li><li><code>for i, seCAM in enumerate(SeCAMs)</code>: Iterates over each SeCAM.</li><li><code>seCAM = np.uint8(255 * seCAM)</code>: Scales the SeCAM values to the range [0, 255] and converts them to uint8 format.</li><li><code>seCAM_resized = cv2.resize(seCAM, (width, height))</code>: Resizes the SeCAM to match the original image size.</li><li><code>mask = seCAM_resized > (secam_threshold * seCAM_resized.max())</code>: Creates a mask for significant regions in the SeCAM.</li><li><code>black_bg = np.zeros_like(original_image)</code>: Creates a black background image.</li><li><code>result = original_image.copy()</code>: Copies the original image.</li><li><code>result[~mask] = black_bg[~mask]</code>: Applies the mask to the original image, keeping only the significant regions.</li><li><code>cv2.imwrite(f"outputs/SeCAM_{save_name}_{i}.jpg", result)</code>: Saves the result image.</li><li><code>image = plt.imread(f"outputs/SeCAM_{save_name}_{i}.jpg")</code>: Reads the saved image.</li><li><code>plt.imshow(image)</code>: Displays the image.</li><li><code>plt.axis('off')</code>: Hides the axis.</li><li><code>plt.show()</code>: Shows the image.</li></ul><p>This function overlays the SeCAM on the original image, masks insignificant regions, adds the class label, and saves the result. It also displays the final image.</p><h3 id=step-3-full-pipeline-for-generating-and-saving-secam>Step 3: Full Pipeline for Generating and Saving SeCAM
+<a class=anchor href=#step-3-full-pipeline-for-generating-and-saving-secam>#</a></h3><p>Finally, we can combine all the above steps into a single function to generate and save SeCAMs for the top K predictions of an input image.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>generate_and_save_seCAM</span>(image_path, topk_predictions, num_segments<span style=color:#f92672>=</span><span style=color:#ae81ff>50</span>, compactness<span style=color:#f92672>=</span><span style=color:#ae81ff>10</span>, secam_threshold<span style=color:#f92672>=</span><span style=color:#ae81ff>0.8</span>):
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    Generate and save SeCAM for the specified image and topk predictions.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param image_path: Path to the input image
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param topk_predictions: Number of top predictions to generate SeCAM for
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param num_segments: Number of segments for SLIC
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param compactness: Compactness parameter for SLIC
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    :param secam_threshold: Threshold to mask significant regions in SeCAM
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Load the class labels</span>
+</span></span><span style=display:flex><span>    class_labels <span style=color:#f92672>=</span> load_class_labels(<span style=color:#e6db74>&#39;LOC_synset_mapping.txt&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Read and preprocess the image</span>
+</span></span><span style=display:flex><span>    image_tensor, original_image, height, width <span style=color:#f92672>=</span> preprocess_image(image_path)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Load the model and extract features</span>
+</span></span><span style=display:flex><span>    model, features_blobs, softmax_weights <span style=color:#f92672>=</span> load_model_and_extract_features()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Get the top k predictions</span>
+</span></span><span style=display:flex><span>    class_indices <span style=color:#f92672>=</span> get_topk_predictions(model, image_tensor, topk_predictions)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Generate superpixels using SLIC</span>
+</span></span><span style=display:flex><span>    segments <span style=color:#f92672>=</span> slic(original_image, n_segments<span style=color:#f92672>=</span>num_segments, compactness<span style=color:#f92672>=</span>compactness, start_label<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Generate SeCAM for the top predictions</span>
+</span></span><span style=display:flex><span>    SeCAMs <span style=color:#f92672>=</span> generate_seCAM(features_blobs[<span style=color:#ae81ff>0</span>], softmax_weights, class_indices, segments)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Display and save the SeCAM results</span>
+</span></span><span style=display:flex><span>    save_name <span style=color:#f92672>=</span> image_path<span style=color:#f92672>.</span>split(<span style=color:#e6db74>&#39;/&#39;</span>)[<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>]<span style=color:#f92672>.</span>split(<span style=color:#e6db74>&#39;.&#39;</span>)[<span style=color:#ae81ff>0</span>] <span style=color:#f92672>+</span> <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;_seg_</span><span style=color:#e6db74>{</span>num_segments<span style=color:#e6db74>}</span><span style=color:#e6db74>_ts_</span><span style=color:#e6db74>{</span>secam_threshold<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    display_and_save_seCAM(SeCAMs, width, height, original_image, save_name, secam_threshold)
+</span></span></code></pre></div><ul><li><code>class_labels = load_class_labels('LOC_synset_mapping.txt')</code>: Loads the class labels from a specified file.</li><li><code>image_tensor, original_image, height, width = preprocess_image(image_path)</code>: Reads and preprocesses the input image, returning the preprocessed image tensor, original image, and image dimensions.</li><li><code>model, features_blobs, softmax_weights = load_model_and_extract_features()</code>: Loads the model and extracts the feature maps and softmax weights.</li><li><code>class_indices, _ = get_topk_predictions(model, image_tensor, topk_predictions)</code>: Gets the top K predictions for the input image.</li><li><code>segments = slic(original_image, n_segments=num_segments, compactness=compactness, start_label=1)</code>: Segments the input image into superpixels using the SLIC algorithm.</li><li><code>SeCAMs = generate_seCAM(features_blobs[0], softmax_weights, class_indices, segments)</code>: Generates the SeCAMs for the top predictions.</li><li><code>save_name = image_path.split('/')[-1].split('.')[0]</code>: Extracts the base name of the image file for saving the results.</li><li><code>display_and_save_seCAM(SeCAMs, width, height, original_image, class_indices, class_labels, save_name, secam_threshold)</code>: Displays and saves the SeCAM results.</li></ul><h3 id=e-examples-of-work>e) Examples of Work:
+<a class=anchor href=#e-examples-of-work>#</a></h3><p>Here you can see the results of applying SeCAM to an image of a dogs using different number of segments and threshold values:</p><p><img src=/SeCAM/CAM_dogs.png alt="SeCAM Example">
+<img src=/SeCAM/SeCAM_dogs.png alt="SeCAM Example"></p><p>There is another example of applying SeCAM to an image of a tiger:</p><p><img src=/SeCAM/SeCAM_tiger.png alt="SeCAM Example"></p><h2 id=conclusion>Conclusion
+<a class=anchor href=#conclusion>#</a></h2><p>In this tutorial, we have explored the concepts of Class Activation Mapping (CAM) and Segmentation-based Class Activation Mapping (SeCAM) as Explainable AI (XAI) methods for understanding image classification models.
 We have seen how CAM highlights discriminative regions in an image that contribute to the model&rsquo;s prediction and how SeCAM combines CAM with image segmentation to provide more interpretable and precise results.
 By visualizing the CAM and SeCAM results, we can gain insights into the decision-making process of Convolutional Neural Networks and understand the basis of their predictions.
-These XAI methods play a crucial role in making AI models more transparent, interpretable, and trustworthy in critical applications where human understanding is essential.</p>
-</article>
- 
-      
-
-      <footer class="book-footer">
-        
-  <div class="flex flex-wrap justify-between">
-
-
-
-
-  <div>
-    <a class="flex align-center" href="https://github.com/IU-PR/Capstone_project/tree/master//content/docs/Groups/CAM_and_SECAM.md" target="_blank" rel="noopener">
-      <img src="/svg/edit.svg" class="book-icon" alt="Edit" />
-      <span>Edit this page</span>
-    </a>
-  </div>
-
-
-</div>
-
-
-
-  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
-
-
- 
-        
-      </footer>
-
-      
-  
-  <div class="book-comments">
-
-</div>
-  
- 
-
-      <label for="menu-control" class="hidden book-menu-overlay"></label>
-    </div>
-
-    
-    <aside class="book-toc">
-      <div class="book-toc-content">
-        
-  
-<nav id="TableOfContents">
-  <ul>
-    <li><a href="#cam-and-secam-explainable-ai-for-understanding-image-classification-models">CAM and SeCAM: Explainable AI for Understanding Image Classification Models</a>
-      <ul>
-        <li><a href="#introduction">Introduction</a></li>
-        <li><a href="#section-1-overview-of-xai-methods">Section 1: Overview of XAI Methods</a></li>
-        <li><a href="#section-2-resnet50-architecture-and-importance-of-understanding">Section 2: ResNet50 Architecture and Importance of Understanding</a></li>
-        <li><a href="#section-3-class-activation-mapping-cam">Section 3: Class Activation Mapping (CAM)</a>
-          <ul>
-            <li><a href="#general-definition">General Definition</a></li>
-            <li><a href="#how-cam-works">How CAM Works:</a></li>
-            <li><a href="#a-steps-involved-in-cam">a) Steps Involved in CAM:</a></li>
-            <li><a href="#b-equations">b) Equations</a></li>
-            <li><a href="#c-implementation-with-code">c) Implementation with Code</a></li>
-            <li><a href="#step-1-preprocess-the-input-image">Step 1: Preprocess the Input Image</a></li>
-            <li><a href="#step-2-load-model-and-extract-features">Step 2: Load Model and Extract Features</a></li>
-            <li><a href="#step-3-get-top-k-predictions">Step 3: Get Top K Predictions</a></li>
-            <li><a href="#step-4-generate-class-activation-maps-cam">Step 4: Generate Class Activation Maps (CAM)</a></li>
-            <li><a href="#step-5-display-and-save-the-cam">Step 5: Display and Save the CAM</a></li>
-            <li><a href="#step-6-full-pipeline-for-generating-and-saving-cam">Step 6: Full Pipeline for Generating and Saving CAM</a></li>
-            <li><a href="#d-examples-of-work">d) Examples of Work:</a></li>
-          </ul>
-        </li>
-        <li><a href="#section-4-segmentation---class-activation-mapping-cam">Section 4: Segmentation - Class Activation Mapping (CAM)</a>
-          <ul>
-            <li><a href="#general-definition-1">General Definition</a></li>
-            <li><a href="#how-secam-works">How SeCAM Works</a></li>
-            <li><a href="#a-steps-involved-in-secam">a) Steps Involved in SeCAM:</a></li>
-            <li><a href="#b-slic-simple-linear-iterative-clustering-algorithm">b) SLIC (Simple Linear Iterative Clustering) Algorithm</a></li>
-            <li><a href="#steps-of-the-slic-algorithm">Steps of the SLIC Algorithm</a></li>
-            <li><a href="#distance-measure">Distance Measure</a></li>
-            <li><a href="#numerical-example">Numerical Example</a></li>
-            <li><a href="#c-secam-equations">c) SeCAM Equations</a></li>
-            <li><a href="#d-implementation-with-code">d) Implementation with Code</a></li>
-            <li><a href="#step-1-3-same-as-for-cam">Step 1-3: Same as for CAM</a></li>
-            <li><a href="#step-4-generate-secam">Step 4: Generate SeCAM</a></li>
-            <li><a href="#step-5-display-and-save-secam">Step 5: Display and Save SeCAM</a></li>
-            <li><a href="#step-3-full-pipeline-for-generating-and-saving-secam">Step 3: Full Pipeline for Generating and Saving SeCAM</a></li>
-            <li><a href="#e-examples-of-work">e) Examples of Work:</a></li>
-          </ul>
-        </li>
-        <li><a href="#conclusion">Conclusion</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-
-
- 
-      </div>
-    </aside>
-    
-  </main>
-
-  
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
+These XAI methods play a crucial role in making AI models more transparent, interpretable, and trustworthy in critical applications where human understanding is essential.</p></article><footer class=book-footer><div class="flex flex-wrap justify-between"><div><a class="flex align-center" href=https://github.com/IU-PR/Capstone_project/tree/master//content/docs/Groups/CAM_and_SECAM.md target=_blank rel=noopener><img src=/svg/edit.svg class=book-icon alt=Edit>
+<span>Edit this page</span></a></div></div><script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><div class=book-toc-content><nav id=TableOfContents><ul><li><a href=#cam-and-secam-explainable-ai-for-understanding-image-classification-models>CAM and SeCAM: Explainable AI for Understanding Image Classification Models</a><ul><li><a href=#introduction>Introduction</a></li><li><a href=#section-1-overview-of-xai-methods>Section 1: Overview of XAI Methods</a></li><li><a href=#section-2-resnet50-architecture-and-importance-of-understanding>Section 2: ResNet50 Architecture and Importance of Understanding</a></li><li><a href=#section-3-class-activation-mapping-cam>Section 3: Class Activation Mapping (CAM)</a><ul><li><a href=#general-definition>General Definition</a></li><li><a href=#how-cam-works>How CAM Works:</a></li><li><a href=#a-steps-involved-in-cam>a) Steps Involved in CAM:</a></li><li><a href=#b-equations>b) Equations</a></li><li><a href=#c-implementation-with-code>c) Implementation with Code</a></li><li><a href=#step-1-preprocess-the-input-image>Step 1: Preprocess the Input Image</a></li><li><a href=#step-2-load-model-and-extract-features>Step 2: Load Model and Extract Features</a></li><li><a href=#step-3-get-top-k-predictions>Step 3: Get Top K Predictions</a></li><li><a href=#step-4-generate-class-activation-maps-cam>Step 4: Generate Class Activation Maps (CAM)</a></li><li><a href=#step-5-display-and-save-the-cam>Step 5: Display and Save the CAM</a></li><li><a href=#step-6-full-pipeline-for-generating-and-saving-cam>Step 6: Full Pipeline for Generating and Saving CAM</a></li><li><a href=#d-examples-of-work>d) Examples of Work:</a></li></ul></li><li><a href=#section-4-segmentation---class-activation-mapping-cam>Section 4: Segmentation - Class Activation Mapping (CAM)</a><ul><li><a href=#general-definition-1>General Definition</a></li><li><a href=#how-secam-works>How SeCAM Works</a></li><li><a href=#a-steps-involved-in-secam>a) Steps Involved in SeCAM:</a></li><li><a href=#b-slic-simple-linear-iterative-clustering-algorithm>b) SLIC (Simple Linear Iterative Clustering) Algorithm</a></li><li><a href=#steps-of-the-slic-algorithm>Steps of the SLIC Algorithm</a></li><li><a href=#distance-measure>Distance Measure</a></li><li><a href=#numerical-example>Numerical Example</a></li><li><a href=#c-secam-equations>c) SeCAM Equations</a></li><li><a href=#d-implementation-with-code>d) Implementation with Code</a></li><li><a href=#step-1-3-same-as-for-cam>Step 1-3: Same as for CAM</a></li><li><a href=#step-4-generate-secam>Step 4: Generate SeCAM</a></li><li><a href=#step-5-display-and-save-secam>Step 5: Display and Save SeCAM</a></li><li><a href=#step-3-full-pipeline-for-generating-and-saving-secam>Step 3: Full Pipeline for Generating and Saving SeCAM</a></li><li><a href=#e-examples-of-work>e) Examples of Work:</a></li></ul></li><li><a href=#conclusion>Conclusion</a></li></ul></li></ul></nav></div></aside></main></body></html>

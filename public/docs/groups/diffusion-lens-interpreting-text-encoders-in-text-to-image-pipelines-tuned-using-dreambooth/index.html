@@ -1,468 +1,57 @@
-<!DOCTYPE html>
-<html lang="en-us" dir="ltr">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines # Authors: Ivan Golov, Roman Makeev
+<!doctype html><html lang=en-us dir=ltr><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines # Authors: Ivan Golov, Roman Makeev
 To see the implementation, visit our github project.
 Introduction # In this work, we introduce an interpretable, end-to-end framework that enhances Stable Diffusion v1.5 model fine‑tuned via the DreamBooth method [1] to generate high‑fidelity, subject‑driven images from as few reference examples.
-While DreamBooth effectively personalizes generation by associating a unique rare token with the target concept, the internal process through which textual prompts are transformed into visual representations remains opaque.">
-<meta name="theme-color" content="#FFFFFF">
-<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/docs/groups/diffusion-lens-interpreting-text-encoders-in-text-to-image-pipelines-tuned-using-dreambooth/">
-  <meta property="og:site_name" content="XAI">
-  <meta property="og:title" content="Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines">
-  <meta property="og:description" content="Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines # Authors: Ivan Golov, Roman Makeev
+While DreamBooth effectively personalizes generation by associating a unique rare token with the target concept, the internal process through which textual prompts are transformed into visual representations remains opaque."><meta name=theme-color content="#FFFFFF"><meta name=color-scheme content="light dark"><meta property="og:url" content="http://localhost:1313/docs/groups/diffusion-lens-interpreting-text-encoders-in-text-to-image-pipelines-tuned-using-dreambooth/"><meta property="og:site_name" content="XAI"><meta property="og:title" content="Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines"><meta property="og:description" content="Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines # Authors: Ivan Golov, Roman Makeev
 To see the implementation, visit our github project.
 Introduction # In this work, we introduce an interpretable, end-to-end framework that enhances Stable Diffusion v1.5 model fine‑tuned via the DreamBooth method [1] to generate high‑fidelity, subject‑driven images from as few reference examples.
-While DreamBooth effectively personalizes generation by associating a unique rare token with the target concept, the internal process through which textual prompts are transformed into visual representations remains opaque.">
-  <meta property="og:locale" content="en_us">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="docs">
-<title>Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines | XAI</title>
-<link rel="manifest" href="/manifest.json">
-<link rel="icon" href="/favicon.png" type="image/x-icon">
-<link rel="stylesheet" href="/book.min.e832d4e94212199857473bcf13a450d089c3fcd54ccadedcfac84ed0feff83fb.css" integrity="sha256-6DLU6UISGZhXRzvPE6RQ0InD/NVMyt7c&#43;shO0P7/g/s=" crossorigin="anonymous">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/mathtex-script-type.min.js" integrity="sha384-jiBVvJ8NGGj5n7kJaiWwWp9AjC+Yh8rhZY3GtAX8yU28azcLgoRo4oukO87g7zDT" crossorigin="anonymous"></script>
-  <script defer src="/flexsearch.min.js"></script>
-  <script defer src="/en.search.min.690e50761b66b2e4cf12ec5df41f0c40cac7f8b58f42e8845ad4158a9deab588.js" integrity="sha256-aQ5QdhtmsuTPEuxd9B8MQMrH&#43;LWPQuiEWtQVip3qtYg=" crossorigin="anonymous"></script>
-
-  <script defer src="/sw.min.6f6f90fcb8eb1c49ec389838e6b801d0de19430b8e516902f8d75c3c8bd98739.js" integrity="sha256-b2&#43;Q/LjrHEnsOJg45rgB0N4ZQwuOUWkC&#43;NdcPIvZhzk=" crossorigin="anonymous"></script>
-
-  
-
-<!--
-Made with Book Theme
-https://github.com/alex-shpak/hugo-book
--->
-  
-</head>
-<body dir="ltr">
-  <input type="checkbox" class="hidden toggle" id="menu-control" />
-  <input type="checkbox" class="hidden toggle" id="toc-control" />
-  <main class="container flex">
-    <aside class="book-menu">
-      <div class="book-menu-content">
-        
-  <nav>
-<h2 class="book-brand">
-  <a class="flex align-center" href="/"><img src="/YELLOW_BAR.png" alt="Logo" /><span><b>XAI</b></span>
-  </a>
-</h2>
-
-
-<div class="book-search">
-  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
-  <div class="book-search-spinner hidden"></div>
-  <ul id="book-search-results"></ul>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-  
-  <ul>
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/cam_and_secam/" class="">CAM and SeCAM</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/diffusion-lens-interpreting-text-encoders-in-text-to-image-pipelines-tuned-using-dreambooth/" class="active">Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/dimensionality-reduction-in-nlp-visualizing-sentence-embeddings-with-umap-and-t-sne/" class="">Dimensionality Reduction in NLP: Visualizing Sentence Embeddings with UMAP and t-SNE</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/example/" class="">Example</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/ai-playing-geoguessr-explained/" class="">Ai Playing Geo Guessr Explained</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/contrastive-grad-cam-consistency/" class="">Contrastive Grad Cam Consistency</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/dndfs_shap/" class="">Dndfs Shap</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/gradcam/" class="">Grad Cam</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/integrated-gradients/" class="">Integrated Gradients</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/kernel-shap/" class="">Kernel Shap</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/rag/" class="">Rag</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/shap_darya_and_viktoria/" class="">Shap Darya and Viktoria</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/sverl_tac_toe/" class="">Sverl Tac Toe</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/torchprism/" class="">Torch Prism</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="/docs/groups/xai_for_transformers/" class="">Xai for Transformers</a>
-  
-
-        </li>
-      
-    
-  </ul>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</nav>
-
-
-
-
-  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
-
-
- 
-      </div>
-    </aside>
-
-    <div class="book-page">
-      <header class="book-header">
-        
-  <div class="flex align-center justify-between">
-  <label for="menu-control">
-    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
-  </label>
-
-  <strong>Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines</strong>
-
-  <label for="toc-control">
-    
-    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
-    
-  </label>
-</div>
-
-
-  
-  <aside class="hidden clearfix">
-    
-  
-<nav id="TableOfContents">
-  <ul>
-    <li><a href="#diffusion-lens-interpreting-text-encoders-in-text-to-image-pipelines"><strong>Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines</strong></a>
-      <ul>
-        <li><a href="#introduction"><strong>Introduction</strong></a></li>
-        <li><a href="#background"><strong>Background</strong></a>
-          <ul>
-            <li><a href="#section-1-dreambooth-fine-tuning"><strong>Section 1: DreamBooth Fine-Tuning</strong></a></li>
-            <li><a href="#section-2-diffusion-lens-interpretability"><strong>Section 2: Diffusion Lens Interpretability</strong></a></li>
-          </ul>
-        </li>
-        <li><a href="#methodology"><strong>Methodology</strong></a>
-          <ul>
-            <li><a href="#31-codebase-organization"><strong>3.1 Codebase Organization</strong></a></li>
-            <li><a href="#32-text-encoder-architecture"><strong>3.2 Text Encoder Architecture</strong></a></li>
-            <li><a href="#33-diffusion-lens-pipeline-setup"><strong>3.3 Diffusion Lens Pipeline Setup</strong></a></li>
-            <li><a href="#34-unified-layerwise-decoding--latent-snapshotting"><strong>3.4 Unified Layer‑wise Decoding &amp; Latent Snapshotting</strong></a></li>
-          </ul>
-        </li>
-        <li><a href="#experiments-and-analysis"><strong>Experiments and Analysis</strong></a>
-          <ul>
-            <li><a href="#1-dreambooth-explainability-during-training"><strong>1. DreamBooth Explainability During Training</strong></a></li>
-            <li><a href="#insights"><strong>Insights</strong></a></li>
-            <li><a href="#2-comparing-the-raw-text-encoder-vs-fine-tuned-via-dreambooth"><strong>2. Comparing the Raw Text Encoder vs Fine-Tuned via DreamBooth</strong></a></li>
-            <li><a href="#3-diving-into-the-latent-spaces-understanding-representational-changes"><strong>3. Diving into the Latent Spaces: Understanding Representational Changes</strong></a></li>
-          </ul>
-        </li>
-        <li><a href="#conclusion"><strong>Conclusion</strong></a></li>
-        <li><a href="#references"><strong>References</strong></a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-
-
-
-  </aside>
-  
- 
-      </header>
-
-      
-      
-  <article class="markdown"><h1 id="diffusion-lens-interpreting-text-encoders-in-text-to-image-pipelines">
-  <strong>Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines</strong>
-  <a class="anchor" href="#diffusion-lens-interpreting-text-encoders-in-text-to-image-pipelines">#</a>
-</h1>
-<p><strong>Authors: Ivan Golov, Roman Makeev</strong></p>
-<p><em>To see the implementation, visit our 
-  <a href="https://github.com/IVproger/GAI_course_project/tree/xai">github project</a>.</em></p>
-<!-- Example of image loading -->
-<!-- ![Diffusion Lens Diagram](/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth.png) -->
-<hr>
-<h2 id="introduction">
-  <strong>Introduction</strong>
-  <a class="anchor" href="#introduction">#</a>
-</h2>
-<p>In this work, we introduce an interpretable, end-to-end framework that enhances <strong>Stable Diffusion v1.5 model</strong> fine‑tuned via the 
-  <a href="https://dreambooth.github.io">DreamBooth method</a> [1] to generate high‑fidelity, subject‑driven images from as few reference examples.</p>
-<p>While DreamBooth effectively personalizes generation by associating a unique rare token with the target concept, the internal process through which textual prompts are transformed into visual representations remains opaque. To bridge this gap, we integrate 
-  <a href="https://tokeron.github.io/DiffusionLensWeb/">Diffusion Lens</a> [2], a visualization technique that decodes the text encoder’s intermediate hidden states into images, producing a layer‑by‑layer sequence that illuminates how semantic concepts emerge and refine over the course of encoding.</p>
-<h2 id="background">
-  <strong>Background</strong>
-  <a class="anchor" href="#background">#</a>
-</h2>
-<h3 id="section-1-dreambooth-fine-tuning">
-  <strong>Section 1: DreamBooth Fine-Tuning</strong>
-  <a class="anchor" href="#section-1-dreambooth-fine-tuning">#</a>
-</h3>
-<p>DreamBooth [1] fine-tunes a pre-trained diffusion model <strong>with a small set (3–5) of images of a subject by binding a unique, rare-token identifier to the subject</strong>. The rare token, chosen from the text encoder’s vocabulary, acts as a minimal prior and is used to encode target image features and styles. The main training objective is given by:</p>
-<p>
-  <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_math.png" alt="Loss functions" /></p>
-<p>An additional prior preservation loss ensures that the model retains its generalization over the subject’s class even after fine-tuning.</p>
-<p>
-  <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth.png" alt="DreamBooth framework" /></p>
-<p>Figure 1: Illustration of the DreamBooth approach: Fine-tuning the diffusion model using rare tokens to
-encode target subject details and style</p>
-<p>
-  <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_examples.png" alt="DreamBooth example" /></p>
-<p>Figure 2: Expected output from DreamBooth fine-tuning: Images generated that exhibit the target subject
-details and stylistic features as encoded by the rare tokens.</p>
-<h3 id="section-2-diffusion-lens-interpretability">
-  <strong>Section 2: Diffusion Lens Interpretability</strong>
-  <a class="anchor" href="#section-2-diffusion-lens-interpretability">#</a>
-</h3>
-<p>Diffusion Lens [2] is employed to analyze <strong>the internal representations of the text encoder after the fine-tuning process</strong>. Rather than solely relying on the final output, we generate images from intermediate hidden states.
-For a given layer l (with l &lt; L for a total of L layers), the generated image is:</p>
-<p>
-  <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/DiffLen_math.png" alt="Diffusion Lens math" /></p>
-<p>This method provides:</p>
-<ul>
-<li><strong>Layer-by-Layer Understanding:</strong> Early layers capture basic, unstructured representations (a “bag
-of concepts”), while later layers progressively refine and organize these ideas.</li>
-<li><strong>Complexity Analysis:</strong> Simple prompts (e.g., “a cat”) yield clear representations in early layers,
+While DreamBooth effectively personalizes generation by associating a unique rare token with the target concept, the internal process through which textual prompts are transformed into visual representations remains opaque."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="docs"><title>Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines | XAI</title>
+<link rel=manifest href=/manifest.json><link rel=icon href=/favicon.png type=image/x-icon><link rel=stylesheet href=/book.min.e832d4e94212199857473bcf13a450d089c3fcd54ccadedcfac84ed0feff83fb.css integrity="sha256-6DLU6UISGZhXRzvPE6RQ0InD/NVMyt7c+shO0P7/g/s=" crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/mathtex-script-type.min.js integrity=sha384-jiBVvJ8NGGj5n7kJaiWwWp9AjC+Yh8rhZY3GtAX8yU28azcLgoRo4oukO87g7zDT crossorigin=anonymous></script><script defer src=/flexsearch.min.js></script><script defer src=/en.search.min.690e50761b66b2e4cf12ec5df41f0c40cac7f8b58f42e8845ad4158a9deab588.js integrity="sha256-aQ5QdhtmsuTPEuxd9B8MQMrH+LWPQuiEWtQVip3qtYg=" crossorigin=anonymous></script><script defer src=/sw.min.6f6f90fcb8eb1c49ec389838e6b801d0de19430b8e516902f8d75c3c8bd98739.js integrity="sha256-b2+Q/LjrHEnsOJg45rgB0N4ZQwuOUWkC+NdcPIvZhzk=" crossorigin=anonymous></script></head><body dir=ltr><input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><div class=book-menu-content><nav><h2 class=book-brand><a class="flex align-center" href=/><img src=/YELLOW_BAR.png alt=Logo><span><b>XAI</b></span></a></h2><div class=book-search><input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><ul><li><a href=/docs/groups/cam_and_secam/>CAM and SeCAM</a></li><li><a href=/docs/groups/diffusion-lens-interpreting-text-encoders-in-text-to-image-pipelines-tuned-using-dreambooth/ class=active>Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines</a></li><li><a href=/docs/groups/dimensionality-reduction-in-nlp-visualizing-sentence-embeddings-with-umap-and-t-sne/>Dimensionality Reduction in NLP: Visualizing Sentence Embeddings with UMAP and t-SNE</a></li><li><a href=/docs/groups/example/>Example</a></li><li><a href=/docs/groups/ai-playing-geoguessr-explained/>Ai Playing Geo Guessr Explained</a></li><li><a href=/docs/groups/contrastive-grad-cam-consistency/>Contrastive Grad Cam Consistency</a></li><li><a href=/docs/groups/dndfs_shap/>Dndfs Shap</a></li><li><a href=/docs/groups/gradcam/>Grad Cam</a></li><li><a href=/docs/groups/integrated-gradients/>Integrated Gradients</a></li><li><a href=/docs/groups/kernel-shap/>Kernel Shap</a></li><li><a href=/docs/groups/rag/>Rag</a></li><li><a href=/docs/groups/shap_darya_and_viktoria/>Shap Darya and Viktoria</a></li><li><a href=/docs/groups/sverl_tac_toe/>Sverl Tac Toe</a></li><li><a href=/docs/groups/torchprism/>Torch Prism</a></li><li><a href=/docs/groups/xai_for_transformers/>Xai for Transformers</a></li></ul></nav><script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script></div></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/svg/menu.svg class=book-icon alt=Menu>
+</label><strong>Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines</strong>
+<label for=toc-control><img src=/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#diffusion-lens-interpreting-text-encoders-in-text-to-image-pipelines><strong>Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines</strong></a><ul><li><a href=#introduction><strong>Introduction</strong></a></li><li><a href=#background><strong>Background</strong></a><ul><li><a href=#section-1-dreambooth-fine-tuning><strong>Section 1: DreamBooth Fine-Tuning</strong></a></li><li><a href=#section-2-diffusion-lens-interpretability><strong>Section 2: Diffusion Lens Interpretability</strong></a></li></ul></li><li><a href=#methodology><strong>Methodology</strong></a><ul><li><a href=#31-codebase-organization><strong>3.1 Codebase Organization</strong></a></li><li><a href=#32-text-encoder-architecture><strong>3.2 Text Encoder Architecture</strong></a></li><li><a href=#33-diffusion-lens-pipeline-setup><strong>3.3 Diffusion Lens Pipeline Setup</strong></a></li><li><a href=#34-unified-layerwise-decoding--latent-snapshotting><strong>3.4 Unified Layer‑wise Decoding & Latent Snapshotting</strong></a></li></ul></li><li><a href=#experiments-and-analysis><strong>Experiments and Analysis</strong></a><ul><li><a href=#1-dreambooth-explainability-during-training><strong>1. DreamBooth Explainability During Training</strong></a></li><li><a href=#insights><strong>Insights</strong></a></li><li><a href=#2-comparing-the-raw-text-encoder-vs-fine-tuned-via-dreambooth><strong>2. Comparing the Raw Text Encoder vs Fine-Tuned via DreamBooth</strong></a></li><li><a href=#3-diving-into-the-latent-spaces-understanding-representational-changes><strong>3. Diving into the Latent Spaces: Understanding Representational Changes</strong></a></li></ul></li><li><a href=#conclusion><strong>Conclusion</strong></a></li><li><a href=#references><strong>References</strong></a></li></ul></li></ul></nav></aside></header><article class=markdown><h1 id=diffusion-lens-interpreting-text-encoders-in-text-to-image-pipelines><strong>Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines</strong>
+<a class=anchor href=#diffusion-lens-interpreting-text-encoders-in-text-to-image-pipelines>#</a></h1><p><strong>Authors: Ivan Golov, Roman Makeev</strong></p><p><em>To see the implementation, visit our
+<a href=https://github.com/IVproger/GAI_course_project/tree/xai>github project</a>.</em></p><hr><h2 id=introduction><strong>Introduction</strong>
+<a class=anchor href=#introduction>#</a></h2><p>In this work, we introduce an interpretable, end-to-end framework that enhances <strong>Stable Diffusion v1.5 model</strong> fine‑tuned via the
+<a href=https://dreambooth.github.io>DreamBooth method</a> [1] to generate high‑fidelity, subject‑driven images from as few reference examples.</p><p>While DreamBooth effectively personalizes generation by associating a unique rare token with the target concept, the internal process through which textual prompts are transformed into visual representations remains opaque. To bridge this gap, we integrate
+<a href=https://tokeron.github.io/DiffusionLensWeb/>Diffusion Lens</a> [2], a visualization technique that decodes the text encoder’s intermediate hidden states into images, producing a layer‑by‑layer sequence that illuminates how semantic concepts emerge and refine over the course of encoding.</p><h2 id=background><strong>Background</strong>
+<a class=anchor href=#background>#</a></h2><h3 id=section-1-dreambooth-fine-tuning><strong>Section 1: DreamBooth Fine-Tuning</strong>
+<a class=anchor href=#section-1-dreambooth-fine-tuning>#</a></h3><p>DreamBooth [1] fine-tunes a pre-trained diffusion model <strong>with a small set (3–5) of images of a subject by binding a unique, rare-token identifier to the subject</strong>. The rare token, chosen from the text encoder’s vocabulary, acts as a minimal prior and is used to encode target image features and styles. The main training objective is given by:</p><p><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_math.png alt="Loss functions"></p><p>An additional prior preservation loss ensures that the model retains its generalization over the subject’s class even after fine-tuning.</p><p><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth.png alt="DreamBooth framework"></p><p>Figure 1: Illustration of the DreamBooth approach: Fine-tuning the diffusion model using rare tokens to
+encode target subject details and style</p><p><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_examples.png alt="DreamBooth example"></p><p>Figure 2: Expected output from DreamBooth fine-tuning: Images generated that exhibit the target subject
+details and stylistic features as encoded by the rare tokens.</p><h3 id=section-2-diffusion-lens-interpretability><strong>Section 2: Diffusion Lens Interpretability</strong>
+<a class=anchor href=#section-2-diffusion-lens-interpretability>#</a></h3><p>Diffusion Lens [2] is employed to analyze <strong>the internal representations of the text encoder after the fine-tuning process</strong>. Rather than solely relying on the final output, we generate images from intermediate hidden states.
+For a given layer l (with l &lt; L for a total of L layers), the generated image is:</p><p><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/DiffLen_math.png alt="Diffusion Lens math"></p><p>This method provides:</p><ul><li><strong>Layer-by-Layer Understanding:</strong> Early layers capture basic, unstructured representations (a “bag
+of concepts”), while later layers progressively refine and organize these ideas.</li><li><strong>Complexity Analysis:</strong> Simple prompts (e.g., “a cat”) yield clear representations in early layers,
 whereas complex prompts (e.g., “a red car next to a blue bike”) require deeper layers to form accurate
-relational structures.</li>
-<li><strong>Concept Frequency Insights:</strong> Common concepts appear early; uncommon or detailed concepts
-emerge only in higher layers.</li>
-<li><strong>Impact Analysis:</strong> By comparing the intermediate representations before and after applying adapter
+relational structures.</li><li><strong>Concept Frequency Insights:</strong> Common concepts appear early; uncommon or detailed concepts
+emerge only in higher layers.</li><li><strong>Impact Analysis:</strong> By comparing the intermediate representations before and after applying adapter
 techniques (e.g., LoRA), we can study how such modifications alter the text encoder’s understanding
-and the final image generation.</li>
-<li><strong>No Extra Training Required:</strong> The analysis leverages the pre-trained model without modifying its
-architecture</li>
-</ul>
-<p>
-  <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/difflens.png" alt="Diffusion Lens Diagram" /></p>
-<h2 id="methodology">
-  <strong>Methodology</strong>
-  <a class="anchor" href="#methodology">#</a>
-</h2>
-<h3 id="31-codebase-organization">
-  <strong>3.1 Codebase Organization</strong>
-  <a class="anchor" href="#31-codebase-organization">#</a>
-</h3>
-<p>Our project is structured to cleanly separate main modules and scripts:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>GAI_course_project/
-</span></span><span style="display:flex;"><span>├── configs/                 # YAML/JSON configs for training and inference
-</span></span><span style="display:flex;"><span>├── data/                    # Raw and preprocessed datasets
-</span></span><span style="display:flex;"><span>├── DiffusionLens/           # Core implementation of Diffusion Lens pipeline
-</span></span><span style="display:flex;"><span>├── inference_outputs/       # Generated images and logs from inference runs
-</span></span><span style="display:flex;"><span>├── lens_output/             # Intermediate visualizations produced by Diffusion Lens
-</span></span><span style="display:flex;"><span>├── LICENSE
-</span></span><span style="display:flex;"><span>├── notebooks/               # Experiment notebooks
-</span></span><span style="display:flex;"><span>│   ├── Diffusion_Lens_framework.ipynb
-</span></span><span style="display:flex;"><span>│   ├── Experiment№1_token_understanding.ipynb
-</span></span><span style="display:flex;"><span>│   ├── Experiment№2_latent_representations.ipynb
-</span></span><span style="display:flex;"><span>│   ├── Text_Encoder_Architecture_exploration.ipynb
-</span></span><span style="display:flex;"><span>│   └── README.md
-</span></span><span style="display:flex;"><span>├── outputs/                 # Final sample images and metrics
-</span></span><span style="display:flex;"><span>├── papers/                  # PDF versions of referenced papers
-</span></span><span style="display:flex;"><span>├── poetry.lock              # Dependency lockfile
-</span></span><span style="display:flex;"><span>├── pyproject.toml           # Package definition
-</span></span><span style="display:flex;"><span>├── README.md
-</span></span><span style="display:flex;"><span>├── requirements.txt         # pip dependencies
-</span></span><span style="display:flex;"><span>├── scripts/                 # Utility scripts (data download, env setup ... )
-</span></span><span style="display:flex;"><span>├── src/                     # Main training and evaluation code
-</span></span><span style="display:flex;"><span>└── static/                  # Fixed assets (figures, math images)
-</span></span></code></pre></div><hr>
-<h3 id="32-text-encoder-architecture">
-  <strong>3.2 Text Encoder Architecture</strong>
-  <a class="anchor" href="#32-text-encoder-architecture">#</a>
-</h3>
-<p>We use the Hugging Face CLIPTextModel from <code>sd-legacy/stable-diffusion-v1-5</code>:</p>
-<pre tabindex="0"><code>CLIPTextModel(
+and the final image generation.</li><li><strong>No Extra Training Required:</strong> The analysis leverages the pre-trained model without modifying its
+architecture</li></ul><p><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/difflens.png alt="Diffusion Lens Diagram"></p><h2 id=methodology><strong>Methodology</strong>
+<a class=anchor href=#methodology>#</a></h2><h3 id=31-codebase-organization><strong>3.1 Codebase Organization</strong>
+<a class=anchor href=#31-codebase-organization>#</a></h3><p>Our project is structured to cleanly separate main modules and scripts:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>GAI_course_project/
+</span></span><span style=display:flex><span>├── configs/                 # YAML/JSON configs for training and inference
+</span></span><span style=display:flex><span>├── data/                    # Raw and preprocessed datasets
+</span></span><span style=display:flex><span>├── DiffusionLens/           # Core implementation of Diffusion Lens pipeline
+</span></span><span style=display:flex><span>├── inference_outputs/       # Generated images and logs from inference runs
+</span></span><span style=display:flex><span>├── lens_output/             # Intermediate visualizations produced by Diffusion Lens
+</span></span><span style=display:flex><span>├── LICENSE
+</span></span><span style=display:flex><span>├── notebooks/               # Experiment notebooks
+</span></span><span style=display:flex><span>│   ├── Diffusion_Lens_framework.ipynb
+</span></span><span style=display:flex><span>│   ├── Experiment№1_token_understanding.ipynb
+</span></span><span style=display:flex><span>│   ├── Experiment№2_latent_representations.ipynb
+</span></span><span style=display:flex><span>│   ├── Text_Encoder_Architecture_exploration.ipynb
+</span></span><span style=display:flex><span>│   └── README.md
+</span></span><span style=display:flex><span>├── outputs/                 # Final sample images and metrics
+</span></span><span style=display:flex><span>├── papers/                  # PDF versions of referenced papers
+</span></span><span style=display:flex><span>├── poetry.lock              # Dependency lockfile
+</span></span><span style=display:flex><span>├── pyproject.toml           # Package definition
+</span></span><span style=display:flex><span>├── README.md
+</span></span><span style=display:flex><span>├── requirements.txt         # pip dependencies
+</span></span><span style=display:flex><span>├── scripts/                 # Utility scripts (data download, env setup ... )
+</span></span><span style=display:flex><span>├── src/                     # Main training and evaluation code
+</span></span><span style=display:flex><span>└── static/                  # Fixed assets (figures, math images)
+</span></span></code></pre></div><hr><h3 id=32-text-encoder-architecture><strong>3.2 Text Encoder Architecture</strong>
+<a class=anchor href=#32-text-encoder-architecture>#</a></h3><p>We use the Hugging Face CLIPTextModel from <code>sd-legacy/stable-diffusion-v1-5</code>:</p><pre tabindex=0><code>CLIPTextModel(
   text_model=CLIPTextTransformer(
     embeddings=CLIPTextEmbeddings(
       token_embedding: Embedding(49408, 768)
@@ -472,627 +61,168 @@ architecture</li>
     final_layer_norm=LayerNorm(768)
   )
 )
-</code></pre><p>Each of the 12 <code>CLIPEncoderLayer</code>s comprises:</p>
-<ol>
-<li><strong>Multi‑head self‑attention</strong> (<code>q_proj</code>, <code>k_proj</code>, <code>v_proj</code>, <code>out_proj</code>)</li>
-<li><strong>LayerNorm</strong> (pre‑ and post‑MLP)</li>
-<li><strong>MLP</strong> (<code>fc1</code> → QuickGELU → <code>fc2</code>)</li>
-</ol>
-<p>We extract the hidden state simply by advancing the input through the transformer stack and collecting the intermediate outputs.</p>
-<hr>
-<h3 id="33-diffusion-lens-pipeline-setup">
-  <strong>3.3 Diffusion Lens Pipeline Setup</strong>
-  <a class="anchor" href="#33-diffusion-lens-pipeline-setup">#</a>
-</h3>
-<p>The <strong>Diffusion Lens Pipeline</strong> extends Hugging Face’s <code>StableDiffusionPipeline</code> into our <code>StableDiffusionGlassPipeline</code>, adding two key interpretability hooks:</p>
-<ol>
-<li><strong>Text‑encoder split</strong> via
-<ul>
-<li><code>start_layer</code>: index of first CLIP layer to decode</li>
-<li><code>end_layer</code>: (exclusive) index of last layer to decode</li>
-<li><code>step_layer</code>: stride between layers</li>
-</ul>
-</li>
-<li><strong>U‑Net snapshot</strong> via
-<ul>
-<li><code>callback(step, timestep, latents)</code></li>
-<li><code>callback_steps</code>: interval of denoising steps at which to invoke <code>callback</code></li>
-</ul>
-</li>
-</ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> DiffusionLens.pipeline <span style="color:#f92672">import</span> StableDiffusionGlassPipeline
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1. Instantiate the pipeline</span>
-</span></span><span style="display:flex;"><span>pipe <span style="color:#f92672">=</span> StableDiffusionGlassPipeline(
-</span></span><span style="display:flex;"><span>    vae<span style="color:#f92672">=</span>vae,
-</span></span><span style="display:flex;"><span>    text_encoder<span style="color:#f92672">=</span>text_encoder,
-</span></span><span style="display:flex;"><span>    tokenizer<span style="color:#f92672">=</span>tokenizer,
-</span></span><span style="display:flex;"><span>    unet<span style="color:#f92672">=</span>unet,
-</span></span><span style="display:flex;"><span>    scheduler<span style="color:#f92672">=</span>scheduler,
-</span></span><span style="display:flex;"><span>    safety_checker<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>,
-</span></span><span style="display:flex;"><span>)
-</span></span><span style="display:flex;"><span>pipe<span style="color:#f92672">.</span>to(DEVICE)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. Run with interpretability hooks</span>
-</span></span><span style="display:flex;"><span>layer_outputs <span style="color:#f92672">=</span> pipe(
-</span></span><span style="display:flex;"><span>    prompt<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;A red sports car&#34;</span>,          <span style="color:#75715e"># or List[str]</span>
-</span></span><span style="display:flex;"><span>    negative_prompt<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;low resolution&#34;</span>,   <span style="color:#75715e"># optional</span>
-</span></span><span style="display:flex;"><span>    num_inference_steps<span style="color:#f92672">=</span><span style="color:#ae81ff">50</span>,
-</span></span><span style="display:flex;"><span>    guidance_scale<span style="color:#f92672">=</span><span style="color:#ae81ff">7.5</span>,
-</span></span><span style="display:flex;"><span>    generator<span style="color:#f92672">=</span>generator,                <span style="color:#75715e"># torch.Generator for reproducibility</span>
-</span></span><span style="display:flex;"><span>    num_images_per_prompt<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>,
-</span></span><span style="display:flex;"><span>    start_layer<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>,                      <span style="color:#75715e"># decode from layer 0</span>
-</span></span><span style="display:flex;"><span>    end_layer<span style="color:#f92672">=</span><span style="color:#ae81ff">12</span>,                       <span style="color:#75715e"># up to layer 11</span>
-</span></span><span style="display:flex;"><span>    step_layer<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>,                       <span style="color:#75715e"># every 2 layers</span>
-</span></span><span style="display:flex;"><span>    output_type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;pil&#34;</span>,                  <span style="color:#75715e"># &#34;pil&#34; or &#34;latents&#34;</span>
-</span></span><span style="display:flex;"><span>    return_dict<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>,
-</span></span><span style="display:flex;"><span>    callback<span style="color:#f92672">=</span>unet_latent_hook,          <span style="color:#75715e"># function to capture U‑Net latents</span>
-</span></span><span style="display:flex;"><span>    callback_steps<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>,
-</span></span><span style="display:flex;"><span>    cross_attention_kwargs<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>,
-</span></span><span style="display:flex;"><span>    guidance_rescale<span style="color:#f92672">=</span><span style="color:#ae81ff">0.0</span>,
-</span></span><span style="display:flex;"><span>    skip_layers<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>,
-</span></span><span style="display:flex;"><span>    explain_other_model<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>,
-</span></span><span style="display:flex;"><span>    per_token<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>,
-</span></span><span style="display:flex;"><span>)
-</span></span></code></pre></div><p><strong>Available arguments</strong> (beyond the standard diffusion settings listed above):</p>
-<ul>
-<li><strong>prompt</strong> (<code>str</code> or <code>List[str]</code>): text to guide image synthesis</li>
-<li><strong>height</strong>, <strong>width</strong> (<code>int</code>, optional): output resolution (defaults to <code>unet.config.sample_size * vae_scale_factor</code>)</li>
-<li><strong>negative_prompt</strong> (<code>str</code> or <code>List[str]</code>): steer away from unwanted content</li>
-<li><strong>generator</strong> (<code>torch.Generator</code>): for deterministic sampling</li>
-<li><strong>latents</strong> (<code>torch.FloatTensor</code>, optional): pre‑sampled latents to reuse</li>
-<li><strong>prompt_embeds</strong>, <strong>negative_prompt_embeds</strong> (<code>torch.FloatTensor</code>, optional): bypass tokenization</li>
-<li><strong>return_dict</strong> (<code>bool</code>): return a <code>StableDiffusionPipelineOutput</code> if <code>True</code>, else a tuple</li>
-<li><strong>cross_attention_kwargs</strong> (<code>dict</code>, optional): e.g., <code>{&quot;scale&quot;: LoRA_scale}</code></li>
-<li><strong>guidance_rescale</strong> (<code>float</code>): adjust classifier‑free guidance strength</li>
-<li><strong>skip_layers</strong> (<code>List[int]</code>, optional): explicitly skip certain CLIP layers</li>
-<li><strong>explain_other_model</strong> (<code>bool</code>): enable cross‑model comparison mode</li>
-<li><strong>per_token</strong> (<code>bool</code>): decode embeddings for each token separately</li>
-</ul>
-<p>With these settings, a single call to <code>pipe(...)</code> will produce both:</p>
-<ul>
-<li>A <strong>sequence of images</strong>, one per text‑encoder layer;</li>
-<li>Optionally, <strong>U‑Net latent snapshots</strong>, captured via your <code>callback</code>.</li>
-</ul>
-<h3 id="34-unified-layerwise-decoding--latent-snapshotting">
-  <strong>3.4 Unified Layer‑wise Decoding &amp; Latent Snapshotting</strong>
-  <a class="anchor" href="#34-unified-layerwise-decoding--latent-snapshotting">#</a>
-</h3>
-<p>Below is a distilled pseudo‑code sketch of single‑pass interpretability routine:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> __call__(<span style="color:#f92672">...</span>, start_layer<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, end_layer<span style="color:#f92672">=-</span><span style="color:#ae81ff">1</span>, step_layer<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>,
-</span></span><span style="display:flex;"><span>             callback<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, callback_steps<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, <span style="color:#f92672">...</span>):
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    For each selected text‑encoder layer ℓ:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      • Encode prompt up to ℓ → partial embedding.
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      • Run diffusion denoising with that embedding.
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      • During denoise, if (step </span><span style="color:#e6db74">% c</span><span style="color:#e6db74">allback_steps == 0): callback(...)
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      • Decode final latents → PIL image.
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Returns all layer‑wise images (and any latents via callback).
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 1. Input validation</span>
-</span></span><span style="display:flex;"><span>    self<span style="color:#f92672">.</span>check_inputs(<span style="color:#f92672">...</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 2. Split prompt into embeddings_per_layer</span>
-</span></span><span style="display:flex;"><span>    embeddings <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>_encode_prompt(
-</span></span><span style="display:flex;"><span>        prompt, start_layer, end_layer, step_layer, <span style="color:#f92672">...</span>
-</span></span><span style="display:flex;"><span>    )
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    images <span style="color:#f92672">=</span> []
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> ℓ, embed <span style="color:#f92672">in</span> enumerate(embeddings):
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 3a. Initialize scheduler &amp; latents</span>
-</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>scheduler<span style="color:#f92672">.</span>set_timesteps(num_inference_steps, device)
-</span></span><span style="display:flex;"><span>        latents <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>prepare_latents(<span style="color:#f92672">...</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 3b. Denoising loop</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> step, t <span style="color:#f92672">in</span> enumerate(self<span style="color:#f92672">.</span>scheduler<span style="color:#f92672">.</span>timesteps):
-</span></span><span style="display:flex;"><span>            lat_in <span style="color:#f92672">=</span> (
-</span></span><span style="display:flex;"><span>                torch<span style="color:#f92672">.</span>cat([latents]<span style="color:#f92672">*</span><span style="color:#ae81ff">2</span>) 
-</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> guidance_scale<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> latents
-</span></span><span style="display:flex;"><span>            )
-</span></span><span style="display:flex;"><span>            lat_in <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>scheduler<span style="color:#f92672">.</span>scale_model_input(lat_in, t)
-</span></span><span style="display:flex;"><span>            noise <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>unet(lat_in, t, encoder_hidden_states<span style="color:#f92672">=</span>embed)[<span style="color:#ae81ff">0</span>]
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> guidance_scale<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">1</span>:
-</span></span><span style="display:flex;"><span>                uncond, text <span style="color:#f92672">=</span> noise<span style="color:#f92672">.</span>chunk(<span style="color:#ae81ff">2</span>)
-</span></span><span style="display:flex;"><span>                noise <span style="color:#f92672">=</span> uncond <span style="color:#f92672">+</span> guidance_scale<span style="color:#f92672">*</span>(text<span style="color:#f92672">-</span>uncond)
-</span></span><span style="display:flex;"><span>            latents <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>scheduler<span style="color:#f92672">.</span>step(noise, t, latents)[<span style="color:#ae81ff">0</span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> callback <span style="color:#f92672">and</span> step <span style="color:#f92672">%</span> callback_steps <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
-</span></span><span style="display:flex;"><span>                callback(step, t, latents)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 3c. Decode &amp; collect image</span>
-</span></span><span style="display:flex;"><span>        img <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>vae<span style="color:#f92672">.</span>decode(latents <span style="color:#f92672">/</span> self<span style="color:#f92672">.</span>vae<span style="color:#f92672">.</span>config<span style="color:#f92672">.</span>scaling_factor)[<span style="color:#ae81ff">0</span>]
-</span></span><span style="display:flex;"><span>        images<span style="color:#f92672">.</span>append(self<span style="color:#f92672">.</span>image_processor<span style="color:#f92672">.</span>postprocess(img, output_type, [<span style="color:#66d9ef">True</span>]))
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 4. Return images (plus any capture via callback)</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> images
-</span></span></code></pre></div><p><strong>Why this matters:</strong></p>
-<ul>
-<li><strong>Text‑encoder decoding</strong> reveals <em>when</em> concepts (objects, colors, relations) emerge.</li>
-<li><strong>U‑Net snapshots</strong> show <em>how</em> DreamBooth’s subject details are injected over diffusion steps.</li>
-<li><strong>Single invocation</strong> keeps training/inference overhead minimal and ensures full end‑to‑end traceability.</li>
-</ul>
-<p><strong>Note:</strong> For further details, please see our <code>notebooks/Diffusion_Lens_framework.ipynb</code> notebook and the official 
-  <a href="https://github.com/tokeron/DiffusionLens">Diffusion Lens GitHub repository</a>.</p>
-<hr>
-<h2 id="experiments-and-analysis">
-  <strong>Experiments and Analysis</strong>
-  <a class="anchor" href="#experiments-and-analysis">#</a>
-</h2>
-<h3 id="1-dreambooth-explainability-during-training">
-  <strong>1. DreamBooth Explainability During Training</strong>
-  <a class="anchor" href="#1-dreambooth-explainability-during-training">#</a>
-</h3>
-<h4 id="objective">
-  <strong>Objective:</strong>
-  <a class="anchor" href="#objective">#</a>
-</h4>
-<p>To understand how fine-tuning with the DreamBooth approach alters the internal representations of the Stable Diffusion model during training, we use <strong>DiffusionLens</strong> to visualize the evolution of the text encoder layers over time.</p>
-<h4 id="setup">
-  <strong>Setup:</strong>
-  <a class="anchor" href="#setup">#</a>
-</h4>
-<ul>
-<li>Model: <code>runwayml/stable-diffusion-v1-5</code></li>
-<li>Unique identifier: <code>xon</code></li>
-<li>Instance prompt: <code>&quot;a photo of xon dog&quot;</code></li>
-<li>Class prompt: <code>&quot;a photo of a dog&quot;</code></li>
-<li>Negative prompt: <code>&quot;low quality, blurry, deformed&quot;</code></li>
-<li>Visualization tool: <code>DiffusionLens</code></li>
-<li>Visualization frequency: Every 50 epochs (from 50 to 350)</li>
-<li>Layers analyzed: Text encoder layers 0 to 12</li>
-</ul>
-<h4 id="config-snapshot">
-  <strong>Config Snapshot:</strong>
-  <a class="anchor" href="#config-snapshot">#</a>
-</h4>
-<p>We used the following config file: <code>configs/train_dog_dreambooth_with_lens.yaml</code>, with key parameters such as:</p>
-<ul>
-<li><code>train_text_encoder: true</code></li>
-<li><code>num_train_epochs: 350</code></li>
-<li><code>use_diffusion_lens: true</code></li>
-<li><code>diffusion_lens_epochs: 50</code></li>
-</ul>
-<h4 id="procedure">
-  <strong>Procedure:</strong>
-  <a class="anchor" href="#procedure">#</a>
-</h4>
-<ol>
-<li>The model is trained using DreamBooth with a personalized prompt format.</li>
-<li>Every 50 epochs, DiffusionLens is used to extract and visualize activations from each layer of the text encoder.</li>
-<li>Layers 0 through 12 are analyzed to observe changes in learned representations.</li>
-</ol>
-<h4 id="text-encoder-layer-evolution-during-dreambooth-training">
-  <strong>Text Encoder Layer Evolution During DreamBooth Training</strong>
-  <a class="anchor" href="#text-encoder-layer-evolution-during-dreambooth-training">#</a>
-</h4>
-<p align="center">
-  <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_000_evolution.gif" alt="Layer 0 Evolution" width="200"/>
-  <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_001_evolution.gif" alt="Layer 1 Evolution" width="200"/>
-  <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_002_evolution.gif" alt="Layer 2 Evolution" width="200"/>
-</p>
-<p align="center">
-  <strong>Layer 0</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <strong>Layer 1</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <strong>Layer 2</strong>
-</p>
-<p align="center">
-  <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_003_evolution.gif" alt="Layer 3 Evolution" width="200"/>
-  <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_004_evolution.gif" alt="Layer 4 Evolution" width="200"/>
-  <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_005_evolution.gif" alt="Layer 5 Evolution" width="200"/>
-</p>
-<p align="center">
-  <strong>Layer 3</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <strong>Layer 4</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <strong>Layer 5</strong>
-</p>
-<p align="center">
-  <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_006_evolution.gif" alt="Layer 6 Evolution" width="200"/>
-  <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_007_evolution.gif" alt="Layer 7 Evolution" width="200"/>
-  <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_008_evolution.gif" alt="Layer 8 Evolution" width="200"/>
-</p>
-<p align="center">
-  <strong>Layer 6</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <strong>Layer 7</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <strong>Layer 8</strong>
-</p>
-<p align="center">
-  <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_009_evolution.gif" alt="Layer 9 Evolution" width="200"/>
-  <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_010_evolution.gif" alt="Layer 10 Evolution" width="200"/>
-  <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_011_evolution.gif" alt="Layer 11 Evolution" width="200"/>
-</p>
-<p align="center">
-  <strong>Layer 9</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <strong>Layer 10</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <strong>Layer 11</strong>
-</p>
-<p align="center">
-  <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_012_evolution.gif" alt="Layer 12 Evolution" width="400"/>
-</p>
-<p align="center">
-  <strong>Layer 12 (Final styled output)</strong>
-</p>
-<h3 id="insights">
-  <strong>Insights</strong>
-  <a class="anchor" href="#insights">#</a>
-</h3>
-<p>The visualizations generated by DiffusionLens illustrate a clear progression in how the model learns to associate the newly introduced token <code>xon</code> with the target object concept—in this case, a specific Corgi dog. As training progresses, we observe several noteworthy patterns across the text encoder layers:</p>
-<ul>
-<li>
-<p><strong>Lower Layers (0–4):</strong> These layers show minimal representational change throughout training. The activations remain diffuse and unstructured, suggesting that the lower layers primarily handle syntactic or low-level token processing, without capturing high-level semantics.</p>
-</li>
-<li>
-<p><strong>Middle Layers (5–8):</strong> Here, we start to see emerging structure. The representations of <code>xon</code> begin to cluster spatially, indicating the early stages of semantic grounding. These layers act as a bridge, where the token slowly transitions from being an uninitialized placeholder to acquiring meaning aligned with the target concept.</p>
-</li>
-<li>
-<p><strong>Upper Layers (9–12):</strong> The most significant transformations occur in the higher layers. By the later epochs, <code>xon</code>’s activations become increasingly focused and begin to align closely with those of the <code>dog</code> token from the class prompt. Layer 12, in particular, shows a stable and semantically meaningful representation, confirming that <code>xon</code> has been successfully integrated into the learned conceptual space of &ldquo;dog.&rdquo;</p>
-</li>
-<li>
-<p><strong>Semantic Flow:</strong> An important observation is that the concept-specific information (in this case, the Corgi dog) propagates <strong>from higher to lower layers</strong> over the course of training. While early layers remain mostly static, they begin to subtly reflect the new semantics as training progresses. This suggests that DreamBooth fine-tuning mainly affects the upper layers first, and the influence gradually trickles down the encoder.</p>
-</li>
-<li>
-<p><strong>Token Identity Transfer:</strong> Initially, <code>xon</code> has no intrinsic meaning. However, through DreamBooth fine-tuning, it learns to encapsulate the characteristics of the target reference image. The model effectively compresses the concept of the specific Corgi into the <code>xon</code> token. Over time, <code>xon</code> becomes semantically grounded and occupies a space in the latent representation that overlaps with the broader <code>dog</code> concept. The process demonstrates how DreamBooth builds a bridge from a personalized token to a general semantic class—storing specific visual identity in <code>xon</code>, and transferring it to the general “dog” representation space during generation.</p>
-</li>
-</ul>
-<hr>
-<h3 id="2-comparing-the-raw-text-encoder-vs-fine-tuned-via-dreambooth">
-  <strong>2. Comparing the Raw Text Encoder vs Fine-Tuned via DreamBooth</strong>
-  <a class="anchor" href="#2-comparing-the-raw-text-encoder-vs-fine-tuned-via-dreambooth">#</a>
-</h3>
-<h4 id="objective-1">
-  <strong>Objective:</strong>
-  <a class="anchor" href="#objective-1">#</a>
-</h4>
-<p>To investigate how DreamBooth fine-tuning alters the semantic understanding of special token (e.g <code>xon</code>) by comparing the outputs of the <strong>original</strong> (pre-trained) and <strong>fine-tuned</strong> text encoder models.</p>
-<ol>
-<li>
-<p><strong>Baseline Extraction:</strong></p>
-<ul>
-<li>Use the raw text encder from<code>runwayml/stable-diffusion-v1-5</code> pipeline.</li>
-<li>Encode a promt only with specified token (e.g., <code>xon</code>)</li>
-<li>Visualize the layer-wise embeddings.</li>
-</ul>
-</li>
-<li>
-<p><strong>Post-Fine-Tuning Comparison:</strong></p>
-<ul>
-<li>Repeat the same encoding process with the fine-tuned DreamBooth model.</li>
-<li>Visualize the layer-wise embeddings.</li>
-</ul>
-</li>
-</ol>
-<h4 id="text-encoder-layer-visualizations--raw-vs-tuned-all-layers">
-  <strong>Text Encoder Layer Visualizations – Raw vs. Tuned (All Layers):</strong>
-  <a class="anchor" href="#text-encoder-layer-visualizations--raw-vs-tuned-all-layers">#</a>
-</h4>
-<style>
-  .layer-block {
-    text-align: center;
-    margin-bottom: 40px;
-  }
-  .layer-images {
-    display: inline-flex;
-    gap: 40px;
-    margin-bottom: 10px;
-  }
-  .layer-labels {
-    display: inline-flex;
-    gap: 230px;
-    justify-content: right;
-  }
-</style>
-<div class="layer-block">
-  <h4>Layer 0</h4>
-  <div class="layer-images">
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_000_step_000.png" width="300"/>
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_000_step_000.png" width="300"/>
-  </div>
-  <div class="layer-labels">
-    <strong>Layer 0 Raw</strong>
-    <strong>Layer 0 Tuned</strong>
-  </div>
-</div>
-<div class="layer-block">
-  <h4>Layer 1</h4>
-  <div class="layer-images">
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_001_step_001.png" width="300"/>
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_001_step_001.png" width="300"/>
-  </div>
-  <div class="layer-labels">
-    <strong>Layer 1 Raw</strong>
-    <strong>Layer 1 Tuned</strong>
-  </div>
-</div>
-<div class="layer-block">
-  <h4>Layer 2</h4>
-  <div class="layer-images">
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_002_step_002.png" width="300"/>
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_002_step_002.png" width="300"/>
-  </div>
-  <div class="layer-labels">
-    <strong>Layer 2 Raw</strong>
-    <strong>Layer 2 Tuned</strong>
-  </div>
-</div>
-<div class="layer-block">
-  <h4>Layer 3</h4>
-  <div class="layer-images">
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_003_step_003.png" width="300"/>
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_003_step_003.png" width="300"/>
-  </div>
-  <div class="layer-labels">
-    <strong>Layer 3 Raw</strong>
-    <strong>Layer 3 Tuned</strong>
-  </div>
-</div>
-<div class="layer-block">
-  <h4>Layer 4</h4>
-  <div class="layer-images">
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_004_step_004.png" width="300"/>
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_004_step_004.png" width="300"/>
-  </div>
-  <div class="layer-labels">
-    <strong>Layer 4 Raw</strong>
-    <strong>Layer 4 Tuned</strong>
-  </div>
-</div>
-<div class="layer-block">
-  <h4>Layer 5</h4>
-  <div class="layer-images">
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_005_step_005.png" width="300"/>
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_005_step_005.png" width="300"/>
-  </div>
-  <div class="layer-labels">
-    <strong>Layer 5 Raw</strong>
-    <strong>Layer 5 Tuned</strong>
-  </div>
-</div>
-<div class="layer-block">
-  <h4>Layer 6</h4>
-  <div class="layer-images">
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_006_step_006.png" width="300"/>
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_006_step_006.png" width="300"/>
-  </div>
-  <div class="layer-labels">
-    <strong>Layer 6 Raw</strong>
-    <strong>Layer 6 Tuned</strong>
-  </div>
-</div>
-<div class="layer-block">
-  <h4>Layer 7</h4>
-  <div class="layer-images">
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_007_step_007.png" width="300"/>
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_007_step_007.png" width="300"/>
-  </div>
-  <div class="layer-labels">
-    <strong>Layer 7 Raw</strong>
-    <strong>Layer 7 Tuned</strong>
-  </div>
-</div>
-<div class="layer-block">
-  <h4>Layer 8</h4>
-  <div class="layer-images">
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_008_step_008.png" width="300"/>
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_008_step_008.png" width="300"/>
-  </div>
-  <div class="layer-labels">
-    <strong>Layer 8 Raw</strong>
-    <strong>Layer 8 Tuned</strong>
-  </div>
-</div>
-<div class="layer-block">
-  <h4>Layer 9</h4>
-  <div class="layer-images">
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_009_step_009.png" width="300"/>
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_009_step_009.png" width="300"/>
-  </div>
-  <div class="layer-labels">
-    <strong>Layer 9 Raw</strong>
-    <strong>Layer 9 Tuned</strong>
-  </div>
-</div>
-<div class="layer-block">
-  <h4>Layer 10</h4>
-  <div class="layer-images">
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_010_step_010.png" width="300"/>
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_010_step_010.png" width="300"/>
-  </div>
-  <div class="layer-labels">
-    <strong>Layer 10 Raw</strong>
-    <strong>Layer 10 Tuned</strong>
-  </div>
-</div>
-<div class="layer-block">
-  <h4>Layer 11</h4>
-  <div class="layer-images">
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_011_step_011.png" width="300"/>
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_011_step_011.png" width="300"/>
-  </div>
-  <div class="layer-labels">
-    <strong>Layer 11 Raw</strong>
-    <strong>Layer 11 Tuned</strong>
-  </div>
-</div>
-<div class="layer-block">
-  <h4>Layer 12</h4>
-  <div class="layer-images">
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_012_step_012.png" width="300"/>
-    <img src="/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_012_step_012.png" width="300"/>
-  </div>
-  <div class="layer-labels">
-    <strong>Layer 12 Raw</strong>
-    <strong>Layer 12 Tuned</strong>
-  </div>
-</div>
-<p><strong>Insights</strong></p>
-<ul>
-<li>
-<p>We see that till up to the 10th layer, the difference in understanding the xon concept between the pure text encoder and the trained text encoder is not dramatic. However, beyond that point, the subsequent layers begin to retain and emphasize information specifically related to our dog.</p>
-</li>
-<li>
-<p>The deeper layers of the text encoder are more responsible for capturing fine-grained, learned representations associated with the fine-tuned concept.</p>
-</li>
-<li>
-<p>The experiment demonstrates that DreamBooth fine-tuning impacts the deeper layers of the text encoder more significantly, encoding concept-specific details that were not present in the original model. This insight can guide future work in understanding where and how personalization occurs in diffusion model pipelines.</p>
-</li>
-</ul>
-<hr>
-<h3 id="3-diving-into-the-latent-spaces-understanding-representational-changes">
-  <strong>3. Diving into the Latent Spaces: Understanding Representational Changes</strong>
-  <a class="anchor" href="#3-diving-into-the-latent-spaces-understanding-representational-changes">#</a>
-</h3>
-<p><strong>Objective:</strong><br>
-The goal of this section is to explore and quantify how DreamBooth fine-tuning alters the semantic embedding of a new concept token (<code>xon</code>) in relation to an existing, semantically related concept (<code>dog</code>). We do this by probing the latent space of the CLIP text encoder, comparing the cosine similarity between the embeddings of <code>xon</code> and <code>dog</code> before and after fine-tuning.</p>
-<p><strong>Procedure:</strong><br>
-We leverage the Diffusion Lens methodology to extract and compare token embeddings from both the <strong>pretrained</strong> and <strong>fine-tuned</strong> versions of the CLIP text encoder. Specifically, we:</p>
-<ol>
-<li>Tokenize a <strong>specific prompt</strong> containing the learned token <code>xon</code>.</li>
-<li>Tokenize a <strong>general prompt</strong> containing the token <code>dog</code>.</li>
-<li>Extract the embeddings corresponding to <code>xon</code> and <code>dog</code> from their respective prompts.</li>
-<li>Compute the <strong>cosine similarity</strong> between these token embeddings.</li>
-<li>Repeat the process for both the <strong>base encoder</strong> and the <strong>fine-tuned encoder</strong>, allowing us to quantify representational changes in the latent space.</li>
-</ol>
-<p><strong>Pseudo-code:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>function compute_the_similarity(tokenizer, text_encoder, prompt_specific, prompt_general, specific_token, general_token):
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Step 1: Tokenize both prompts</span>
-</span></span><span style="display:flex;"><span>    tokens_specific <span style="color:#f92672">=</span> tokenizer(prompt_specific)
-</span></span><span style="display:flex;"><span>    tokens_general <span style="color:#f92672">=</span> tokenizer(prompt_general)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Step 2: Locate token indices in respective prompts</span>
-</span></span><span style="display:flex;"><span>    index_specific <span style="color:#f92672">=</span> find_index(tokens_specific<span style="color:#f92672">.</span>input_ids, specific_token)
-</span></span><span style="display:flex;"><span>    index_general <span style="color:#f92672">=</span> find_index(tokens_general<span style="color:#f92672">.</span>input_ids, general_token)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Step 3: Encode both prompts using the provided text encoder</span>
-</span></span><span style="display:flex;"><span>    embeddings_specific <span style="color:#f92672">=</span> text_encoder(tokens_specific)
-</span></span><span style="display:flex;"><span>    embeddings_general <span style="color:#f92672">=</span> text_encoder(tokens_general)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Step 4: Extract embeddings for specific tokens</span>
-</span></span><span style="display:flex;"><span>    embedding_xon <span style="color:#f92672">=</span> embeddings_specific[index_specific]
-</span></span><span style="display:flex;"><span>    embedding_dog <span style="color:#f92672">=</span> embeddings_general[index_general]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Step 5: Compute cosine similarity</span>
-</span></span><span style="display:flex;"><span>    similarity <span style="color:#f92672">=</span> cosine_similarity(embedding_xon, embedding_dog)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> similarity
-</span></span></code></pre></div><p><strong>Insights:</strong></p>
-<ul>
-<li>The cosine similarity between <code>xon</code> and <code>dog</code> <strong>before fine-tuning</strong> was <strong>0.1781</strong>, indicating low semantic alignment in the latent space of the base model.</li>
-<li>After applying DreamBooth fine-tuning, the similarity increased to <strong>0.2504</strong>, showing that the model has moved the representation of <code>xon</code> closer to that of <code>dog</code>.</li>
-<li>This shift suggests that DreamBooth successfully teaches the model that <code>xon</code> carries dog-like semantics, validating its effect on the latent space alignment of new concept tokens.</li>
-</ul>
-<hr>
-<h2 id="conclusion">
-  <strong>Conclusion</strong>
-  <a class="anchor" href="#conclusion">#</a>
-</h2>
-<p>By combining DreamBooth fine-tuning with Diffusion Lens interpretability, we achieve not only <strong>high-fidelity, subject-driven image synthesis</strong> but also <strong>transparent insights</strong> into the model’s inner semantic processing. Our visualizations confirm that concepts emerge and sharpen progressively across text encoder and U-net layers.</p>
-<h2 id="references">
-  <strong>References</strong>
-  <a class="anchor" href="#references">#</a>
-</h2>
-<p>[1] N. Ruiz, Y. Li, V. Jampani, Y. Pritch, M. Rubinstein, and K. Aberman, Dreambooth: Fine tuning text-
-to-image diffusion models for subject-driven generation, 2023. arXiv: 2208.12242 [cs.CV]. [Online]. Available: 
-  <a href="https://arxiv.org/abs/2208.12242">https://arxiv.org/abs/2208.12242</a>.</p>
-<p>[2] M. Toker, H. Orgad, M. Ventura, D. Arad, and Y. Belinkov, “Diffusion lens: Interpreting text encoders in text-to-image pipelines,” Association for Computational Linguistics, 2024, pp. 9713–9728. doi: 10.18653/v1/2024.acl-long.524. [Online]. Available: 
-  <a href="https://arxiv.org/abs/2208.12242">http://dx.doi.org/10.18653/v1/2024.acl-long.524</a>.</p>
-</article>
- 
-      
-
-      <footer class="book-footer">
-        
-  <div class="flex flex-wrap justify-between">
-
-
-
-
-  <div>
-    <a class="flex align-center" href="https://github.com/IU-PR/Capstone_project/tree/master//content/docs/Groups/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth.md" target="_blank" rel="noopener">
-      <img src="/svg/edit.svg" class="book-icon" alt="Edit" />
-      <span>Edit this page</span>
-    </a>
-  </div>
-
-
-</div>
-
-
-
-  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
-
-
- 
-        
-      </footer>
-
-      
-  
-  <div class="book-comments">
-
-</div>
-  
- 
-
-      <label for="menu-control" class="hidden book-menu-overlay"></label>
-    </div>
-
-    
-    <aside class="book-toc">
-      <div class="book-toc-content">
-        
-  
-<nav id="TableOfContents">
-  <ul>
-    <li><a href="#diffusion-lens-interpreting-text-encoders-in-text-to-image-pipelines"><strong>Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines</strong></a>
-      <ul>
-        <li><a href="#introduction"><strong>Introduction</strong></a></li>
-        <li><a href="#background"><strong>Background</strong></a>
-          <ul>
-            <li><a href="#section-1-dreambooth-fine-tuning"><strong>Section 1: DreamBooth Fine-Tuning</strong></a></li>
-            <li><a href="#section-2-diffusion-lens-interpretability"><strong>Section 2: Diffusion Lens Interpretability</strong></a></li>
-          </ul>
-        </li>
-        <li><a href="#methodology"><strong>Methodology</strong></a>
-          <ul>
-            <li><a href="#31-codebase-organization"><strong>3.1 Codebase Organization</strong></a></li>
-            <li><a href="#32-text-encoder-architecture"><strong>3.2 Text Encoder Architecture</strong></a></li>
-            <li><a href="#33-diffusion-lens-pipeline-setup"><strong>3.3 Diffusion Lens Pipeline Setup</strong></a></li>
-            <li><a href="#34-unified-layerwise-decoding--latent-snapshotting"><strong>3.4 Unified Layer‑wise Decoding &amp; Latent Snapshotting</strong></a></li>
-          </ul>
-        </li>
-        <li><a href="#experiments-and-analysis"><strong>Experiments and Analysis</strong></a>
-          <ul>
-            <li><a href="#1-dreambooth-explainability-during-training"><strong>1. DreamBooth Explainability During Training</strong></a></li>
-            <li><a href="#insights"><strong>Insights</strong></a></li>
-            <li><a href="#2-comparing-the-raw-text-encoder-vs-fine-tuned-via-dreambooth"><strong>2. Comparing the Raw Text Encoder vs Fine-Tuned via DreamBooth</strong></a></li>
-            <li><a href="#3-diving-into-the-latent-spaces-understanding-representational-changes"><strong>3. Diving into the Latent Spaces: Understanding Representational Changes</strong></a></li>
-          </ul>
-        </li>
-        <li><a href="#conclusion"><strong>Conclusion</strong></a></li>
-        <li><a href="#references"><strong>References</strong></a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-
-
- 
-      </div>
-    </aside>
-    
-  </main>
-
-  
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
+</code></pre><p>Each of the 12 <code>CLIPEncoderLayer</code>s comprises:</p><ol><li><strong>Multi‑head self‑attention</strong> (<code>q_proj</code>, <code>k_proj</code>, <code>v_proj</code>, <code>out_proj</code>)</li><li><strong>LayerNorm</strong> (pre‑ and post‑MLP)</li><li><strong>MLP</strong> (<code>fc1</code> → QuickGELU → <code>fc2</code>)</li></ol><p>We extract the hidden state simply by advancing the input through the transformer stack and collecting the intermediate outputs.</p><hr><h3 id=33-diffusion-lens-pipeline-setup><strong>3.3 Diffusion Lens Pipeline Setup</strong>
+<a class=anchor href=#33-diffusion-lens-pipeline-setup>#</a></h3><p>The <strong>Diffusion Lens Pipeline</strong> extends Hugging Face’s <code>StableDiffusionPipeline</code> into our <code>StableDiffusionGlassPipeline</code>, adding two key interpretability hooks:</p><ol><li><strong>Text‑encoder split</strong> via<ul><li><code>start_layer</code>: index of first CLIP layer to decode</li><li><code>end_layer</code>: (exclusive) index of last layer to decode</li><li><code>step_layer</code>: stride between layers</li></ul></li><li><strong>U‑Net snapshot</strong> via<ul><li><code>callback(step, timestep, latents)</code></li><li><code>callback_steps</code>: interval of denoising steps at which to invoke <code>callback</code></li></ul></li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> DiffusionLens.pipeline <span style=color:#f92672>import</span> StableDiffusionGlassPipeline
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 1. Instantiate the pipeline</span>
+</span></span><span style=display:flex><span>pipe <span style=color:#f92672>=</span> StableDiffusionGlassPipeline(
+</span></span><span style=display:flex><span>    vae<span style=color:#f92672>=</span>vae,
+</span></span><span style=display:flex><span>    text_encoder<span style=color:#f92672>=</span>text_encoder,
+</span></span><span style=display:flex><span>    tokenizer<span style=color:#f92672>=</span>tokenizer,
+</span></span><span style=display:flex><span>    unet<span style=color:#f92672>=</span>unet,
+</span></span><span style=display:flex><span>    scheduler<span style=color:#f92672>=</span>scheduler,
+</span></span><span style=display:flex><span>    safety_checker<span style=color:#f92672>=</span><span style=color:#66d9ef>None</span>,
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>pipe<span style=color:#f92672>.</span>to(DEVICE)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 2. Run with interpretability hooks</span>
+</span></span><span style=display:flex><span>layer_outputs <span style=color:#f92672>=</span> pipe(
+</span></span><span style=display:flex><span>    prompt<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;A red sports car&#34;</span>,          <span style=color:#75715e># or List[str]</span>
+</span></span><span style=display:flex><span>    negative_prompt<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;low resolution&#34;</span>,   <span style=color:#75715e># optional</span>
+</span></span><span style=display:flex><span>    num_inference_steps<span style=color:#f92672>=</span><span style=color:#ae81ff>50</span>,
+</span></span><span style=display:flex><span>    guidance_scale<span style=color:#f92672>=</span><span style=color:#ae81ff>7.5</span>,
+</span></span><span style=display:flex><span>    generator<span style=color:#f92672>=</span>generator,                <span style=color:#75715e># torch.Generator for reproducibility</span>
+</span></span><span style=display:flex><span>    num_images_per_prompt<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>,
+</span></span><span style=display:flex><span>    start_layer<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>,                      <span style=color:#75715e># decode from layer 0</span>
+</span></span><span style=display:flex><span>    end_layer<span style=color:#f92672>=</span><span style=color:#ae81ff>12</span>,                       <span style=color:#75715e># up to layer 11</span>
+</span></span><span style=display:flex><span>    step_layer<span style=color:#f92672>=</span><span style=color:#ae81ff>2</span>,                       <span style=color:#75715e># every 2 layers</span>
+</span></span><span style=display:flex><span>    output_type<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;pil&#34;</span>,                  <span style=color:#75715e># &#34;pil&#34; or &#34;latents&#34;</span>
+</span></span><span style=display:flex><span>    return_dict<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>,
+</span></span><span style=display:flex><span>    callback<span style=color:#f92672>=</span>unet_latent_hook,          <span style=color:#75715e># function to capture U‑Net latents</span>
+</span></span><span style=display:flex><span>    callback_steps<span style=color:#f92672>=</span><span style=color:#ae81ff>10</span>,
+</span></span><span style=display:flex><span>    cross_attention_kwargs<span style=color:#f92672>=</span><span style=color:#66d9ef>None</span>,
+</span></span><span style=display:flex><span>    guidance_rescale<span style=color:#f92672>=</span><span style=color:#ae81ff>0.0</span>,
+</span></span><span style=display:flex><span>    skip_layers<span style=color:#f92672>=</span><span style=color:#66d9ef>None</span>,
+</span></span><span style=display:flex><span>    explain_other_model<span style=color:#f92672>=</span><span style=color:#66d9ef>False</span>,
+</span></span><span style=display:flex><span>    per_token<span style=color:#f92672>=</span><span style=color:#66d9ef>False</span>,
+</span></span><span style=display:flex><span>)
+</span></span></code></pre></div><p><strong>Available arguments</strong> (beyond the standard diffusion settings listed above):</p><ul><li><strong>prompt</strong> (<code>str</code> or <code>List[str]</code>): text to guide image synthesis</li><li><strong>height</strong>, <strong>width</strong> (<code>int</code>, optional): output resolution (defaults to <code>unet.config.sample_size * vae_scale_factor</code>)</li><li><strong>negative_prompt</strong> (<code>str</code> or <code>List[str]</code>): steer away from unwanted content</li><li><strong>generator</strong> (<code>torch.Generator</code>): for deterministic sampling</li><li><strong>latents</strong> (<code>torch.FloatTensor</code>, optional): pre‑sampled latents to reuse</li><li><strong>prompt_embeds</strong>, <strong>negative_prompt_embeds</strong> (<code>torch.FloatTensor</code>, optional): bypass tokenization</li><li><strong>return_dict</strong> (<code>bool</code>): return a <code>StableDiffusionPipelineOutput</code> if <code>True</code>, else a tuple</li><li><strong>cross_attention_kwargs</strong> (<code>dict</code>, optional): e.g., <code>{"scale": LoRA_scale}</code></li><li><strong>guidance_rescale</strong> (<code>float</code>): adjust classifier‑free guidance strength</li><li><strong>skip_layers</strong> (<code>List[int]</code>, optional): explicitly skip certain CLIP layers</li><li><strong>explain_other_model</strong> (<code>bool</code>): enable cross‑model comparison mode</li><li><strong>per_token</strong> (<code>bool</code>): decode embeddings for each token separately</li></ul><p>With these settings, a single call to <code>pipe(...)</code> will produce both:</p><ul><li>A <strong>sequence of images</strong>, one per text‑encoder layer;</li><li>Optionally, <strong>U‑Net latent snapshots</strong>, captured via your <code>callback</code>.</li></ul><h3 id=34-unified-layerwise-decoding--latent-snapshotting><strong>3.4 Unified Layer‑wise Decoding & Latent Snapshotting</strong>
+<a class=anchor href=#34-unified-layerwise-decoding--latent-snapshotting>#</a></h3><p>Below is a distilled pseudo‑code sketch of single‑pass interpretability routine:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> __call__(<span style=color:#f92672>...</span>, start_layer<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>, end_layer<span style=color:#f92672>=-</span><span style=color:#ae81ff>1</span>, step_layer<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>,
+</span></span><span style=display:flex><span>             callback<span style=color:#f92672>=</span><span style=color:#66d9ef>None</span>, callback_steps<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>, <span style=color:#f92672>...</span>):
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    For each selected text‑encoder layer ℓ:
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>      • Encode prompt up to ℓ → partial embedding.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>      • Run diffusion denoising with that embedding.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>      • During denoise, if (step </span><span style=color:#e6db74>% c</span><span style=color:#e6db74>allback_steps == 0): callback(...)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>      • Decode final latents → PIL image.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    Returns all layer‑wise images (and any latents via callback).
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 1. Input validation</span>
+</span></span><span style=display:flex><span>    self<span style=color:#f92672>.</span>check_inputs(<span style=color:#f92672>...</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 2. Split prompt into embeddings_per_layer</span>
+</span></span><span style=display:flex><span>    embeddings <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>_encode_prompt(
+</span></span><span style=display:flex><span>        prompt, start_layer, end_layer, step_layer, <span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    images <span style=color:#f92672>=</span> []
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> ℓ, embed <span style=color:#f92672>in</span> enumerate(embeddings):
+</span></span><span style=display:flex><span>        <span style=color:#75715e># 3a. Initialize scheduler &amp; latents</span>
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>scheduler<span style=color:#f92672>.</span>set_timesteps(num_inference_steps, device)
+</span></span><span style=display:flex><span>        latents <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>prepare_latents(<span style=color:#f92672>...</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># 3b. Denoising loop</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> step, t <span style=color:#f92672>in</span> enumerate(self<span style=color:#f92672>.</span>scheduler<span style=color:#f92672>.</span>timesteps):
+</span></span><span style=display:flex><span>            lat_in <span style=color:#f92672>=</span> (
+</span></span><span style=display:flex><span>                torch<span style=color:#f92672>.</span>cat([latents]<span style=color:#f92672>*</span><span style=color:#ae81ff>2</span>) 
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> guidance_scale<span style=color:#f92672>&gt;</span><span style=color:#ae81ff>1</span> <span style=color:#66d9ef>else</span> latents
+</span></span><span style=display:flex><span>            )
+</span></span><span style=display:flex><span>            lat_in <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>scheduler<span style=color:#f92672>.</span>scale_model_input(lat_in, t)
+</span></span><span style=display:flex><span>            noise <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>unet(lat_in, t, encoder_hidden_states<span style=color:#f92672>=</span>embed)[<span style=color:#ae81ff>0</span>]
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> guidance_scale<span style=color:#f92672>&gt;</span><span style=color:#ae81ff>1</span>:
+</span></span><span style=display:flex><span>                uncond, text <span style=color:#f92672>=</span> noise<span style=color:#f92672>.</span>chunk(<span style=color:#ae81ff>2</span>)
+</span></span><span style=display:flex><span>                noise <span style=color:#f92672>=</span> uncond <span style=color:#f92672>+</span> guidance_scale<span style=color:#f92672>*</span>(text<span style=color:#f92672>-</span>uncond)
+</span></span><span style=display:flex><span>            latents <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>scheduler<span style=color:#f92672>.</span>step(noise, t, latents)[<span style=color:#ae81ff>0</span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> callback <span style=color:#f92672>and</span> step <span style=color:#f92672>%</span> callback_steps <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>:
+</span></span><span style=display:flex><span>                callback(step, t, latents)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># 3c. Decode &amp; collect image</span>
+</span></span><span style=display:flex><span>        img <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>vae<span style=color:#f92672>.</span>decode(latents <span style=color:#f92672>/</span> self<span style=color:#f92672>.</span>vae<span style=color:#f92672>.</span>config<span style=color:#f92672>.</span>scaling_factor)[<span style=color:#ae81ff>0</span>]
+</span></span><span style=display:flex><span>        images<span style=color:#f92672>.</span>append(self<span style=color:#f92672>.</span>image_processor<span style=color:#f92672>.</span>postprocess(img, output_type, [<span style=color:#66d9ef>True</span>]))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 4. Return images (plus any capture via callback)</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> images
+</span></span></code></pre></div><p><strong>Why this matters:</strong></p><ul><li><strong>Text‑encoder decoding</strong> reveals <em>when</em> concepts (objects, colors, relations) emerge.</li><li><strong>U‑Net snapshots</strong> show <em>how</em> DreamBooth’s subject details are injected over diffusion steps.</li><li><strong>Single invocation</strong> keeps training/inference overhead minimal and ensures full end‑to‑end traceability.</li></ul><p><strong>Note:</strong> For further details, please see our <code>notebooks/Diffusion_Lens_framework.ipynb</code> notebook and the official
+<a href=https://github.com/tokeron/DiffusionLens>Diffusion Lens GitHub repository</a>.</p><hr><h2 id=experiments-and-analysis><strong>Experiments and Analysis</strong>
+<a class=anchor href=#experiments-and-analysis>#</a></h2><h3 id=1-dreambooth-explainability-during-training><strong>1. DreamBooth Explainability During Training</strong>
+<a class=anchor href=#1-dreambooth-explainability-during-training>#</a></h3><h4 id=objective><strong>Objective:</strong>
+<a class=anchor href=#objective>#</a></h4><p>To understand how fine-tuning with the DreamBooth approach alters the internal representations of the Stable Diffusion model during training, we use <strong>DiffusionLens</strong> to visualize the evolution of the text encoder layers over time.</p><h4 id=setup><strong>Setup:</strong>
+<a class=anchor href=#setup>#</a></h4><ul><li>Model: <code>runwayml/stable-diffusion-v1-5</code></li><li>Unique identifier: <code>xon</code></li><li>Instance prompt: <code>"a photo of xon dog"</code></li><li>Class prompt: <code>"a photo of a dog"</code></li><li>Negative prompt: <code>"low quality, blurry, deformed"</code></li><li>Visualization tool: <code>DiffusionLens</code></li><li>Visualization frequency: Every 50 epochs (from 50 to 350)</li><li>Layers analyzed: Text encoder layers 0 to 12</li></ul><h4 id=config-snapshot><strong>Config Snapshot:</strong>
+<a class=anchor href=#config-snapshot>#</a></h4><p>We used the following config file: <code>configs/train_dog_dreambooth_with_lens.yaml</code>, with key parameters such as:</p><ul><li><code>train_text_encoder: true</code></li><li><code>num_train_epochs: 350</code></li><li><code>use_diffusion_lens: true</code></li><li><code>diffusion_lens_epochs: 50</code></li></ul><h4 id=procedure><strong>Procedure:</strong>
+<a class=anchor href=#procedure>#</a></h4><ol><li>The model is trained using DreamBooth with a personalized prompt format.</li><li>Every 50 epochs, DiffusionLens is used to extract and visualize activations from each layer of the text encoder.</li><li>Layers 0 through 12 are analyzed to observe changes in learned representations.</li></ol><h4 id=text-encoder-layer-evolution-during-dreambooth-training><strong>Text Encoder Layer Evolution During DreamBooth Training</strong>
+<a class=anchor href=#text-encoder-layer-evolution-during-dreambooth-training>#</a></h4><p align=center><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_000_evolution.gif alt="Layer 0 Evolution" width=200>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_001_evolution.gif alt="Layer 1 Evolution" width=200>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_002_evolution.gif alt="Layer 2 Evolution" width=200></p><p align=center><strong>Layer 0</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<strong>Layer 1</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<strong>Layer 2</strong></p><p align=center><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_003_evolution.gif alt="Layer 3 Evolution" width=200>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_004_evolution.gif alt="Layer 4 Evolution" width=200>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_005_evolution.gif alt="Layer 5 Evolution" width=200></p><p align=center><strong>Layer 3</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<strong>Layer 4</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<strong>Layer 5</strong></p><p align=center><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_006_evolution.gif alt="Layer 6 Evolution" width=200>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_007_evolution.gif alt="Layer 7 Evolution" width=200>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_008_evolution.gif alt="Layer 8 Evolution" width=200></p><p align=center><strong>Layer 6</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<strong>Layer 7</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<strong>Layer 8</strong></p><p align=center><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_009_evolution.gif alt="Layer 9 Evolution" width=200>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_010_evolution.gif alt="Layer 10 Evolution" width=200>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_011_evolution.gif alt="Layer 11 Evolution" width=200></p><p align=center><strong>Layer 9</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<strong>Layer 10</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<strong>Layer 11</strong></p><p align=center><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/layer_evolution_gifs/layer_012_evolution.gif alt="Layer 12 Evolution" width=400></p><p align=center><strong>Layer 12 (Final styled output)</strong></p><h3 id=insights><strong>Insights</strong>
+<a class=anchor href=#insights>#</a></h3><p>The visualizations generated by DiffusionLens illustrate a clear progression in how the model learns to associate the newly introduced token <code>xon</code> with the target object concept—in this case, a specific Corgi dog. As training progresses, we observe several noteworthy patterns across the text encoder layers:</p><ul><li><p><strong>Lower Layers (0–4):</strong> These layers show minimal representational change throughout training. The activations remain diffuse and unstructured, suggesting that the lower layers primarily handle syntactic or low-level token processing, without capturing high-level semantics.</p></li><li><p><strong>Middle Layers (5–8):</strong> Here, we start to see emerging structure. The representations of <code>xon</code> begin to cluster spatially, indicating the early stages of semantic grounding. These layers act as a bridge, where the token slowly transitions from being an uninitialized placeholder to acquiring meaning aligned with the target concept.</p></li><li><p><strong>Upper Layers (9–12):</strong> The most significant transformations occur in the higher layers. By the later epochs, <code>xon</code>’s activations become increasingly focused and begin to align closely with those of the <code>dog</code> token from the class prompt. Layer 12, in particular, shows a stable and semantically meaningful representation, confirming that <code>xon</code> has been successfully integrated into the learned conceptual space of &ldquo;dog.&rdquo;</p></li><li><p><strong>Semantic Flow:</strong> An important observation is that the concept-specific information (in this case, the Corgi dog) propagates <strong>from higher to lower layers</strong> over the course of training. While early layers remain mostly static, they begin to subtly reflect the new semantics as training progresses. This suggests that DreamBooth fine-tuning mainly affects the upper layers first, and the influence gradually trickles down the encoder.</p></li><li><p><strong>Token Identity Transfer:</strong> Initially, <code>xon</code> has no intrinsic meaning. However, through DreamBooth fine-tuning, it learns to encapsulate the characteristics of the target reference image. The model effectively compresses the concept of the specific Corgi into the <code>xon</code> token. Over time, <code>xon</code> becomes semantically grounded and occupies a space in the latent representation that overlaps with the broader <code>dog</code> concept. The process demonstrates how DreamBooth builds a bridge from a personalized token to a general semantic class—storing specific visual identity in <code>xon</code>, and transferring it to the general “dog” representation space during generation.</p></li></ul><hr><h3 id=2-comparing-the-raw-text-encoder-vs-fine-tuned-via-dreambooth><strong>2. Comparing the Raw Text Encoder vs Fine-Tuned via DreamBooth</strong>
+<a class=anchor href=#2-comparing-the-raw-text-encoder-vs-fine-tuned-via-dreambooth>#</a></h3><h4 id=objective-1><strong>Objective:</strong>
+<a class=anchor href=#objective-1>#</a></h4><p>To investigate how DreamBooth fine-tuning alters the semantic understanding of special token (e.g <code>xon</code>) by comparing the outputs of the <strong>original</strong> (pre-trained) and <strong>fine-tuned</strong> text encoder models.</p><ol><li><p><strong>Baseline Extraction:</strong></p><ul><li>Use the raw text encder from<code>runwayml/stable-diffusion-v1-5</code> pipeline.</li><li>Encode a promt only with specified token (e.g., <code>xon</code>)</li><li>Visualize the layer-wise embeddings.</li></ul></li><li><p><strong>Post-Fine-Tuning Comparison:</strong></p><ul><li>Repeat the same encoding process with the fine-tuned (350 epochs) by DreamBooth approach text encoder model.</li><li>Visualize the layer-wise embeddings.</li></ul></li></ol><h4 id=text-encoder-layer-visualizations--raw-vs-tuned-all-layers><strong>Text Encoder Layer Visualizations – Raw vs. Tuned (All Layers):</strong>
+<a class=anchor href=#text-encoder-layer-visualizations--raw-vs-tuned-all-layers>#</a></h4><style>.layer-block{text-align:center;margin-bottom:40px}.layer-images{display:inline-flex;gap:40px;margin-bottom:10px}.layer-labels{display:inline-flex;gap:230px;justify-content:right}</style><div class=layer-block><h4>Layer 0</h4><div class=layer-images><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_000_step_000.png width=300>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_000_step_000.png width=300></div><div class=layer-labels><strong>Layer 0 Raw</strong>
+<strong>Layer 0 Tuned</strong></div></div><div class=layer-block><h4>Layer 1</h4><div class=layer-images><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_001_step_001.png width=300>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_001_step_001.png width=300></div><div class=layer-labels><strong>Layer 1 Raw</strong>
+<strong>Layer 1 Tuned</strong></div></div><div class=layer-block><h4>Layer 2</h4><div class=layer-images><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_002_step_002.png width=300>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_002_step_002.png width=300></div><div class=layer-labels><strong>Layer 2 Raw</strong>
+<strong>Layer 2 Tuned</strong></div></div><div class=layer-block><h4>Layer 3</h4><div class=layer-images><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_003_step_003.png width=300>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_003_step_003.png width=300></div><div class=layer-labels><strong>Layer 3 Raw</strong>
+<strong>Layer 3 Tuned</strong></div></div><div class=layer-block><h4>Layer 4</h4><div class=layer-images><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_004_step_004.png width=300>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_004_step_004.png width=300></div><div class=layer-labels><strong>Layer 4 Raw</strong>
+<strong>Layer 4 Tuned</strong></div></div><div class=layer-block><h4>Layer 5</h4><div class=layer-images><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_005_step_005.png width=300>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_005_step_005.png width=300></div><div class=layer-labels><strong>Layer 5 Raw</strong>
+<strong>Layer 5 Tuned</strong></div></div><div class=layer-block><h4>Layer 6</h4><div class=layer-images><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_006_step_006.png width=300>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_006_step_006.png width=300></div><div class=layer-labels><strong>Layer 6 Raw</strong>
+<strong>Layer 6 Tuned</strong></div></div><div class=layer-block><h4>Layer 7</h4><div class=layer-images><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_007_step_007.png width=300>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_007_step_007.png width=300></div><div class=layer-labels><strong>Layer 7 Raw</strong>
+<strong>Layer 7 Tuned</strong></div></div><div class=layer-block><h4>Layer 8</h4><div class=layer-images><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_008_step_008.png width=300>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_008_step_008.png width=300></div><div class=layer-labels><strong>Layer 8 Raw</strong>
+<strong>Layer 8 Tuned</strong></div></div><div class=layer-block><h4>Layer 9</h4><div class=layer-images><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_009_step_009.png width=300>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_009_step_009.png width=300></div><div class=layer-labels><strong>Layer 9 Raw</strong>
+<strong>Layer 9 Tuned</strong></div></div><div class=layer-block><h4>Layer 10</h4><div class=layer-images><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_010_step_010.png width=300>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_010_step_010.png width=300></div><div class=layer-labels><strong>Layer 10 Raw</strong>
+<strong>Layer 10 Tuned</strong></div></div><div class=layer-block><h4>Layer 11</h4><div class=layer-images><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_011_step_011.png width=300>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_011_step_011.png width=300></div><div class=layer-labels><strong>Layer 11 Raw</strong>
+<strong>Layer 11 Tuned</strong></div></div><div class=layer-block><h4>Layer 12</h4><div class=layer-images><img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook/layer_012_step_012.png width=300>
+<img src=/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth/dreambooth_lens_notebook_trained/layer_012_step_012.png width=300></div><div class=layer-labels><strong>Layer 12 Raw</strong>
+<strong>Layer 12 Tuned</strong></div></div><p><strong>Insights</strong></p><ul><li><p>We see that till up to the 10th layer, the difference in understanding the xon concept between the pure text encoder and the trained text encoder is not dramatic. However, beyond that point, the subsequent layers begin to retain and emphasize information specifically related to our dog.</p></li><li><p>The deeper layers of the text encoder are more responsible for capturing fine-grained, learned representations associated with the fine-tuned concept.</p></li><li><p>The experiment demonstrates that DreamBooth fine-tuning impacts the deeper layers of the text encoder more significantly, encoding concept-specific details that were not present in the original model. This insight can guide future work in understanding where and how personalization occurs in diffusion model pipelines.</p></li></ul><hr><h3 id=3-diving-into-the-latent-spaces-understanding-representational-changes><strong>3. Diving into the Latent Spaces: Understanding Representational Changes</strong>
+<a class=anchor href=#3-diving-into-the-latent-spaces-understanding-representational-changes>#</a></h3><p><strong>Objective:</strong><br>The goal of this section is to explore and quantify how DreamBooth fine-tuning alters the semantic embedding of a new concept token (<code>xon</code>) in relation to an existing, semantically related concept (<code>dog</code>). We do this by probing the latent space of the CLIP text encoder, comparing the cosine similarity between the embeddings of <code>xon</code> and <code>dog</code> before and after fine-tuning.</p><p><strong>Procedure:</strong><br>We leverage the Diffusion Lens methodology to extract and compare token embeddings from both the <strong>pretrained</strong> and <strong>fine-tuned</strong> versions of the CLIP text encoder. Specifically, we:</p><ol><li>Tokenize a <strong>specific prompt</strong> containing the learned token <code>xon</code>.</li><li>Tokenize a <strong>general prompt</strong> containing the token <code>dog</code>.</li><li>Extract the embeddings corresponding to <code>xon</code> and <code>dog</code> from their respective prompts.</li><li>Compute the <strong>cosine similarity</strong> between these token embeddings.</li><li>Repeat the process for both the <strong>base encoder</strong> and the <strong>fine-tuned encoder</strong>, allowing us to quantify representational changes in the latent space.</li></ol><p><strong>Pseudo-code:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>function compute_the_similarity(tokenizer, text_encoder, prompt_specific, prompt_general, specific_token, general_token):
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Step 1: Tokenize both prompts</span>
+</span></span><span style=display:flex><span>    tokens_specific <span style=color:#f92672>=</span> tokenizer(prompt_specific)
+</span></span><span style=display:flex><span>    tokens_general <span style=color:#f92672>=</span> tokenizer(prompt_general)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Step 2: Locate token indices in respective prompts</span>
+</span></span><span style=display:flex><span>    index_specific <span style=color:#f92672>=</span> find_index(tokens_specific<span style=color:#f92672>.</span>input_ids, specific_token)
+</span></span><span style=display:flex><span>    index_general <span style=color:#f92672>=</span> find_index(tokens_general<span style=color:#f92672>.</span>input_ids, general_token)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Step 3: Encode both prompts using the provided text encoder</span>
+</span></span><span style=display:flex><span>    embeddings_specific <span style=color:#f92672>=</span> text_encoder(tokens_specific)
+</span></span><span style=display:flex><span>    embeddings_general <span style=color:#f92672>=</span> text_encoder(tokens_general)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Step 4: Extract embeddings for specific tokens</span>
+</span></span><span style=display:flex><span>    embedding_xon <span style=color:#f92672>=</span> embeddings_specific[index_specific]
+</span></span><span style=display:flex><span>    embedding_dog <span style=color:#f92672>=</span> embeddings_general[index_general]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Step 5: Compute cosine similarity</span>
+</span></span><span style=display:flex><span>    similarity <span style=color:#f92672>=</span> cosine_similarity(embedding_xon, embedding_dog)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> similarity
+</span></span></code></pre></div><p><strong>Insights:</strong></p><ul><li>The cosine similarity between <code>xon</code> and <code>dog</code> <strong>before fine-tuning</strong> was <strong>0.1781</strong>, indicating low semantic alignment in the latent space of the base model.</li><li>After applying DreamBooth fine-tuning, the similarity increased to <strong>0.2504</strong>, showing that the model has moved the representation of <code>xon</code> closer to that of <code>dog</code>.</li><li>This shift suggests that DreamBooth successfully teaches the model that <code>xon</code> carries dog-like semantics, validating its effect on the latent space alignment of new concept tokens.</li></ul><hr><h2 id=conclusion><strong>Conclusion</strong>
+<a class=anchor href=#conclusion>#</a></h2><p>By combining DreamBooth fine-tuning with Diffusion Lens interpretability, we achieve not only <strong>high-fidelity, subject-driven image synthesis</strong> but also <strong>transparent insights</strong> into the model’s inner semantic processing. Our visualizations confirm that concepts emerge and sharpen progressively across text encoder and U-net layers.</p><h2 id=references><strong>References</strong>
+<a class=anchor href=#references>#</a></h2><p>[1] N. Ruiz, Y. Li, V. Jampani, Y. Pritch, M. Rubinstein, and K. Aberman, Dreambooth: Fine tuning text-
+to-image diffusion models for subject-driven generation, 2023. arXiv: 2208.12242 [cs.CV]. [Online]. Available:
+<a href=https://arxiv.org/abs/2208.12242>https://arxiv.org/abs/2208.12242</a>.</p><p>[2] M. Toker, H. Orgad, M. Ventura, D. Arad, and Y. Belinkov, “Diffusion lens: Interpreting text encoders in text-to-image pipelines,” Association for Computational Linguistics, 2024, pp. 9713–9728. doi: 10.18653/v1/2024.acl-long.524. [Online]. Available:
+<a href=https://arxiv.org/abs/2208.12242>http://dx.doi.org/10.18653/v1/2024.acl-long.524</a>.</p></article><footer class=book-footer><div class="flex flex-wrap justify-between"><div><a class="flex align-center" href=https://github.com/IU-PR/Capstone_project/tree/master//content/docs/Groups/Diffusion%20Lens:%20Interpreting%20Text%20Encoders%20in%20Text-to-Image%20pipelines%20tuned%20using%20DreamBooth.md target=_blank rel=noopener><img src=/svg/edit.svg class=book-icon alt=Edit>
+<span>Edit this page</span></a></div></div><script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><div class=book-toc-content><nav id=TableOfContents><ul><li><a href=#diffusion-lens-interpreting-text-encoders-in-text-to-image-pipelines><strong>Diffusion Lens: Interpreting Text Encoders in Text-to-Image pipelines</strong></a><ul><li><a href=#introduction><strong>Introduction</strong></a></li><li><a href=#background><strong>Background</strong></a><ul><li><a href=#section-1-dreambooth-fine-tuning><strong>Section 1: DreamBooth Fine-Tuning</strong></a></li><li><a href=#section-2-diffusion-lens-interpretability><strong>Section 2: Diffusion Lens Interpretability</strong></a></li></ul></li><li><a href=#methodology><strong>Methodology</strong></a><ul><li><a href=#31-codebase-organization><strong>3.1 Codebase Organization</strong></a></li><li><a href=#32-text-encoder-architecture><strong>3.2 Text Encoder Architecture</strong></a></li><li><a href=#33-diffusion-lens-pipeline-setup><strong>3.3 Diffusion Lens Pipeline Setup</strong></a></li><li><a href=#34-unified-layerwise-decoding--latent-snapshotting><strong>3.4 Unified Layer‑wise Decoding & Latent Snapshotting</strong></a></li></ul></li><li><a href=#experiments-and-analysis><strong>Experiments and Analysis</strong></a><ul><li><a href=#1-dreambooth-explainability-during-training><strong>1. DreamBooth Explainability During Training</strong></a></li><li><a href=#insights><strong>Insights</strong></a></li><li><a href=#2-comparing-the-raw-text-encoder-vs-fine-tuned-via-dreambooth><strong>2. Comparing the Raw Text Encoder vs Fine-Tuned via DreamBooth</strong></a></li><li><a href=#3-diving-into-the-latent-spaces-understanding-representational-changes><strong>3. Diving into the Latent Spaces: Understanding Representational Changes</strong></a></li></ul></li><li><a href=#conclusion><strong>Conclusion</strong></a></li><li><a href=#references><strong>References</strong></a></li></ul></li></ul></nav></div></aside></main></body></html>
